@@ -1,1 +1,30 @@
 /* blank style sheet */
+body {
+  font-family: Roboto, Arial;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+}
+
+th {
+  padding: 6px 0px;
+  text-align: left;
+  background-color: rgb(254, 204, 166);
+}
+
+td, th {
+  border: 1px solid #4d4d4d;
+  padding: 8px;
+}
+
+.question-title {
+  cursor: pointer;
+  font-weight: 500;
+
+}
+
+div[class^='question-description'] {
+  display: none;
+}
