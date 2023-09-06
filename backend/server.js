@@ -1,5 +1,8 @@
+require('dotenv').config()
+
 const express = require('express')
-const dotenv = require('dotenv')
+const mongoose = require('mongoose')
+const userProfileRoutes = require('./routes/userProfiles')
 
 const PORT = process.env.PORT || 3001;
 
@@ -7,16 +10,21 @@ const PORT = process.env.PORT || 3001;
 const app = express()
 
 // middleware for logging purposes, runs on every req
+app.use(express.json())
+
 app.use((req, res, next) => {
     console.log(req.path, req.method)
     next()
 })
 
-app.get('/', (req, res) => {
-    res.json({msg: 'Welcome to the app'})
-})
+app.use('/api/userProfiles', userProfileRoutes)
 
-//listen for requests
-app.listen(PORT, () => {
-    console.log('listening on port', PORT)
-})
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log('listening on port', PORT);
+    })
+  })
+  .catch((err) => {
+    console.log(err);
+  })
