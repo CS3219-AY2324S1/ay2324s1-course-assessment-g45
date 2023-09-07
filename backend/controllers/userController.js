@@ -13,13 +13,13 @@ const getSingleUser = async (req, res) => {
   const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({error: 'No such user'})
+    return res.status(404).json({error: 'No such user.'})
   }
 
   const user = await User.findById(id)
   
   if (!user) {
-    return res.status(404).json({error : 'No such user'})
+    return res.status(404).json({error : 'No such user.'})
   }
 
   res.status(200).json(user)
@@ -32,8 +32,13 @@ const createUser = async (req, res) => {
   try {
     const user = await User.create({username, password, email})
     res.status(200).json(user)
-  } catch (error) { 
-    res.status(400).json({error: error.message})
+  } catch (error) {
+    if (error.code == 11000) {
+      var errMsg = Object.keys(error.keyValue)[0] + " already exists."
+    } else {
+      var errMsg = error.message
+    }
+    res.status(400).json({error: errMsg})
   }
 }
 
@@ -42,13 +47,13 @@ const deleteUser = async (req, res) => {
    const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({error: 'No such user'})
+    return res.status(400).json({error: 'No such user.'})
   }
   
   const user = await User.findOneAndDelete({_id: id})
   
   if (!user) {
-    return res.status(400).json({error : 'No such user'})
+    return res.status(400).json({error : 'No such user.'})
   }
 
   res.status(200).json(user)
@@ -59,7 +64,7 @@ const updateUser = async (req, res) => {
   const { id } = req.params
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({error: 'No such user'})
+    return res.status(400).json({error: 'No such user.'})
   }
   
   const user = await User.findOneAndUpdate({_id: id}, {
@@ -67,7 +72,7 @@ const updateUser = async (req, res) => {
   })
   
   if (!user) {
-    return res.status(400).json({error : 'No such user'})
+    return res.status(400).json({error : 'No such user.'})
   }
 
   const updatedUser = await User.findById(id)
@@ -75,10 +80,26 @@ const updateUser = async (req, res) => {
   res.status(200).json(updatedUser)
 }
 
+const login = async (req, res) => {
+  const { username, password } = req.body
+  const user = await User.findOne({username: username})
+
+  if (!user) {
+    return res.status(400).json({error : 'No such user.'})
+  }
+
+  if (password !== user.password) {
+    return res.status(400).json({error : 'Wrong password or username.'})
+  }
+
+  res.status(200).json(user)
+}
+
 module.exports = {
     getAllUsers,
     getSingleUser,
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    login
 }
