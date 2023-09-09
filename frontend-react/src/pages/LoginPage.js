@@ -1,13 +1,18 @@
 import React from 'react'
 import { useState } from 'react'
+import { useUserContext } from '../hooks/useUserContext'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
+  const { user, dispatch } = useUserContext()
   const [ username, setUsername ] = useState('')
-  const [ password, setPassword ] = useState('') 
+  const [ password, setPassword ] = useState('')
+  const [ error, setError ] = useState(null)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/api/userProfiles', {
+    const response = await fetch('/api/userProfiles/login', {
       method: 'POST',
       headers: {
         'Content-Type' : 'application/json'
@@ -15,12 +20,25 @@ const LoginPage = () => {
       body: JSON.stringify({ username, password})
     })
     const json = await response.json()
-    console.log(json)
+
+    if (!response.ok) {
+      setError(json.error)
+    }
+
+    if (response.ok) {
+      setUsername('')
+      setPassword('')
+      console.log('Logged in successfully!', json)
+      dispatch({ type: 'SET_USER', payload: json })
+      console.log(user)
+      navigate("/")
+    }
+
   }
 
   return (
-    <div className='register-page'>
-      <div className='register-card'>
+    <div className='login-page'>
+      <div className='login-card'>
         <div className='header'>
           <h3> Log in </h3>
         </div>
@@ -29,7 +47,7 @@ const LoginPage = () => {
           <div> {password} </div>
           <div> {username }</div>
         </div>
-        <form className='register-form'>
+        <form>
           <label> User Name: </label>
           <input
             type='text' onChange={(e) => setUsername(e.target.value)}

@@ -1,6 +1,6 @@
 :root {
   --primary: #ff8a41;
-  --secondary: rgb(130, 255, 213);
+  --secondary: rgb(137, 137, 137);
   --error: #e7195a;
 }
 
@@ -11,6 +11,10 @@
   'wght' 400,
   'GRAD' 0,
   'opsz' 24
+}
+
+body {
+  background-color: rgba(146, 102, 102, 0.2);
 }
 
 form {
@@ -49,10 +53,6 @@ input {
   text-decoration: none;
 }
 
-.page {
-  background-color: rgba(146, 102, 102, 0.2);
-}
-
 .primary-btn {
   background-color: var(--primary);
   border: 0;
@@ -64,37 +64,35 @@ input {
   display: block;
 }
 
+.secondary-btn {
+  border: 0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: var(--secondary);
+  cursor: pointer;
+  margin-right: 20px;
+}
+
 .small-icons {
   color: rgb(72, 72, 72);
 }
 
 
-/* register page */
-.form-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(146, 102, 102, 0.2);
-  display: flex;
-  flex-direction: column;
-  padding-top: 50px;
-  align-items: center;
-  z-index: 2;
-  overflow: scroll;
-}
+/* register and login page */
 
-.register-page {
+.register-page,
+.login-page {
   display: flex;
   flex-direction: column;
   padding-top: 50px;
   align-items: center;
   overflow-y: scroll;
-  background-color: rgba(146, 102, 102, 0.2);
 }
 
-.register-card {
+.register-card,
+.login-card,
+.profile-card {
   width: 30%;
   max-width: 700px;
   min-width: 330px;
@@ -114,19 +112,6 @@ input {
   color: white;
 }
 
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 10px;
-  background-color: var(--primary);
-  border: none;
-  border-radius: 20px;
-  color: white;
-  padding: 5px 10px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .btn-container {
   width: 100%;
   margin-bottom: 10px;
@@ -135,6 +120,22 @@ input {
 .error {
   color: var(--error)
 }
+
+/* profile page */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-card {
+  padding: 10px 30px; 
+}
+
+.user-detail {
+  margin: 10px;
+}
+
 
 
 

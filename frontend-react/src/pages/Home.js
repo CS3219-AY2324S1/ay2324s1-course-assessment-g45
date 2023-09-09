@@ -1,7 +1,13 @@
+import { useUserContext } from "../hooks/useUserContext"
+import Profile from "./Profile"
+
 const Home = () => {
+  const { user, dispatch } = useUserContext()
   return (
     <div className="page">
-      Home
+      {
+        user && <Profile user={user}/>
+      }
     </div>
   )
 }

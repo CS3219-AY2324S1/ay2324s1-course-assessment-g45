@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import style from '../styles/style.css'
 import MyAlert from '../components/MyAlert'
 import { useUserContext } from '../hooks/useUserContext'
+import { redirect } from 'react-router-dom'
 
 const RegisterPage = () => {
   const { dispatch } = useUserContext()
@@ -56,6 +57,7 @@ const RegisterPage = () => {
       setEmail('')
       console.log('new user added', json)
       dispatch({ type : 'SET_USER', payload: json })
+      redirect(`/`)
     }
 
   }
@@ -75,7 +77,7 @@ const RegisterPage = () => {
           <div> {password} </div>
           <div> {confirmPassword }</div>
         </div>
-        <form className='register-form'>
+        <form>
           <label> User Name: </label>
           <input
             type='text' onChange={(e) => setUsername(e.target.value)}
