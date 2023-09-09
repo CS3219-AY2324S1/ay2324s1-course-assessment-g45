@@ -34,6 +34,25 @@ input {
   box-sizing: border-box;
 }
 
+.navbar {
+  background-color: white;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+}
+
+.page {
+  background-color: rgba(146, 102, 102, 0.2);
+}
+
 .primary-btn {
   background-color: var(--primary);
   border: 0;
@@ -45,8 +64,12 @@ input {
   display: block;
 }
 
+.small-icons {
+  color: rgb(72, 72, 72);
+}
 
-/* register */
+
+/* register page */
 .form-popup {
   position: fixed;
   top: 0;
@@ -62,14 +85,23 @@ input {
   overflow: scroll;
 }
 
-.form-popup-card {
+.register-page {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+  align-items: center;
+  overflow-y: scroll;
+  background-color: rgba(146, 102, 102, 0.2);
+}
+
+.register-card {
   width: 30%;
   max-width: 700px;
   min-width: 330px;
   background-color: white;
 }
 
-.popup-header {
+.header {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,7 +110,7 @@ input {
   margin-bottom: 30px;
 }
 
-.popup-header h3 {
+.header h3 {
   color: white;
 }
 

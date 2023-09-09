@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import style from '../styles/style.css'
-import MyAlert from './MyAlert'
+import MyAlert from '../components/MyAlert'
+import { useUserContext } from '../hooks/useUserContext'
 
-const RegisterPopUp = () => {
+const RegisterPage = () => {
+  const { dispatch } = useUserContext()
   const [ username, setUsername ] = useState("")
   const [ password, setPassword ] = useState("")
   const [ confirmPassword, setConfirmPassword ] = useState("")
@@ -13,6 +15,15 @@ const RegisterPopUp = () => {
   const checkConfirmPassword = (pw) => {
     setConfirmPassword(pw)
     if (!(pw === password)) {
+      setConfirmPasswordError("Passwords must match")
+    } else {
+      setConfirmPasswordError(null)
+    }
+  }
+
+  const checkPassword = (pw) => {
+    setPassword(pw)
+    if (confirmPassword.length > 0 && !(pw === confirmPassword)) {
       setConfirmPasswordError("Passwords must match")
     } else {
       setConfirmPasswordError(null)
@@ -32,6 +43,8 @@ const RegisterPopUp = () => {
     })
     const json = await response.json()
 
+    console.log(json)
+
     if (!response.ok) {
       setError(json.error)
     }
@@ -41,18 +54,26 @@ const RegisterPopUp = () => {
       setPassword('')
       setConfirmPassword('')
       setEmail('')
+      console.log('new user added', json)
+      dispatch({ type : 'SET_USER', payload: json })
     }
 
   }
 
   return (
-    <div className='form-popup'>
-      <div className='form-popup-card'>
-        <div className='popup-header'>
+    <div className='register-page'>
+      <div className='register-card'>
+        <div className='header'>
           <h3> Register </h3>
-          <button className='close-btn'>
+          {/* <button className='close-btn'>
           <span class="material-symbols-outlined">close</span>
-          </button>
+          </button> */}
+        </div>
+
+        <div>
+          debug:
+          <div> {password} </div>
+          <div> {confirmPassword }</div>
         </div>
         <form className='register-form'>
           <label> User Name: </label>
@@ -63,7 +84,7 @@ const RegisterPopUp = () => {
 
           <label> Password: </label>
           <input
-            type='password' onChange={(e) => setPassword(e.target.value)}
+            type='password' onChange={(e) => checkPassword(e.target.value)}
             value = {password}
           />
 
@@ -97,4 +118,4 @@ const RegisterPopUp = () => {
   )
 }
 
-export default RegisterPopUp
+export default RegisterPage
