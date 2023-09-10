@@ -28,3 +28,11 @@ td, th {
 div[class^='question-description'] {
   display: none;
 }
+
+.actions {
+  display: flex;
+}
+
+.add-question-button {
+  font-weight: bold;
+}

@@ -10,11 +10,18 @@ questions.forEach((question) => {
     </td>
     <td> ${ question.categories }</td>
     <td> ${ question.complexity }</td>
+    <td> 
+      <button onClick={handleEdit}>Edit</button>
+      <button onClick={handleDelete}>Delete</button>
+    </td>
   </tr>
   `;
 
   document.querySelector('.questions-table').innerHTML += html;
 })
+
+const handleEdit = null;
+const handleDelete = null;
 
 const toggleDescription = (id) => {
   const elem = document.querySelector(`.question-description-${id}`);
