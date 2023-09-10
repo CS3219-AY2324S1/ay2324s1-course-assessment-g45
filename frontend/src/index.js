@@ -35,12 +35,12 @@ const toggleDescription = (id) => {
 
 function openDialog() {
   const dialog = document.getElementById("myDialog");
-  dialog.showModal(); // Display the dialog as a modal
+  dialog.showModal(); 
 }
 
 function closeDialog() {
   const dialog = document.getElementById("myDialog");
-  dialog.close(); // Close the dialog
+  dialog.close();
 }
 
 console.log(questions)
