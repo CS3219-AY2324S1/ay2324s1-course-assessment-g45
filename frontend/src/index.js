@@ -11,8 +11,8 @@ questions.forEach((question) => {
     <td> ${ question.categories }</td>
     <td> ${ question.complexity }</td>
     <td> 
-      <button onClick={handleEdit}>Edit</button>
-      <button onClick={handleDelete}>Delete</button>
+      <button onclick={handleEdit()}>Edit</button>
+      <button onclick={handleDelete}>Delete</button>
     </td>
   </tr>
   `;
@@ -20,8 +20,11 @@ questions.forEach((question) => {
   document.querySelector('.questions-table').innerHTML += html;
 })
 
-const handleEdit = null;
+const handleEdit = () => {
+  console.log('Edit')
+};
 const handleDelete = null;
+const handleAdd = null;
 
 const toggleDescription = (id) => {
   const elem = document.querySelector(`.question-description-${id}`);
@@ -30,5 +33,14 @@ const toggleDescription = (id) => {
   )
 }
 
+function openDialog() {
+  const dialog = document.getElementById("myDialog");
+  dialog.showModal(); // Display the dialog as a modal
+}
+
+function closeDialog() {
+  const dialog = document.getElementById("myDialog");
+  dialog.close(); // Close the dialog
+}
 
 console.log(questions)
