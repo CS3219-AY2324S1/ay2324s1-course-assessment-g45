@@ -6,11 +6,10 @@ const MyAlert = ( { serverity, message }) => {
   return (
     <div className='alert-container'>
       <div className={alerts[serverity] + ' alert'}>
-        <span className='material-icons-outlined'> {icons[serverity]} </span>
+        <span className='material-symbols-outlined'> {icons[serverity]} </span>
         <span> {message }</span> 
       </div>
     </div>
-
   )
 }
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 
-const Profile = ({user}) => {
-  const { dispatch } = useUserContext()
+const Profile = () => {
+  const { user, dispatch } = useUserContext()
   // const user = {
   //   username: 'test',
   //   password: 1234,
@@ -74,15 +74,17 @@ const Profile = ({user}) => {
 
       {
         isEdit &&
-        <div>
-          <label> Username: </label>
+        <div className='profile-card'>
+          <label><b>Username:</b></label>
           <input type='text' value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <label> Email: </label>
+          <label><b> Email:</b></label>
           <input type='text' value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
+          <button> Change password</button>
 
 
           {/* TODO: check for correct password */}

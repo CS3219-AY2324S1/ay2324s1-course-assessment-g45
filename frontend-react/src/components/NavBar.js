@@ -19,7 +19,15 @@ const NavBar = () => {
 
         {/* TODO: Log out logic*/}
         { user && 
-          <h4> Log out </h4>
+          <div> 
+            <h4> Log out </h4>
+          </div>
+        }
+
+        { 
+          user && <Link to="/profile"> 
+          <span class="material-symbols-outlined small-icons">account_circle</span>
+          </Link>
         }
       </div>
     </div>

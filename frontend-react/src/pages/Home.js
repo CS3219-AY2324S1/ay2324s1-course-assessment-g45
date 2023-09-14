@@ -1,13 +1,11 @@
+import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../hooks/useUserContext"
-import Profile from "./Profile"
 
 const Home = () => {
   const { user, dispatch } = useUserContext()
+  const navigate = useNavigate()
   return (
     <div className="page">
-      {
-        user && <Profile user={user}/>
-      }
     </div>
   )
 }
