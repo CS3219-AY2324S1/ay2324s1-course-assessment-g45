@@ -77,12 +77,26 @@ button[type="button"]:hover, button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-.add-category {
+.actions {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+}
+
+.edit-button {
+  width: 100%;
+  background-color: gold;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.delete-button {
+  width: 100%;
+  background-color: red;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 button[class^='category-name']:hover {
   background-color: red;
 }
+

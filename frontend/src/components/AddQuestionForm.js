@@ -36,18 +36,35 @@ function closeAddQuestionDialog() {
 	dialog.close();
 }
 
-// TODO: Huy adding backend
-const handleAddQuestion = () => {
-	// TODO: Huy does his magic here
-
-
+// TODO: To add BACKEND operations
+const handleAddQuestion = (question) => {
 	// Frontend
-  console.log('add question')
+	console.log('add question', question)
 	closeAddQuestionDialog()
+	const rowHtml = `
+  <tr>
+    <td > 
+      <div class="question-title" onclick="toggleDescription('${question.title}')"> ${question.title} </div>
+      <div class="question-description-${convertToSlug(question.title)}"> ${question.description} </div>
+    </td>
+    <td> ${question.categories}</td>
+    <td> ${question.complexity}</td>
+    <td> 
+      <button onclick={handleEdit()}>Edit</button>
+      <button onclick={handleDelete}>Delete</button>
+    </td>
+  </tr>
+  `;
+
+	document.querySelector('.questions-table').innerHTML += rowHtml;
+
+	// TODO: Huy does his BACKEND magic here
+	// doSomething()
 };
 
 const questionForm = document.getElementById("question-form");
 
+// Keep track of categories for the current form
 const categories = [];
 
 function addCategory() {
@@ -74,13 +91,20 @@ function removeCategory(category) {
 }
 
 questionForm.addEventListener("submit", function (event) {
-  event.preventDefault();
+	event.preventDefault();
 
-  const title = document.getElementById("title");
-  const question = document.getElementById("question");
-  const complexity = document.getElementById("complexity");
+	const title = document.getElementById("title");
+	const question = document.getElementById("question");
+	const complexity = document.getElementById("complexity");
 
-  handleAddQuestion();
+	const newQuestionObject = {
+		title: title.value,
+		question: question.value,
+		categories,
+		complexity: complexity.value
+	}
+
+	handleAddQuestion(newQuestionObject);
 
 	//Clear the form
 	categories.length = 0
