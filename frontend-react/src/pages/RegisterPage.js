@@ -127,7 +127,7 @@ const RegisterPage = () => {
             />
           </Form.Group>
 
-          <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)}> Submit </Button>
+          <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)}> Register </Button>
 
         </Form>
         {/* <form>
