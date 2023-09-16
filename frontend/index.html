@@ -19,7 +19,7 @@
 <body>
   <main>
     <h1>Welcome to PeerPrep</h1>
-    <div>
+    <div id="container">
       <table class="questions-table">
         <tr>
           <!-- Question Id Question Title Question Description Question Category Question Complexity -->
@@ -29,8 +29,8 @@
           <th> Actions </th>
         </tr>
       </table>
-      <button class="add-question-button" onclick="openDialog()">Add a new question</button>
-      <dialog id="myDialog">
+      <!-- <button class="add-question-button" onclick="openDialog()">Add a new question</button> -->
+      <!-- <dialog id="myDialog">
         <form>
           <label for="title">Title:</label>
           <input type="text" id="title" name="title" required><br>
@@ -40,6 +40,7 @@
 
           <label for="category">Category:</label>
           <input type="text" id="category" name="category" required><br>
+          <button onclick="">Add new category</button>
 
           <label for="complexity">Complexity:</label>
           <input type="text" id="complexity" name="complexity" required><br>
@@ -47,11 +48,12 @@
           <button type="button" onclick="closeDialog()">Cancel</button>
           <button type="submit">Submit</button>
         </form>
-      </dialog>
+      </dialog> -->
     </div>
   </main>
   <script src="src/data/questions.js"></script>
   <script src="src/index.js"></script>
+  <script src="src/components/AddQuestionForm.js"></script>
 </body>
 
 </html>

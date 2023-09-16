@@ -55,7 +55,6 @@ label {
 
 input[type="text"] {
   padding: 8px;
-  margin-bottom: 16px;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
@@ -76,4 +75,14 @@ button[type="submit"] {
 
 button[type="button"]:hover, button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+.add-category {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+button[class^='category-name']:hover {
+  background-color: red;
 }
