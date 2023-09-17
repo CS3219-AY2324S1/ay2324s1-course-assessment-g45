@@ -28,9 +28,9 @@ const getSingleUser = async (req, res) => {
 // POST a new user
 const createUser = async (req, res) => {
   const {username, password, email} = req.body
-
+  
   try {
-    const user = await User.create({username, password, email})
+    const user = await User.signUp(username, password, email)
     res.status(200).json(user)
   } catch (error) {
     if (error.code == 11000) {
@@ -41,7 +41,7 @@ const createUser = async (req, res) => {
     res.status(400).json({error: errMsg})
   }
 }
-
+ 
 // DELETE a user
 const deleteUser = async (req, res) => {
    const { id } = req.params
