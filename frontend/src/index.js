@@ -1,42 +1,61 @@
 // index.js
-const convertToSlug = (inputString) => {
-	return inputString.toLowerCase().replace(/\s+/g, '-');
+const getSlugFromQuestion = (question) => {
+  return getSlug(question.title)
 }
 
-questions.forEach((question) => {
-  const html = `
-  <tr>
-    <td > 
-      <div class="question-title" onclick="toggleDescription('${question.title}')"> ${question.title} </div>
-      <div class="question-description-${convertToSlug(question.title)}"> ${question.description} </div>
-    </td>
-    <td> ${question.categories}</td>
-    <td> ${question.complexity}</td>
-    <td class=""actions> 
-      <button class="edit-button" onclick="handleEditQuestion()">Edit</button>
-      <button class="delete-button" onclick="handleDeleteQuestion()">Delete</button>
-    </td>
-  </tr>
-  `;
+const getSlug = (text) => {
+  return text.toLowerCase().replace(/\s+/g, '-');
+}
 
-  console.log(html)
+const createTableRow = (question) => {
+  const newRow = document.createElement("tr");
+  newRow.classList.add(`row-of-${getSlugFromQuestion(question)}`);
 
-  document.querySelector('.questions-table').innerHTML += html;
-})
+  const questionTitle = document.createElement("td");
+  questionTitle.innerHTML = `
+    <div class="question-title" onclick="toggleDescription('${getSlugFromQuestion(question)}')"> ${question.title} </div>
+    <div class="question-description-${getSlugFromQuestion(question)}"> ${question.description} </div>
+  `
+  newRow.appendChild(questionTitle)
 
-const handleEditQuestion = () => {
-	console.log('edit question')
-};
+  const questionCategory = document.createElement("td");
+  questionCategory.innerHTML = question.categories
+  newRow.appendChild(questionCategory)
 
-const handleDeleteQuestion = () => {
-	console.log('delete question')
-};
+  const questionComplexity = document.createElement("td");
+  questionComplexity.innerHTML = question.complexity
+  newRow.appendChild(questionComplexity)
 
-const toggleDescription = (title) => {
-	const elem = document.querySelector(`.question-description-${convertToSlug(title)}`);
-	elem.style.display = (
-		elem.style.display == '' ? 'block' : ''
-	)
+  const questionActions = document.createElement("td");
+  questionActions.classList.add("actions")
+
+  const editButton = document.createElement("button");
+  editButton.classList.add(`edit-button-for-${getSlugFromQuestion(question)}`)
+  editButton.textContent = "Edit"
+  editButton.addEventListener("click", () => {
+    openEditQuestionForm(question)
+  })
+
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add(`delete-button-for-${getSlugFromQuestion(question)}`)
+  deleteButton.textContent = "Delete"
+  deleteButton.addEventListener("click", () => {
+    handleDeleteQuestion(question)
+  })
+
+  questionActions.appendChild(editButton)
+  questionActions.appendChild(deleteButton)
+
+  newRow.append(questionActions)
+
+  return newRow
+}
+
+const toggleDescription = (slug) => {
+  const elem = document.querySelector(`.question-description-${slug}`);
+  elem.style.display = (
+    elem.style.display == '' ? 'block' : ''
+  )
 }
 
 console.log(questions)

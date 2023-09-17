@@ -80,16 +80,22 @@ button[type="button"]:hover, button[type="submit"]:hover {
 .actions {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
-.edit-button {
+button[class^='edit-button'] {
   width: 100%;
   background-color: gold;
   margin-top: 8px;
   margin-bottom: 8px;
 }
 
-.delete-button {
+button[class^='category-name'] {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+button[class^='delete-button'] {
   width: 100%;
   background-color: red;
   margin-top: 8px;
@@ -99,4 +105,3 @@ button[type="button"]:hover, button[type="submit"]:hover {
 button[class^='category-name']:hover {
   background-color: red;
 }
-
