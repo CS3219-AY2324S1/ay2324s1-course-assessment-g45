@@ -102,17 +102,17 @@ const updateUser = async (req, res) => {
 
 const login = async (req, res) => {
   const { username, password } = req.body
-  const user = await User.findOne({username: username})
 
-  if (!user) {
-    return res.status(400).json({error : 'No such user.'})
+  try {
+    const user = await User.loginUser(username, password)
+
+    // create token
+    const token = createToken(user._id)
+
+    res.status(200).json({username, token})
+  } catch (error) {
+    res.status(400).json({error: error.message})
   }
-
-  if (password !== user.password) {
-    return res.status(400).json({error : 'Wrong password or username.'})
-  }
-
-  res.status(200).json(user)
 }
 
 module.exports = {
