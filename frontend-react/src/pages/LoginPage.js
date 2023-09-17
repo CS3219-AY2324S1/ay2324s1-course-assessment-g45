@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
+import { login } from '../apis/UserProfileApi'
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
@@ -13,13 +14,15 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('/api/userProfiles/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify({ username, password})
-    })
+    // const response = await fetch('/api/userProfiles/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type' : 'application/json'
+    //   },
+    //   body: JSON.stringify({ username, password})
+    // })
+
+    const response = await login({ username, password })
     const json = await response.json()
 
     if (!response.ok) {
