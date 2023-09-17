@@ -1,5 +1,10 @@
 const User = require('../models/userModel')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+
+const createToken = (_id) => {
+  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3d'})
+}
 
 // GET all users
 const getAllUsers = async (req, res) => {
@@ -28,10 +33,16 @@ const getSingleUser = async (req, res) => {
 // POST a new user
 const createUser = async (req, res) => {
   const {username, password, email} = req.body
-  
+
   try {
     const user = await User.signUp(username, password, email)
-    res.status(200).json(user)
+
+    // create token
+    const token = createToken(user._id)
+
+   // res.status(200).json(user)
+    res.status(200).json({username, email, token})
+
   } catch (error) {
     if (error.code == 11000) {
       var errMsg = Object.keys(error.keyValue)[0] + " already exists."
