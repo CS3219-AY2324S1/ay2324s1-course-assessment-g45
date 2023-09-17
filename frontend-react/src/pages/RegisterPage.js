@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import style from '../styles/style.css'
-import MyAlert from '../components/MyAlert'
 import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
+import { Form, Button } from 'react-bootstrap'
+import style from '../styles/style.css'
+
 
 const RegisterPage = () => {
   const { dispatch } = useUserContext()
@@ -12,6 +13,7 @@ const RegisterPage = () => {
   const [ email, setEmail ] = useState("")
   const [ error, setError ] = useState(null)
   const [ confirmPasswordError, setConfirmPasswordError ] = useState(null)
+  const [ loading, setLoading ] = useState(false)
   const navigate = useNavigate()
 
   const checkConfirmPassword = (pw) => {
@@ -80,17 +82,55 @@ const RegisterPage = () => {
           <div> {confirmPassword }</div>
         </div> */}
 
-
-        <form>
+        <Form className='m-4'>
           {
             error && 
             <div className='error'> {error} </div>
           }
-          {/* { 
-            isAlert &&
-            <MyAlert serverity={0} message={'Registered successfully'}/>
-          } */}
+          <Form.Group className='mb-3'>
+            <Form.Label> <b>Username: </b> </Form.Label>
+            <Form.Control 
+              type='text'
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              />
+          </Form.Group>
 
+          <Form.Group className='mb-3'>
+            <Form.Label> <b> Password: </b> </Form.Label>
+            <Form.Control 
+              type='password'
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+              />
+          </Form.Group>
+
+          {
+            confirmPasswordError &&
+            <div className='error'> { confirmPasswordError }</div>
+          }
+          <Form.Group className='mb-3'>
+            <Form.Label> <b> Confirm password: </b> </Form.Label>
+            <Form.Control 
+              type='password'
+              onChange={(e) => checkConfirmPassword(e.target.value)}
+              value={confirmPassword}
+            />
+          </Form.Group>
+
+          <Form.Group className='mb-3'>
+            <Form.Label> <b> Email: </b> </Form.Label>
+            <Form.Control 
+              type='password'
+              onChange={(e) => setEmail(e.target.value)}
+              value = {email}
+            />
+          </Form.Group>
+
+          <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)}> Register </Button>
+
+        </Form>
+        {/* <form>
           <label> User Name: </label>
           <input
             type='text' 
@@ -129,9 +169,8 @@ const RegisterPage = () => {
 
           <div className='btn-container'>
             <input type='submit' className='primary-btn' onClick={(e) => handleSubmit(e)}/>
-            {/* <button type='submit' className='primary-btn' onClick={(e) => handleSubmit(e)}> Register </button> */}
           </div>
-        </form>
+        </form> */}
       </div>
     </div>
   )

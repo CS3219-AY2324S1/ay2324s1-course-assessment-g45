@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
+import { Form, Button } from 'react-bootstrap'
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
@@ -42,28 +43,43 @@ const LoginPage = () => {
         <div className='header'>
           <h3> Log in </h3>
         </div>
-        <div>
+        {/* <div>
           debug:
           <div> {password} </div>
           <div> {username }</div>
-        </div>
-        <form>
-          <label> User Name: </label>
-          <input
-            type='text' onChange={(e) => setUsername(e.target.value)}
-            value={username}
-          />
+        </div> */}
+        <Form className='m-4'>
+          {
+            error &&
+            <div className='error'> {error}</div>
+          }
 
-          <label> Password: </label>
-          <input
-            type='password' onChange={(e) => setPassword(e.target.value)}
-            value={password}
-          />
+          <Form.Group>
+            <Form.Label><b> User Name: </b> </Form.Label>
+            <Form.Control
+              type='text' 
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+            />
+          </Form.Group>
 
-          <div className='btn-container'>
-            <button type='submit' className='primary-btn' onClick={(e) => handleSubmit(e)}> Log in </button>
-          </div>
-        </form>
+          <Form.Group>
+            <Form.Label><b>Password: </b></Form.Label>
+            <Form.Control
+              type='password' 
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
+            />
+          </Form.Group>
+
+          <Button 
+            type='submit' 
+            className='primary-btn' 
+            onClick={(e) => handleSubmit(e)}
+          >
+            Log in
+          </Button>
+        </Form>
       </div>
     </div>  
   )
