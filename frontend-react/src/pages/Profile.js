@@ -17,6 +17,9 @@ const Profile = () => {
   const [ wrongPwError, setWrongPwError ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
+  const [ isEditUsername, setIsEditUsername] = useState(false)
+  const [ isEditEmail, setIsEditEmail ] = useState(false)
+  const [ isChangePassword, setIsChangePassword] = useState(false)
   const navigate = useNavigate()
 
   const checkPassword = (pw) => {
@@ -30,8 +33,7 @@ const Profile = () => {
   const handleEditSubmit = async () => {
     const updatedUser = {
       username: username,
-      email: email,
-      password : newPassword,
+      email: email
     }
 
     const response = await updateUser(user._id, updatedUser)
@@ -57,17 +59,45 @@ const Profile = () => {
   return (
     <div className='profile-container'>
       <h3> Profile </h3>
-
-      {
-        !isEdit &&
+      { (!isEdit && !isChangePassword) &&
         <div className='profile-card'>
-          <div className='user-detail'> <b>Username:</b> { user.username } </div>
-          <div className='user-detail'> <b>Email: </b> { user.email }</div>
+          <div className='row mb-3'> 
+            <b className='col-4'>Username:</b>
+            <div className='col'>{ username }</div> 
+            {/* { 
+              !isEditUsername && 
+              <div className='col-8 row'>
+                <div className='col'>{ username }</div> 
+                <div className='col-2' onClick={()=>setIsEditUsername(true)}>
+                  <span class="material-symbols-outlined small-icons">edit</span>
+                </div>
+              </div>
+            } */}
+          </div>
+          <div className='row mb-3'> 
+            <b className='col-4'>Email: </b> 
+            <div className='col'> { user.email } </div>
+          </div>
+
           <button className='secondary-btn' onClick={() => setIsEdit(!isEdit)}> Edit profile </button>
           <button className='secondary-btn' onClick={handleDelete}> Delete profile </button>
+          <button className='secondary-btn mt-3' onClick={() => setIsChangePassword(true)}> Change password </button>
         </div>
       }
 
+        {/* {
+          isEditUsername &&
+          <div className='row'>
+            <input
+              className='col-10'
+              type='text' value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <span className="material-symbols-outlined small-icons col-1">save</span>
+            <span className="material-symbols-outlined small-icons col-1">cancel</span>
+          </div>
+        } */}
+        
       {
         isEdit &&
         <div className='profile-card'>
@@ -79,22 +109,40 @@ const Profile = () => {
           <input type='text' value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          <button className='secondary-btn' onClick={()=>setIsEdit(false)}> Cancel </button>
+          <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
+        </div>
+      }
 
-          <button> Change password</button>
-
-
+      {
+        isChangePassword &&
+        <div className='profile-card'>
           {/* TODO: check for correct password */}
-          {/* { wrongPwError && <div> {wrongPwError} </div>}
-          <label> Password: </label>
-          <input type='password' value={password}
-          onChange={(e) => checkPassword(e.target.value)}/> */}
-          
+          { wrongPwError && <div> {wrongPwError} </div>}
+          <label> <b>Password :</b> </label>
+          <input 
+            type='password' 
+            value={password}
+            onChange={(e) => checkPassword(e.target.value)}
+          />
+
           <label> New Password: </label>
-          <input type='password' value={newPassword}
+          <input 
+            type='password' 
+            value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
 
+          <label> Confirm New Password: </label>
+          <input 
+            type='password' 
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+          />
+
+          <button className='secondary-btn' onClick={()=>setIsEdit(false)}> Cancel </button>
           <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
+
         </div>
       }
 
