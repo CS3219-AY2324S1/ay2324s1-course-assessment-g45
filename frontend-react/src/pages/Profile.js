@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
+import { updateUser } from '../apis/UserProfileApi'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const { user, dispatch } = useUserContext()
@@ -15,6 +17,7 @@ const Profile = () => {
   const [ wrongPwError, setWrongPwError ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
+  const navigate = useNavigate()
 
   const checkPassword = (pw) => {
     if (!(pw === user.password)) {
@@ -30,21 +33,13 @@ const Profile = () => {
       email: email,
       password : newPassword,
     }
-    const response = await fetch('/api/UserProfiles/' + user._id, {
-      method: 'PATCH',
-      body: JSON.stringify(updatedUser),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-    })
 
+    const response = await updateUser(user._id, updatedUser)
     const json = await response.json()
-
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
       setIsEdit(!isEdit)
-    }    
+    }
   }
 
   const handleDelete = async() => {
@@ -55,6 +50,7 @@ const Profile = () => {
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'LOGOUT', payload : json })
+      navigate('/')
     }  
   }
 

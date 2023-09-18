@@ -3,6 +3,7 @@ import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import style from '../styles/style.css'
+import { post } from '../apis/UserProfileApi'
 
 
 const RegisterPage = () => {
@@ -42,13 +43,7 @@ const RegisterPage = () => {
       return
     }
 
-    const response = await fetch('/api/userProfiles/', {
-      method: 'POST',
-      body: JSON.stringify(userInfo),
-      headers: {
-        'Content-type' : 'application/json'
-      }
-    })
+    const response = await post(userInfo)
     const json = await response.json()
 
     console.log(json)
@@ -121,7 +116,7 @@ const RegisterPage = () => {
           <Form.Group className='mb-3'>
             <Form.Label> <b> Email: </b> </Form.Label>
             <Form.Control 
-              type='password'
+              type='email'
               onChange={(e) => setEmail(e.target.value)}
               value = {email}
             />
