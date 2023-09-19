@@ -14,17 +14,27 @@ const Profile = () => {
   const [ username, setUsername ] = useState(user.username)
   const [ email, setEmail ] = useState(user.email)
   const [ password, setPassword ] = useState('')
-  const [ wrongPwError, setWrongPwError ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
+  const [ confirmNewPasword, setConfirmNewPassword ] = useState('')
+  const [ wrongPwError, setWrongPwError ] = useState('')
+  const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
-  const [ isEditUsername, setIsEditUsername] = useState(false)
-  const [ isEditEmail, setIsEditEmail ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
   const navigate = useNavigate()
 
   const checkPassword = (pw) => {
+    setPassword(pw)
     if (!(pw === user.password)) {
-      setWrongPwError('Password does not match')
+      setWrongPwError('Wrong password')
+    } else {
+      setWrongPwError(null)
+    }
+  }
+
+  const checkConfirmNewPassword = (pw) => {
+    setConfirmNewPassword(pw)
+    if (!(pw === newPassword)) {
+      setWrongPwError('New password must match')
     } else {
       setWrongPwError(null)
     }
@@ -33,14 +43,34 @@ const Profile = () => {
   const handleEditSubmit = async () => {
     const updatedUser = {
       username: username,
-      email: email
+      email: email,
+      password: username.password
     }
-
     const response = await updateUser(user._id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
       setIsEdit(!isEdit)
+    }
+    if (!response.ok) {
+      setError(json.error)
+    }
+  }
+
+  const handleChangePw = async () => {
+    const updatedUser = {
+      username: username,
+      email: email,
+      password : newPassword
+    }
+    const response = await updateUser(user._id, updatedUser)
+    const json = await response.json()
+    if (response.ok) {
+      dispatch({ type : 'EDIT_USER', payload : json})
+      setIsChangePassword(!isChangePassword)
+    }
+    if (!response.ok) {
+      setError(json.error)
     }
   }
 
@@ -53,7 +83,10 @@ const Profile = () => {
     if (response.ok) {
       dispatch({ type : 'LOGOUT', payload : json })
       navigate('/')
-    }  
+    }
+    if (!response.ok) {
+      setError(json.error)
+    }
   }
 
   return (
@@ -118,10 +151,10 @@ const Profile = () => {
         isChangePassword &&
         <div className='profile-card'>
           {/* TODO: check for correct password */}
-          { wrongPwError && <div> {wrongPwError} </div>}
-          <label> <b>Password :</b> </label>
+          { wrongPwError && <div className='error'> {wrongPwError} </div>}
+          <label> Password </label>
           <input 
-            type='password' 
+            type='password'
             value={password}
             onChange={(e) => checkPassword(e.target.value)}
           />
@@ -136,12 +169,12 @@ const Profile = () => {
           <label> Confirm New Password: </label>
           <input 
             type='password' 
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
+            value={confirmNewPasword}
+            onChange={(e) => checkConfirmNewPassword(e.target.value)}
           />
 
-          <button className='secondary-btn' onClick={()=>setIsEdit(false)}> Cancel </button>
-          <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
+          <button className='secondary-btn' onClick={()=>setIsChangePassword(false)}> Cancel </button>
+          <button className='secondary-btn' onClick={handleChangePw}> Save changes </button>
 
         </div>
       }
