@@ -5,18 +5,13 @@ import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const { user, dispatch } = useUserContext()
-  // const user = {
-  //   username: 'test',
-  //   password: 1234,
-  //   email: 'test@gmail.com'
-  // }
 
   const [ username, setUsername ] = useState(user.username)
   const [ email, setEmail ] = useState(user.email)
   const [ password, setPassword ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
   const [ confirmNewPasword, setConfirmNewPassword ] = useState('')
-  const [ wrongPwError, setWrongPwError ] = useState('')
+  const [ passwordError, setPasswordError ] = useState('')
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
@@ -24,23 +19,76 @@ const Profile = () => {
 
   const checkPassword = (pw) => {
     setPassword(pw)
-    if (!(pw === user.password)) {
-      setWrongPwError('Wrong password')
-    } else {
-      setWrongPwError(null)
-    }
+    // if (!(pw === user.password)) {
+    //   setPasswordError('Wrong password')
+    // } else {
+    //   setPasswordError(null)
+    // }
   }
 
   const checkConfirmNewPassword = (pw) => {
     setConfirmNewPassword(pw)
     if (!(pw === newPassword)) {
-      setWrongPwError('New password must match')
+      setPasswordError('New password must match')
     } else {
-      setWrongPwError(null)
+      setPasswordError(null)
     }
   }
 
+  const cancelChangePw = () => {
+    setPassword('')
+    setNewPassword('')
+    setConfirmNewPassword('')
+    setIsChangePassword(false)
+    setPasswordError('')
+  }
+
+  const handleChangePw = async () => {
+    if (password === '') {
+      setPasswordError('Please key in your password')
+      return
+    }
+
+    if (password !== user.password) {
+      setPasswordError('Wrong current password, please try again')
+      return
+    }
+    if (newPassword === '' || confirmNewPasword === '') {
+      setPasswordError('Please key in your new password')
+      return
+    }
+    const updatedUser = {
+      username: username,
+      email: email,
+      password : newPassword
+    }
+    const response = await updateUser(user._id, updatedUser)
+    const json = await response.json()
+    if (response.ok) {
+      dispatch({ type : 'EDIT_USER', payload : json})
+      setPassword('')
+      setNewPassword('')
+      setConfirmNewPassword('')
+      setIsChangePassword(false)
+      setPasswordError('')
+    }
+    if (!response.ok) {
+      setError(json.error)
+    }
+  }
+
+  const cancelEdit = () => {
+    setUsername(user.username)
+    setEmail(user.email)
+    setError('')
+    setIsEdit(false)
+  }
+
   const handleEditSubmit = async () => {
+    if (username === '' || email === '') {
+      setError('User name or email cannot be empty')
+      return
+    }
     const updatedUser = {
       username: username,
       email: email,
@@ -51,23 +99,10 @@ const Profile = () => {
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
       setIsEdit(!isEdit)
-    }
-    if (!response.ok) {
-      setError(json.error)
-    }
-  }
-
-  const handleChangePw = async () => {
-    const updatedUser = {
-      username: username,
-      email: email,
-      password : newPassword
-    }
-    const response = await updateUser(user._id, updatedUser)
-    const json = await response.json()
-    if (response.ok) {
-      dispatch({ type : 'EDIT_USER', payload : json})
-      setIsChangePassword(!isChangePassword)
+      console.log(user)
+      setUsername(user.username)
+      setEmail(user.email)
+      setError('')
     }
     if (!response.ok) {
       setError(json.error)
@@ -92,48 +127,28 @@ const Profile = () => {
   return (
     <div className='profile-container'>
       <h3> Profile </h3>
+      { user.username }
       { (!isEdit && !isChangePassword) &&
         <div className='profile-card'>
           <div className='row mb-3'> 
             <b className='col-4'>Username:</b>
-            <div className='col'>{ username }</div> 
-            {/* { 
-              !isEditUsername && 
-              <div className='col-8 row'>
-                <div className='col'>{ username }</div> 
-                <div className='col-2' onClick={()=>setIsEditUsername(true)}>
-                  <span class="material-symbols-outlined small-icons">edit</span>
-                </div>
-              </div>
-            } */}
+            <div className='col'>{ user.username }</div> 
           </div>
           <div className='row mb-3'> 
             <b className='col-4'>Email: </b> 
             <div className='col'> { user.email } </div>
           </div>
 
-          <button className='secondary-btn' onClick={() => setIsEdit(!isEdit)}> Edit profile </button>
+          <button className='secondary-btn' onClick={() => setIsEdit(true)}> Edit profile </button>
           <button className='secondary-btn' onClick={handleDelete}> Delete profile </button>
           <button className='secondary-btn mt-3' onClick={() => setIsChangePassword(true)}> Change password </button>
         </div>
       }
-
-        {/* {
-          isEditUsername &&
-          <div className='row'>
-            <input
-              className='col-10'
-              type='text' value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <span className="material-symbols-outlined small-icons col-1">save</span>
-            <span className="material-symbols-outlined small-icons col-1">cancel</span>
-          </div>
-        } */}
         
       {
         isEdit &&
         <div className='profile-card'>
+          <div className='error'> {error}</div>
           <label><b>Username:</b></label>
           <input type='text' value={username}
             onChange={(e) => setUsername(e.target.value)}
@@ -142,7 +157,7 @@ const Profile = () => {
           <input type='text' value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <button className='secondary-btn' onClick={()=>setIsEdit(false)}> Cancel </button>
+          <button className='secondary-btn' onClick={cancelEdit}> Cancel </button>
           <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
         </div>
       }
@@ -151,7 +166,7 @@ const Profile = () => {
         isChangePassword &&
         <div className='profile-card'>
           {/* TODO: check for correct password */}
-          { wrongPwError && <div className='error'> {wrongPwError} </div>}
+          { passwordError && <div className='error'> {passwordError} </div>}
           <label> Password </label>
           <input 
             type='password'
@@ -173,7 +188,7 @@ const Profile = () => {
             onChange={(e) => checkConfirmNewPassword(e.target.value)}
           />
 
-          <button className='secondary-btn' onClick={()=>setIsChangePassword(false)}> Cancel </button>
+          <button className='secondary-btn' onClick={cancelChangePw}> Cancel </button>
           <button className='secondary-btn' onClick={handleChangePw}> Save changes </button>
 
         </div>
