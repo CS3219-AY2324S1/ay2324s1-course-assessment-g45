@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
-import Form from 'react-bootstrap/Form'
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import QuestionPopUp from './QuestionPopUp';
 import QuestionForm from './QuestionForm';
-import { useQuestionsContext } from '../hooks/useQuestionContext';
-import { getAllQuestions, deleteQuestion, patch, post } from '../apis/QuestionApi'
+import { useQuestionsContext } from '../../hooks/useQuestionContext';
+import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
 // Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
@@ -20,6 +21,9 @@ const QuestionTable = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const handleCloseEditModal = () => setShowEditModal(false);
   const handleShowEditModal = () => setShowEditModal(true);
+  const [editQn, setEditQn] = useState(null)
+
+  const [selectedQn, setSelectedQn] = useState(null)
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -62,7 +66,7 @@ const QuestionTable = () => {
       setCategories('')
       setComplexity('')
       setError(null)
-      dispatch({type: 'CREATE_QUESTION', payload: json})
+      dispatch({ type: 'CREATE_QUESTION', payload: json })
       console.log('new question added', json)
     }
   }
@@ -73,7 +77,7 @@ const QuestionTable = () => {
     console.log(json);
 
     if (response.ok) {
-      dispatch({type: 'DELETE_QUESTION', payload: json})
+      dispatch({ type: 'DELETE_QUESTION', payload: json })
     } else {
       setError(json.error)
       console.log(error)
@@ -85,7 +89,7 @@ const QuestionTable = () => {
       <Button variant="success" className='ms-3 mt-3 pull-left'
         onClick={handleShowAddModal}>Add a question
       </Button>
-
+{/* 
       <Modal show={showAddModal} onHide={handleCloseAddModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add Question</Modal.Title>
@@ -99,7 +103,7 @@ const QuestionTable = () => {
                 type="text"
                 autoFocus
                 onChange={(e) => setTitle(e.target.value)}
-                value={title}/>
+                value={title} />
             </Form.Group>
             <Form.Group
               className="mb-3"
@@ -132,7 +136,31 @@ const QuestionTable = () => {
             Submit
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
+      {
+        showAddModal &&
+        <QuestionForm
+        handleClose={() => setShowAddModal(false)}
+        formTitle={'Add Question'}
+        />
+      }
+
+      {
+        editQn &&
+        <QuestionForm
+        question={editQn}
+        handleClose={() => setEditQn(null)}
+        formTitle={'Edit Question'}
+        />
+      }
+
+      {
+        selectedQn &&
+        <QuestionPopUp
+          question={selectedQn}
+          handleClose={() => setSelectedQn(null)}
+        />
+      }
 
       <Container className='p-3 m-0 border-0 bd-example m-0 border-0 bd-example-row'>
         <Row className="justify-content-md-center">
@@ -157,7 +185,7 @@ const QuestionTable = () => {
               <Col xs="auto">
                 {j + 1}
               </Col>
-              <Col>
+              <Col onClick={() => setSelectedQn(qn)}>
                 {qn.title}
               </Col>
               <Col>
@@ -171,11 +199,11 @@ const QuestionTable = () => {
               <Col xs="2">
                 <div>
                   <Button variant="danger" className='ms-2'
-                    onClick= {() => handleDeleteQuestion(qn._id)}>Delete</Button>
+                    onClick={() => handleDeleteQuestion(qn._id)}>Delete</Button>
                   <Button variant="primary" className='ms-4'
-                    onClick={handleShowAddModal}>Update</Button>
+                    onClick={() => setEditQn(qn)}>Update</Button>
 
-                  <Modal show={showEditModal} onHide={handleCloseEditModal}>
+                  {/* <Modal show={showEditModal} onHide={handleCloseEditModal}>
                     <Modal.Header closeButton>
                       <Modal.Title>Edit Question</Modal.Title>
                     </Modal.Header>
@@ -224,7 +252,7 @@ const QuestionTable = () => {
                         Submit
                       </Button>
                     </Modal.Footer>
-                  </Modal>
+                  </Modal> */}
                 </div>
               </Col>
             </Row>
