@@ -39,10 +39,6 @@ const QuestionTable = () => {
     fetchQuestions()
   }, [])
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [categories, setCategories] = useState('')
-  const [complexity, setComplexity] = useState('')
   const [error, setError] = useState(null)
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
@@ -74,7 +70,7 @@ const QuestionTable = () => {
       {
         editQn &&
         <QuestionForm
-        question={editQn}
+        editedQn={editQn}
         handleClose={() => setEditQn(null)}
         formTitle={'Edit Question'}
         />

@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
 
-const QuestionForm = ({ question, handleClose, formTitle }) => {
+const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { questions, dispatch } = useQuestionsContext()
-  const [title, setTitle] = useState(question ? question.title : '')
-  const [description, setDescription] = useState(question ? question.description : '')
-  const [categories, setCategories] = useState(question ? question.categories : '')
-  const [complexity, setComplexity] = useState(question ? question.complexity : '')
+  const [title, setTitle] = useState(editedQn ? editedQn.title : '')
+  const [description, setDescription] = useState(editedQn ? editedQn.description : '')
+  const [categories, setCategories] = useState(editedQn ? editedQn.categories : '')
+  const [complexity, setComplexity] = useState(editedQn ? editedQn.complexity : '')
   const [error, setError] = useState(null)
 
   // if (question) {
@@ -25,7 +25,7 @@ const QuestionForm = ({ question, handleClose, formTitle }) => {
     // check edit or add
     if (formTitle == 'Add Question') {
       handleAddQuestion()
-    } else if (formTitle == 'Edit Queston') {
+    } else if (formTitle == 'Edit Question') {
       handleEditQuestion()
     }
   }
@@ -50,9 +50,8 @@ const QuestionForm = ({ question, handleClose, formTitle }) => {
 
   const handleEditQuestion = async () => {
     const question = { title, description, categories, complexity }
-    const response = await patch(question._id, question)
+    const response = await patch(editedQn._id, question)
     const json = await response.json()
-    console.log(json)
     if (!response.ok) {
       setError(json.error)
     } else {

@@ -12,8 +12,12 @@ export const questionsReducer = (state, action) => {
       return {
         questions: [action.payload, ...state.questions]
       }
-    case 'EDIT_QUESTION' :
+    case 'EDIT_QUESTION':
       return {
+        questions: state.questions.map((qn) => {
+          if (qn._id === action.payload._id) qn = action.payload
+          return qn
+        })
       }
     case 'DELETE_QUESTION':
       return {
@@ -30,7 +34,7 @@ export const QuestionsContextProvider = ({ children }) => {
   })
 
   return (
-    <QuestionsContext.Provider value={{...state, dispatch}}>
+    <QuestionsContext.Provider value={{ ...state, dispatch }}>
       {children}
     </QuestionsContext.Provider>
   )
