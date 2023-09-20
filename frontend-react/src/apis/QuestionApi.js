@@ -21,7 +21,6 @@ async function deleteQuestion({ id }) {
 }
 
 async function patch(id, {...params}) {
-  console.log(params)
   return fetch(`/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),
