@@ -45,32 +45,6 @@ const QuestionTable = () => {
   const [complexity, setComplexity] = useState('')
   const [error, setError] = useState(null)
 
-  const handleSubmit = async () => {
-    handleCloseAddModal()
-
-    const question = { title, description, categories, complexity }
-
-    console.log(question)
-    const response = await post(question)
-    const json = await response.json()
-
-    console.log(json)
-
-    if (!response.ok) {
-      setError(json.error)
-    }
-
-    if (response.ok) {
-      setTitle('')
-      setDescription('')
-      setCategories('')
-      setComplexity('')
-      setError(null)
-      dispatch({ type: 'CREATE_QUESTION', payload: json })
-      console.log('new question added', json)
-    }
-  }
-
   const handleDeleteQuestion = async (deleteQuestionId) => {
     const response = await deleteQuestion({ id: deleteQuestionId })
     const json = await response.json()
@@ -89,54 +63,6 @@ const QuestionTable = () => {
       <Button variant="success" className='ms-3 mt-3 pull-left'
         onClick={handleShowAddModal}>Add a question
       </Button>
-{/* 
-      <Modal show={showAddModal} onHide={handleCloseAddModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Question</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-              <Form.Label>Title</Form.Label>
-              <Form.Control
-                type="text"
-                autoFocus
-                onChange={(e) => setTitle(e.target.value)}
-                value={title} />
-            </Form.Group>
-            <Form.Group
-              className="mb-3"
-              controlId="exampleForm.ControlTextarea1">
-              <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows={3}
-                onChange={(e) => setDescription(e.target.value)}
-                value={description} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-              <Form.Label>Categories</Form.Label>
-              <Form.Control
-                type="text" onChange={(e) => setCategories(e.target.value)}
-                value={categories} />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-              <Form.Label>Complexity</Form.Label>
-              <Form.Control
-                type="text" onChange={(e) => setComplexity(e.target.value)}
-                value={complexity} />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseAddModal}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
       {
         showAddModal &&
         <QuestionForm
@@ -202,57 +128,6 @@ const QuestionTable = () => {
                     onClick={() => handleDeleteQuestion(qn._id)}>Delete</Button>
                   <Button variant="primary" className='ms-4'
                     onClick={() => setEditQn(qn)}>Update</Button>
-
-                  {/* <Modal show={showEditModal} onHide={handleCloseEditModal}>
-                    <Modal.Header closeButton>
-                      <Modal.Title>Edit Question</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                      <Form>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                          <Form.Label>Title</Form.Label>
-                          <Form.Control
-                            type="text"
-                            onChange={(e) => setTitle(e.target.value)}
-                            value={title}
-                            autoFocus />
-                        </Form.Group>
-                        <Form.Group
-                          className="mb-3"
-                          controlId="exampleForm.ControlTextarea1"
-                        >
-                          <Form.Label>Description</Form.Label>
-                          <Form.Control as="textarea" rows={3}
-                            onChange={(e) => setDescription(e.target.value)}
-                            value={description} />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                          <Form.Label>Categories</Form.Label>
-                          <Form.Control
-                            type="text"
-                            onChange={(e) => setCategories(e.target.value)}
-                            value={categories} />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                          <Form.Label>Complexity</Form.Label>
-                          <Form.Control
-                            type="text"
-                            onChange={(e) => setComplexity(e.target.value)}
-                            value={complexity} />
-                        </Form.Group>
-                      </Form>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={handleCloseEditModal}>
-                        Close
-                      </Button>
-                      <Button variant="primary" onClick={handleCloseEditModal}>
-                        Submit
-                      </Button>
-                    </Modal.Footer>
-                  </Modal> */}
                 </div>
               </Col>
             </Row>

@@ -19,25 +19,25 @@ const QuestionForm = ({ question, handleClose, formTitle }) => {
   //   setCategories(question.categories)
   //   setComplexity(question.complexity)
   // }
-  
-  const handleSubmit = async () => {
+
+  const handleSubmit = () => {
     handleClose()
-
-    const question = { title, description, categories, complexity }
-
-    console.log(question)
-
     // check edit or add
+    if (formTitle == 'Add Question') {
+      handleAddQuestion()
+    } else if (formTitle == 'Edit Queston') {
+      handleEditQuestion()
+    }
+  }
+
+  const handleAddQuestion = async () => {
+    const question = { title, description, categories, complexity }
     const response = await post(question)
     const json = await response.json()
-
     console.log(json)
-
     if (!response.ok) {
       setError(json.error)
-    }
-
-    if (response.ok) {
+    } else {
       setTitle('')
       setDescription('')
       setCategories('')
@@ -45,6 +45,24 @@ const QuestionForm = ({ question, handleClose, formTitle }) => {
       setError(null)
       dispatch({ type: 'CREATE_QUESTION', payload: json })
       console.log('new question added', json)
+    }
+  }
+
+  const handleEditQuestion = async () => {
+    const question = { title, description, categories, complexity }
+    const response = await patch(question._id, question)
+    const json = await response.json()
+    console.log(json)
+    if (!response.ok) {
+      setError(json.error)
+    } else {
+      setTitle('')
+      setDescription('')
+      setCategories('')
+      setComplexity('')
+      setError(null)
+      dispatch({ type: 'EDIT_QUESTION', payload: json })
+      console.log('question edited', json)
     }
   }
 
@@ -101,7 +119,6 @@ const QuestionForm = ({ question, handleClose, formTitle }) => {
         </Modal.Footer>
       </Modal>
     </>
-  );
+  )
 }
-
 export default QuestionForm
