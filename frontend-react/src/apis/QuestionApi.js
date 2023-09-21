@@ -1,11 +1,15 @@
+import Config from '../Config';
+
+const baseUrl = Config.Common.QuestionApiBaseUrl;
+
 async function getAllQuestions() {
-  return fetch('/api/questions/', {
-    method: 'GET'
+  return fetch(`${baseUrl}/api/questions/`, {
+    method: 'GET',
   });
 }
 
 async function post({ ...params }) {
-  return fetch('/api/questions/', {
+  return fetch(`${baseUrl}/api/questions/`, {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
@@ -15,13 +19,13 @@ async function post({ ...params }) {
 }
 
 async function deleteQuestion({ id }) {
-  return fetch(`/api/questions/${id}`, {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'DELETE',
   });
 }
 
-async function patch(id, {...params}) {
-  return fetch(`/api/questions/${id}`, {
+async function patch(id, { ...params }) {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
