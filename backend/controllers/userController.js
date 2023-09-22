@@ -74,21 +74,30 @@ const deleteUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id } = req.params
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({error: 'No such user.'})
-  }
-  
-  const user = await User.findOneAndUpdate({_id: id}, {
-    ...req.body
-  })
-  
-  if (!user) {
-    return res.status(400).json({error : 'No such user.'})
-  }
+  try {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({error: 'No such user.'})
+    }
+    
+    const user = await User.findOneAndUpdate({_id: id}, {
+      ...req.body
+    })
+    
+    if (!user) {
+      return res.status(400).json({error : 'No such user.'})
+    }
 
-  const updatedUser = await User.findById(id)
-
-  res.status(200).json(updatedUser)
+    const updatedUser = await User.findById(id)
+    res.status(200).json(updatedUser)
+    
+  } catch (error) {
+    if (error.code == 11000) {
+      var errMsg = Object.keys(error.keyValue)[0] + " already exists."
+    } else {
+      var errMsg = error.message
+    }
+    res.status(400).json({error: errMsg})
+  }
 }
 
 const login = async (req, res) => {

@@ -1,3 +1,9 @@
+async function getAllQuestions() {
+  return fetch('/api/questions/', {
+    method: 'GET'
+  });
+}
+
 async function post({ ...params }) {
   return fetch('/api/questions/', {
     method: 'POST',
@@ -14,7 +20,7 @@ async function deleteQuestion({ id }) {
   });
 }
 
-async function patch({ id, ...params }) {
+async function patch(id, {...params}) {
   return fetch(`/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),
@@ -24,4 +30,4 @@ async function patch({ id, ...params }) {
   });
 }
 
-export { post, deleteQuestion, patch };
+export { getAllQuestions, post, deleteQuestion, patch };
