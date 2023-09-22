@@ -7,11 +7,11 @@ import { QuestionsContextProvider } from './contexts/QuestionContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <QuestionsContextProvider>
-      <UserContextProvider>
+    <UserContextProvider>
+      <QuestionsContextProvider>
         <App />
-      </UserContextProvider>
-    </QuestionsContextProvider>
+      </QuestionsContextProvider>
+    </UserContextProvider>
   </React.StrictMode>
 );
 
