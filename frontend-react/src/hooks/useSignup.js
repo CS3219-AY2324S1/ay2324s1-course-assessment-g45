@@ -1,16 +1,17 @@
 import { UserContext } from "../contexts/userContext";
 import { useState } from "react";
 import { useUserContext } from "./useUserContext";
+import { useNavigate } from 'react-router-dom'
 
 export const useSignup = () => {
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
   const {dispatch} = useUserContext()
+  const navigate = useNavigate()
 
   const signup = async (username, password, email) => {
     setIsLoading(true)
     setError(null)
-    ///api/user/signup
 
     const response = await fetch('/api/userProfiles/', {
         method: 'POST',
@@ -30,6 +31,7 @@ export const useSignup = () => {
 
         dispatch({type: 'SET_USER', payload:json})
         setIsLoading(false)
+        navigate("/")
     }
   }
 
