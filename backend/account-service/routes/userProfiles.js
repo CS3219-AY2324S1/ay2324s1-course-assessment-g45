@@ -17,7 +17,7 @@ router.get('/', getAllUsers)
 router.get('/:id', getSingleUser)
 
 // POST a new profile
-router.post('/signup', createUser)
+router.post('/', createUser)
 
 // DELETE a profile
 router.delete('/:id', deleteUser)
