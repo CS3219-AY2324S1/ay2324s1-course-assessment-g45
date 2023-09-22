@@ -29,6 +29,11 @@ const getSingleQuestion = async (req, res) => {
 const createQuestion = async (req, res) => {
   const { title, categories, complexity, description } = req.body;
 
+  const checkQuestion = await Question.findOne({ title: title }).exec();
+  if (checkQuestion) {
+    return res.status(404).json({ error: 'Duplicate question.' });
+  }
+
   try {
     const question = await Question.create({
       title,
@@ -51,11 +56,11 @@ const createQuestion = async (req, res) => {
 const deleteQuestion = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'No such question.' });
-  }
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(400).json({ error: 'No such question.' });
+  // }
 
-  const question = await Question.findOneAndDelete({ _id: id });
+  const question = await Question.findOneAndDelete({ title: id });
 
   if (!question) {
     return res.status(400).json({ error: 'No such question.' });
@@ -67,13 +72,12 @@ const deleteQuestion = async (req, res) => {
 // UPDATE a question
 const updateQuestion = async (req, res) => {
   const { id } = req.params;
-
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'No such question.' });
-  }
+  // if (!mongoose.Types.ObjectId.isValid(id)) {
+  //   return res.status(400).json({ error: 'No such question.' });
+  // }
 
   const question = await Question.findOneAndUpdate(
-    { _id: id },
+    { title: id },
     {
       ...req.body,
     }
@@ -83,7 +87,7 @@ const updateQuestion = async (req, res) => {
     return res.status(400).json({ error: 'No such question.' });
   }
 
-  const updatedQuestion = await Question.findById(id);
+  const updatedQuestion = await Question.findOne({ title: id }).exec();
 
   res.status(200).json(updatedQuestion);
 };

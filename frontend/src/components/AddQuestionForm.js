@@ -29,7 +29,7 @@ document.getElementById('container').innerHTML += templateForm;
 const categories = [];
 
 // Keep track of whether to edit a question
-var oldSlug = '';
+var oldTitle = '';
 
 function openAddQuestionForm() {
   const dialog = document.getElementById('dialog');
@@ -37,7 +37,7 @@ function openAddQuestionForm() {
 }
 
 function openEditQuestionForm(question) {
-  oldSlug = getSlugFromQuestion(question);
+  oldTitle = question.title;
   console.log(question);
   const title = document.getElementById('title');
   const description = document.getElementById('description');
@@ -69,13 +69,19 @@ function closeForm() {
   document.getElementById('complexity').value = '';
   document.getElementById('category').value = '';
   document.getElementById('category-display').innerHTML = '';
-  oldSlug = '';
+  oldTitle = '';
 }
 
-// TODO: To add BACKEND operations
 const addQuestionFrontend = (question) => {
   // Frontend
   console.log('add question', question);
+
+  // Prevents duplicate question titles
+  if (document.querySelector(`.row-of-${getSlugFromQuestion(question)}`)) {
+    console.log('Duplicate question title');
+    return;
+  }
+
   const rowHtml = createTableRow(question);
 
   document.querySelector('.questions-table').appendChild(rowHtml);
@@ -95,21 +101,39 @@ const addQuestionFrontend = (question) => {
 
 const handleAddQuestion = (question) => {
   addQuestionFrontend(question);
+
+  // Backend
+  fetch('/api/questions/', {
+    method: 'POST',
+    body: JSON.stringify(question),
+    headers: {
+      'Content-type': 'application/json',
+    },
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 
-// TODO: To add BACKEND operations
-const handleEditQuestion = (oldSlug, question) => {
+const handleEditQuestion = (oldTitle, question) => {
   // Frontend
   console.log('edit question', question);
   const rowHtml = createTableRow(question);
 
-  const oldRow = document.querySelector(`.row-of-${oldSlug}`);
+  const oldRow = document.querySelector(`.row-of-${getSlug(oldTitle)}`);
   oldRow.parentElement.replaceChild(rowHtml, oldRow);
 
-  // TODO: Huy does his BACKEND magic here
+  // Backend
+  fetch(`/api/questions/${oldTitle}`, {
+    method: 'PATCH',
+    body: JSON.stringify(question),
+    headers: {
+      'Content-type': 'application/json',
+    },
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 
-// TODO: To add BACKEND operations
 const handleDeleteQuestion = (question) => {
   document
     .querySelector(`.edit-button-for-${getSlugFromQuestion(question)}`)
@@ -123,7 +147,12 @@ const handleDeleteQuestion = (question) => {
     });
   document.querySelector(`.row-of-${getSlugFromQuestion(question)}`).remove();
 
-  // TODO: Huy does his BACKEND magic here
+  // Backend
+  fetch(`/api/questions/${question.title}`, {
+    method: 'DELETE',
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 
 const questionForm = document.getElementById('question-form');
@@ -173,10 +202,10 @@ questionForm.addEventListener('submit', function (event) {
     complexity: newComplexity.value,
   };
 
-  if (oldSlug == '') {
+  if (oldTitle == '') {
     handleAddQuestion(newQuestionObject);
   } else {
-    handleEditQuestion(oldSlug, newQuestionObject);
+    handleEditQuestion(oldTitle, newQuestionObject);
   }
 
   closeForm();
