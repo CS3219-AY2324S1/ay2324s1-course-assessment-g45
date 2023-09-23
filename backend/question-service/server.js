@@ -1,14 +1,16 @@
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
-const userProfileRoutes = require('./routes/userProfiles');
 const questionRoutes = require('./routes/questions');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 //express app
 const app = express();
+
+app.use(cors());
 
 // middleware for logging purposes, runs on every req
 app.use(express.json());
@@ -18,7 +20,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/userProfiles', userProfileRoutes);
 app.use('/api/questions', questionRoutes);
 
 mongoose
