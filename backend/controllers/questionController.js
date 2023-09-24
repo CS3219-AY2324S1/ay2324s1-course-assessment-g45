@@ -76,6 +76,14 @@ const updateQuestion = async (req, res) => {
   //   return res.status(400).json({ error: 'No such question.' });
   // }
 
+  if (id !== req.body.title) {
+    const checkQuestion = await Question.findOne({
+      title: req.body.title,
+    }).exec();
+    if (checkQuestion)
+      return res.status(400).json({ error: 'Question title already exists.' });
+  }
+
   const question = await Question.findOneAndUpdate(
     { title: id },
     {

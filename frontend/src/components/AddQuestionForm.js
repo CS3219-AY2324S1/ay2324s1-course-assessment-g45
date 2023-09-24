@@ -61,7 +61,7 @@ function openEditQuestionForm(question) {
 }
 
 function closeForm() {
-  document.querySelector(`.title-warning`).style.display = ""
+  document.querySelector(`.title-warning`).style.display = '';
 
   const dialog = document.getElementById('dialog');
   dialog.close();
@@ -105,9 +105,9 @@ const addQuestionFrontend = (question) => {
 const handleAddQuestion = (question) => {
   try {
     addQuestionFrontend(question);
-  } catch(err) {
-    document.querySelector(`.title-warning`).style.display = "block"
-    return
+  } catch (err) {
+    document.querySelector(`.title-warning`).style.display = 'block';
+    return;
   }
 
   // Backend
@@ -120,12 +120,21 @@ const handleAddQuestion = (question) => {
   }).catch((error) => {
     console.log(error);
   });
-  closeForm()
+  closeForm();
 };
 
 const handleEditQuestion = (oldTitle, question) => {
   // Frontend
   console.log('edit question', question);
+
+  if (
+    question.title !== oldTitle &&
+    document.querySelector(`.row-of-${getSlugFromQuestion(question)}`)
+  ) {
+    console.log('Question title already exists');
+    return;
+  }
+
   const rowHtml = createTableRow(question);
 
   const oldRow = document.querySelector(`.row-of-${getSlug(oldTitle)}`);
@@ -141,7 +150,7 @@ const handleEditQuestion = (oldTitle, question) => {
   }).catch((error) => {
     console.log(error);
   });
-  closeForm()
+  closeForm();
 };
 
 const handleDeleteQuestion = (question) => {
