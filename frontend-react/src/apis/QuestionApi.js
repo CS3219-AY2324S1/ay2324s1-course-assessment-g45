@@ -1,35 +1,39 @@
-import Config from '../Config';
-
-const baseUrl = Config.Common.QuestionApiBaseUrl;
-
-async function getAllQuestions() {
-  return fetch(`${baseUrl}/api/questions/`, {
+async function getAllQuestions(token) {
+  return fetch('/api/questions/', {
     method: 'GET',
-  });
-}
-
-async function post({ ...params }) {
-  return fetch(`${baseUrl}/api/questions/`, {
-    method: 'POST',
-    body: JSON.stringify(params),
     headers: {
-      'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`
     },
   });
 }
 
-async function deleteQuestion({ id }) {
-  return fetch(`${baseUrl}/api/questions/${id}`, {
-    method: 'DELETE',
+async function post(token, { ...params }) {
+  return fetch('/api/questions/', {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
   });
 }
 
-async function patch(id, { ...params }) {
-  return fetch(`${baseUrl}/api/questions/${id}`, {
+async function deleteQuestion(token, {id}) {
+  return fetch(`/api/questions/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+  });
+}
+
+async function patch(token, id, {...params}) {
+  return fetch(`/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
       'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`
     },
   });
 }

@@ -6,11 +6,8 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
-import { patch, post } from '../../apis/QuestionApi';
-import * as formik from 'formik';
-import * as yup from 'yup';
-import ReactQuill from 'react-quill';
-import 'quill/dist/quill.snow.css';
+import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { useUserContext } from '../../hooks/useUserContext';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
@@ -24,6 +21,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
+  const {user} = useUserContext();
 
   const [ categories, setCategories ] = useState(editedQn ? editedQn.categories : [])
   const [ inputCat, setInputCat ] = useState('')
@@ -47,8 +45,8 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   }
 
   const handleAddQuestion = async () => {
-    const question = formRef.current.values
-    const response = await post(question)
+    const question = { title, description, categories, complexity }
+    const response = await post(user.token, question)
     const json = await response.json()
     console.log(json)
     if (!response.ok) {
@@ -61,8 +59,8 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   }
 
   const handleEditQuestion = async () => {
-    const question = formRef.current.values
-    const response = await patch(editedQn._id, question)
+    const question = { title, description, categories, complexity }
+    const response = await patch(user.token, editedQn._id, question)
     const json = await response.json()
     if (!response.ok) {
       setError(json.error)
