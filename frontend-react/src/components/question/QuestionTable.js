@@ -9,6 +9,8 @@ import QuestionPopUp from './QuestionPopUp';
 import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { useUserContext } from '../../hooks/useUserContext';
+
 // Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
@@ -24,10 +26,15 @@ const QuestionTable = () => {
   const [editQn, setEditQn] = useState(null)
 
   const [selectedQn, setSelectedQn] = useState(null)
-
+  const {user} = useUserContext();
+  
   useEffect(() => {
     const fetchQuestions = async () => {
-      const response = await getAllQuestions()
+      if (!user) {
+        setError('Please login to view questions')  
+        return
+      }
+      const response = await getAllQuestions(user.token)
       const json = await response.json()
       console.log(response)
 
@@ -42,7 +49,12 @@ const QuestionTable = () => {
   const [error, setError] = useState(null)
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
-    const response = await deleteQuestion({ id: deleteQuestionId })
+    if (!user) {
+      setError('Please login to delete questions')  
+      return
+    }
+
+    const response = await deleteQuestion(user.token, { id: deleteQuestionId })
     const json = await response.json()
     console.log(json);
 

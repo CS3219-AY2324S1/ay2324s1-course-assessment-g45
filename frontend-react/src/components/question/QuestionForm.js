@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import { useState } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { useUserContext } from '../../hooks/useUserContext';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { questions, dispatch } = useQuestionsContext()
@@ -12,6 +13,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const [categories, setCategories] = useState(editedQn ? editedQn.categories : '')
   const [complexity, setComplexity] = useState(editedQn ? editedQn.complexity : '')
   const [error, setError] = useState(null)
+  const {user} = useUserContext();
 
   // if (question) {
   //   setTitle(question.title)
@@ -32,7 +34,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   const handleAddQuestion = async () => {
     const question = { title, description, categories, complexity }
-    const response = await post(question)
+    const response = await post(user.token, question)
     const json = await response.json()
     console.log(json)
     if (!response.ok) {
@@ -50,7 +52,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   const handleEditQuestion = async () => {
     const question = { title, description, categories, complexity }
-    const response = await patch(editedQn._id, question)
+    const response = await patch(user.token, editedQn._id, question)
     const json = await response.json()
     if (!response.ok) {
       setError(json.error)

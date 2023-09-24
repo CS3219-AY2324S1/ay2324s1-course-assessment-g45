@@ -21,8 +21,6 @@ const RegisterPage = () => {
 
   const checkConfirmPassword = (pw) => {
     setConfirmPassword(pw)
-    console.log(pw)
-    console.log(password)
     if (!(pw === password)) {
       setConfirmPasswordError("Passwords must match")
     } else {
