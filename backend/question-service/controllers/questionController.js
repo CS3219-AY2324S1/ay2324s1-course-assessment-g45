@@ -28,25 +28,6 @@ const getSingleQuestion = async (req, res) => {
 // POST a new question
 const createQuestion = async (req, res) => {
   const { title, categories, complexity, description } = req.body;
-
-  let emptyFields = []
-
-  if (!title) {
-    emptyFields.push('title')
-  }
-  if (!categories) {
-    emptyFields.push('categories')
-  }
-  if (!complexity) {
-    emptyFields.push('complexity')
-  }
-  if (!description) {
-    emptyFields.push('description')
-  }
-  if (emptyFields.length > 0) {
-    return res.status(400).json({ error : 'Please fill in all the fields', emptyFields })
-  }
-
   try {
     const question = await Question.create({
       title,

@@ -9,11 +9,9 @@ import QuestionPopUp from './QuestionPopUp';
 import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
-// Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
-  //const [questions, setQuestions] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false);
   const handleCloseAddModal = () => setShowAddModal(false);
   const handleShowAddModal = () => setShowAddModal(true);
