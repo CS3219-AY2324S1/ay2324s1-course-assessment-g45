@@ -112,3 +112,11 @@ button[class^='category-name']:hover {
   min-height: 300px;
   overflow: auto;
 }
+
+#warning {
+  background-color: rgb(255, 143, 143);
+}
+
+.title-warning {
+  display: none;
+}

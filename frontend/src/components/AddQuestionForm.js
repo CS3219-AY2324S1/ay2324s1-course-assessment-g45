@@ -3,6 +3,7 @@ const templateForm = `
 		<form id="question-form">
 			<label for="title">Title:</label>
 			<input type="text" id="title" name="title" required><br>
+      <div id="warning" class="title-warning">Title already exists!</div>
 
 			<label for="description">Description:</label>
 			<textarea type="text" id="description" name="description" required></textarea>
@@ -60,6 +61,8 @@ function openEditQuestionForm(question) {
 }
 
 function closeForm() {
+  document.querySelector(`.title-warning`).style.display = ""
+
   const dialog = document.getElementById('dialog');
   dialog.close();
 
@@ -79,8 +82,7 @@ const addQuestionFrontend = (question) => {
 
   // Prevents duplicate question titles
   if (document.querySelector(`.row-of-${getSlugFromQuestion(question)}`)) {
-    console.log('Duplicate question title');
-    return;
+    throw Error('Duplicate question title');
   }
 
   const rowHtml = createTableRow(question);
@@ -101,7 +103,12 @@ const addQuestionFrontend = (question) => {
 };
 
 const handleAddQuestion = (question) => {
-  addQuestionFrontend(question);
+  try {
+    addQuestionFrontend(question);
+  } catch(err) {
+    document.querySelector(`.title-warning`).style.display = "block"
+    return
+  }
 
   // Backend
   fetch('/api/questions/', {
@@ -113,6 +120,7 @@ const handleAddQuestion = (question) => {
   }).catch((error) => {
     console.log(error);
   });
+  closeForm()
 };
 
 const handleEditQuestion = (oldTitle, question) => {
@@ -133,6 +141,7 @@ const handleEditQuestion = (oldTitle, question) => {
   }).catch((error) => {
     console.log(error);
   });
+  closeForm()
 };
 
 const handleDeleteQuestion = (question) => {
@@ -209,7 +218,7 @@ questionForm.addEventListener('submit', function (event) {
     handleEditQuestion(oldTitle, newQuestionObject);
   }
 
-  closeForm();
+  // closeForm();
 });
 
 fetch('/api/questions/', {
