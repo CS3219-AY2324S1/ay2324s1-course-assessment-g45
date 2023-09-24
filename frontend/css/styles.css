@@ -39,8 +39,10 @@ div[class^='question-description'] {
 }
 
 dialog {
-  width: 300px;
+  width: 80%;
+  height: 80%;
   padding: 20px;
+  overflow: auto;
 }
 
 form {
@@ -104,4 +106,9 @@ button[class^='delete-button'] {
 
 button[class^='category-name']:hover {
   background-color: red;
+}
+
+#description {
+  min-height: 300px;
+  overflow: auto;
 }

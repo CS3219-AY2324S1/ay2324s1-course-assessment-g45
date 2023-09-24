@@ -5,7 +5,8 @@ const templateForm = `
 			<input type="text" id="title" name="title" required><br>
 
 			<label for="description">Description:</label>
-			<input type="text" id="description" name="description" required><br>
+			<textarea type="text" id="description" name="description" required></textarea>
+      <br/>
 
 			<label for="category">Category:</label>
 			<div id="category-display"></div>
