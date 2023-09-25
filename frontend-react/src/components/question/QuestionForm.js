@@ -145,6 +145,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                         if (e == '<p><br></p>') errors.description = 'Required'
                       }}
                       isInvalid={!!errors.description}
+                      style={{ height: 200 }}
                       />
                   </div>
                   <Form.Control.Feedback type="invalid">
