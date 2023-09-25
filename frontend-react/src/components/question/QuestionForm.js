@@ -1,11 +1,13 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { patch, post } from '../../apis/QuestionApi';
 import * as formik from 'formik';
 import * as yup from 'yup';
+import ReactQuill from 'react-quill';
+import 'quill/dist/quill.snow.css';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
@@ -92,7 +94,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.title}</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group
+                {/* <Form.Group
                   className="mb-3"
                   controlId="exampleForm.ControlTextarea1"
                 >
@@ -105,7 +107,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     className="mb-0" />
                   <Form.Control.Feedback type="invalid">
                     {errors.description}</Form.Control.Feedback>
-                </Form.Group>
+                </Form.Group> */}
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label>Categories</Form.Label>
                   <Form.Control
@@ -130,12 +132,34 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.complexity}</Form.Control.Feedback>
                 </Form.Group>
+
+                <Form.Group>
+                  <Form.Label> Description </Form.Label>
+                  <div style={{ height : 250, overflowY: 'auto'}}>
+                    <ReactQuill
+                      name="description"
+                      theme='snow' 
+                      value={values.description}
+                      onChange={(e) => {
+                        values.description = e; 
+                        if (e == '<p><br></p>') errors.description = 'Required'
+                      }}
+                      isInvalid={!!errors.description}
+                      />
+                  </div>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.description} hello </Form.Control.Feedback>
+                </Form.Group>
+
+
                 <Button type="submit" variant="primary">
                   Submit
                 </Button>
               </Form>
             }
           </Formik>
+
+
         </Modal.Body>
       </Modal>
     </>
