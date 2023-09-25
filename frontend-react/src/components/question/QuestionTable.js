@@ -27,7 +27,6 @@ const QuestionTable = () => {
 
   const [selectedQn, setSelectedQn] = useState(null)
   const {user} = useUserContext();
-  
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!user) {
@@ -68,9 +67,11 @@ const QuestionTable = () => {
 
   return (
     <div>
+      { user.role == 'admin' && 
       <Button variant="success" className='ms-3 mt-3 pull-left'
         onClick={handleShowAddModal}>Add a question
       </Button>
+      }
       {
         showAddModal &&
         <QuestionForm
@@ -110,8 +111,10 @@ const QuestionTable = () => {
           <Col>
             Complexity
           </Col>
+          { user.role == 'admin' && 
           <Col xs="2">
           </Col>
+          }
         </Row>
         {questions && questions.map((qn, j) => (
           <div>
@@ -130,6 +133,7 @@ const QuestionTable = () => {
               <Col>
                 {qn.complexity}
               </Col>
+              { user.role == 'admin' && 
               <Col xs="2">
                 <div>
                   <Button variant="danger" className='ms-2'
@@ -138,6 +142,7 @@ const QuestionTable = () => {
                     onClick={() => setEditQn(qn)}>Update</Button>
                 </div>
               </Col>
+              }
             </Row>
           </div>
         ))}
