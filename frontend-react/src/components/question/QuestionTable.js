@@ -100,7 +100,7 @@ const QuestionTable = () => {
           </Col>
         </Row>
         {questions && questions.map((qn, j) => (
-          <div>
+          <div key={j}>
             <Row className="justify-content-md-center">
               <Col xs="auto">
                 {j + 1}

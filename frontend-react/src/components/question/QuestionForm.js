@@ -108,6 +108,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.description}</Form.Control.Feedback>
                 </Form.Group> */}
+
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label>Categories</Form.Label>
                   <Form.Control
@@ -120,7 +121,8 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.categories}</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
+
+                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                   <Form.Label>Complexity</Form.Label>
                   <Form.Control
                     type="text"
@@ -128,12 +130,35 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     onChange={handleChange}
                     value={values.complexity}
                     isInvalid={!!errors.complexity}
-                    className="mb-0" />
+                    className="mb-0"/>
                   <Form.Control.Feedback type="invalid">
                     {errors.complexity}</Form.Control.Feedback>
+                </Form.Group> */}                
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
+                  <Form.Label>Complexity</Form.Label>
+                  <Form.Select
+                    required
+                    name='complexity'
+                    onChange={handleChange}
+                    value={values.complexity}
+                    isInvalid={!!errors.complexity}
+                  >
+                    { !values.complexity && <option> Select Complexity </option> }
+                    <option value='Easy'> Easy </option>
+                    <option value='Medium'> Medium </option>
+                    <option value='Hard'> Hard </option>
+                  </Form.Select>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.complexity}
+                  </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group>
+                {/* <div>
+                  error title: { errors.title} <br/>
+                  error description: { errors.description} <br/>
+                </div> */}
+
+                <Form.Group controlId="exampleForm.ControlTextarea1">
                   <Form.Label> Description </Form.Label>
                   <div style={{ height : 250, overflowY: 'auto'}}>
                     <ReactQuill
@@ -141,17 +166,15 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                       theme='snow' 
                       value={values.description}
                       onChange={(e) => {
-                        values.description = e; 
-                        if (e == '<p><br></p>') errors.description = 'Required'
+                        values.description = e;
                       }}
                       isInvalid={!!errors.description}
                       style={{ height: 200 }}
                       />
                   </div>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.description} hello </Form.Control.Feedback>
+                  <Form.Control.Feedback>
+                    {errors.description} </Form.Control.Feedback>
                 </Form.Group>
-
 
                 <Button type="submit" variant="primary">
                   Submit
