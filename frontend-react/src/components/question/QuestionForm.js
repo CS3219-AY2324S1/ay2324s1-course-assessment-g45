@@ -15,14 +15,15 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   const schema = yup.object().shape({
     title: yup.string().required('Required'),
-    description: yup.string().required('Required'),
     categories: yup.string().required('Required'),
-    complexity: yup.string().required('Required')
+    complexity: yup.string().required('Required'),
+    description: yup.string().required('Required')
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
 
   const handleSubmitFunct = () => {
+    console.log("handleSubmit Called")
     handleClose()
     // check edit or add
     if (formTitle == 'Add Question') {
@@ -72,9 +73,9 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
             onSubmit={handleSubmitFunct}
             initialValues={{
               title: editedQn ? editedQn.title : '',
-              description: editedQn ? editedQn.description : '',
               categories: editedQn ? editedQn.categories.toString() : '',
               complexity: editedQn ? editedQn.complexity : '',
+              description: editedQn ? editedQn.description : ''
             }}
             validateOnChange={false}
             innerRef={formRef}
@@ -133,7 +134,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     className="mb-0"/>
                   <Form.Control.Feedback type="invalid">
                     {errors.complexity}</Form.Control.Feedback>
-                </Form.Group> */}                
+                </Form.Group> */}
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                   <Form.Label>Complexity</Form.Label>
                   <Form.Select
@@ -143,7 +144,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     value={values.complexity}
                     isInvalid={!!errors.complexity}
                   >
-                    { !values.complexity && <option> Select Complexity </option> }
+                    {!values.complexity && <option> Select Complexity </option>}
                     <option value='Easy'> Easy </option>
                     <option value='Medium'> Medium </option>
                     <option value='Hard'> Hard </option>
@@ -161,18 +162,15 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                   <Form.Label> Description </Form.Label>
                   <div style={{ height : 250, overflowY: 'auto'}}>
-                    <ReactQuill
+                      <ReactQuill 
                       name="description"
-                      theme='snow' 
-                      value={values.description}
-                      onChange={(e) => {
-                        values.description = e;
-                      }}
+                      theme='snow' value={values.description}
+                      onChange={(e)=> values.description = e}
                       isInvalid={!!errors.description}
                       style={{ height: 200 }}
                       />
                   </div>
-                  <Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
                     {errors.description} </Form.Control.Feedback>
                 </Form.Group>
 
