@@ -20,7 +20,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
     title: yup.string().required('Required'),
     categories: yup.string().required('Required'),
     complexity: yup.string().required('Required'),
-    description: yup.string().required('Required')
+    description: yup.string().required('Required').notOneOf(['<p><br></p>'], 'Required')
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
@@ -237,6 +237,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                       style={{ height: 200 }}
                       />
                   </div>
+                  <div className='error'> {errors.description} </div>
                   <Form.Control.Feedback type="invalid">
                     {errors.description} </Form.Control.Feedback>
                 </Form.Group>
