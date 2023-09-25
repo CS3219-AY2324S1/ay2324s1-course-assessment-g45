@@ -119,4 +119,5 @@ button[class^='category-name']:hover {
 
 .title-warning {
   display: none;
+  margin-top: 8px;
 }

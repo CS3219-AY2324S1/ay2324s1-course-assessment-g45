@@ -3,7 +3,6 @@ const templateForm = `
 		<form id="question-form">
 			<label for="title">Title:</label>
 			<input type="text" id="title" name="title" required><br>
-      <div id="warning" class="title-warning">Title already exists!</div>
 
 			<label for="description">Description:</label>
 			<textarea type="text" id="description" name="description" required></textarea>
@@ -21,6 +20,7 @@ const templateForm = `
 
 			<button type="button" onclick="closeForm()">Cancel</button>
 			<button type="submit">Submit</button>
+      <div id="warning" class="title-warning">Title already exists!</div>
 		</form>
   </dialog>
 `;
@@ -131,7 +131,7 @@ const handleEditQuestion = (oldTitle, question) => {
     question.title !== oldTitle &&
     document.querySelector(`.row-of-${getSlugFromQuestion(question)}`)
   ) {
-    console.log('Question title already exists');
+    document.querySelector(`.title-warning`).style.display = 'block';;
     return;
   }
 
