@@ -18,10 +18,14 @@ const userProfileSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    role: {
+        type: String,
+        required: true,
     }
 }, {timestamps: true})
 
-userProfileSchema.statics.signUp = async function(username, password, email) {
+userProfileSchema.statics.signUp = async function(username, password, email, userRole) {
     
     if (!email || !password || !username) {
         throw Error("All fields must be filled")
@@ -54,7 +58,7 @@ userProfileSchema.statics.signUp = async function(username, password, email) {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = await this.create({ username, password: hash, email})
+    const user = await this.create({ username, password: hash, email, role: userRole})
 
     return user
 
