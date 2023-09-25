@@ -1,6 +1,9 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Badge from 'react-bootstrap/Badge'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
 import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { patch, post } from '../../apis/QuestionApi';
@@ -21,6 +24,16 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
+
+  const [ categories, setCategories ] = useState(editedQn ? editedQn.categories : [])
+  const [ inputCat, setInputCat ] = useState('')
+
+  const removeCategory = (arr, cat) => {
+    const index = arr.indexOf(cat)
+    if (index > - 1) {
+      arr.splice(index, 1)
+    }
+  }
 
   const handleSubmitFunct = () => {
     handleClose()
@@ -81,6 +94,9 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
           >
             {({ handleSubmit, handleChange, errors, values }) =>
               <Form noValidate onSubmit={handleSubmit}>
+                
+                {/* <div> { categories } </div> */}
+
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                   <Form.Label>Title</Form.Label>
                   <Form.Control
@@ -109,6 +125,55 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     {errors.description}</Form.Control.Feedback>
                 </Form.Group> */}
 
+                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
+                  <Form.Label>Categories</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="categories"
+                    onChange={handleChange}
+                    value={values.categories}
+                    isInvalid={!!errors.categories}
+                    className="mb-0" />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.categories}</Form.Control.Feedback>
+                </Form.Group> */}
+
+                {/* <label> Categories: </label>
+
+                <Row className='align-items-center'>
+                  <Col>
+                    <Form.Control 
+                      type='text'
+                      name='category'
+                      value={inputCat}
+                      onChange={(e) => setInputCat(e.target.value)}
+                    />
+                  </Col>
+                  <Col>
+                    <button 
+                      type='button' 
+                      onClick={() => {
+                        setCategories([...categories, inputCat]);
+                        setInputCat('')
+                      }}> add </button>
+                  </Col>
+                </Row>
+
+                <h5>
+                { categories.map((c,i) => {
+                  return (
+                    <div
+                      className='d-inline p-2 bg-primary text-white rounded'
+                      key={i} 
+                      onClick={() => setCategories(categories.filter(item => item !== c))}> 
+                      {c} 
+                    </div>)
+                })}
+                </h5> */}
+
+
+
+
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label>Categories</Form.Label>
                   <Form.Control
@@ -133,7 +198,8 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     className="mb-0"/>
                   <Form.Control.Feedback type="invalid">
                     {errors.complexity}</Form.Control.Feedback>
-                </Form.Group> */}                
+                </Form.Group>             */}
+
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                   <Form.Label>Complexity</Form.Label>
                   <Form.Select
