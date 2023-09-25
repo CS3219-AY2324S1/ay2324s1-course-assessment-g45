@@ -114,10 +114,9 @@ button[class^='category-name']:hover {
 }
 
 #warning {
-  background-color: rgb(255, 143, 143);
+  color: red;
 }
 
 .title-warning {
   display: none;
-  margin-top: 8px;
 }

@@ -18,9 +18,11 @@ const templateForm = `
 			<label for="complexity">Complexity:</label>
 			<input type="text" id="complexity" name="complexity" required><br>
 
+      <div class="title-warning">
+        <p id="warning">Title already exists!</p>
+      </div>
 			<button type="button" onclick="closeForm()">Cancel</button>
 			<button type="submit">Submit</button>
-      <div id="warning" class="title-warning">Title already exists!</div>
 		</form>
   </dialog>
 `;
