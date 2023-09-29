@@ -62,8 +62,7 @@ const Profile = () => {
       email: email,
       password : newPassword
     }
-
-    const response = await updateUser(user.id, updatedUser)
+    const response = await updateUser(user.token, user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
@@ -96,7 +95,8 @@ const Profile = () => {
       email: email,
       password: username.password
     }
-    const response = await updateUser(user.id, updatedUser)
+
+    const response = await updateUser(user.token, user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})

@@ -7,23 +7,24 @@ const {
     updateUser,
     login
 } = require('../controllers/userController')
+const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router()
 
 // GET all profiles
-router.get('/', getAllUsers)
+router.get('/', requireAuth, getAllUsers)
 
 // GET a single profile
-router.get('/:id', getSingleUser)
+router.get('/:id', requireAuth, getSingleUser)
 
 // POST a new profile
 router.post('/', createUser)
 
 // DELETE a profile
-router.delete('/:id', deleteUser)
+router.delete('/:id', requireAuth, deleteUser)
 
 // UPDATE a profile
-router.patch('/:id', updateUser)
+router.patch('/:id', requireAuth, updateUser)
 
 // LOGIN
 router.post('/login', login)
