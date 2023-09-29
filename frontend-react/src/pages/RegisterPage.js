@@ -40,6 +40,11 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (username == '' || password == '' || email == '' || confirmPasswordError) {
+      setError('Please fill in all the fields')
+      return
+    }
+
     await signup(username, password, email)
 
     // const userInfo = { username, password, email }

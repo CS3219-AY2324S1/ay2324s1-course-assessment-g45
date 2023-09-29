@@ -12,8 +12,8 @@ async function post({ ...params }) {
   });
 }
 
-async function login({ ...params }) {
-  return fetch(`${baseUrl}/api/userProfiles/login`, {
+async function loginUser({...params}) {
+  return fetch('/api/userProfiles/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -39,4 +39,10 @@ async function deleteUser(id) {
   });
 }
 
-export { post, login, updateUser, deleteUser };
+async function getAllUsers() {
+  return fetch('/api/userProfiles/', {
+    method: 'GET'
+  })
+}
+
+export { post, loginUser, updateUser, deleteUser, getAllUsers };

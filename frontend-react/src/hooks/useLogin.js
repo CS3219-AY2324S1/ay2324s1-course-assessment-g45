@@ -2,6 +2,7 @@ import { UserContext } from "../contexts/userContext";
 import { useState } from "react";
 import { useUserContext } from "./useUserContext";
 import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../apis/UserProfileApi'
 
 export const useLogin = () => {
   const [error, setError] = useState(null)
@@ -13,11 +14,7 @@ export const useLogin = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/api/userProfiles/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password})
-    })
+    const response = await loginUser({username, password})
     const json = await response.json()
 
     if (!response.ok) {
@@ -30,7 +27,12 @@ export const useLogin = () => {
 
         dispatch({type: 'SET_USER', payload:json})
         setIsLoading(false)
-        navigate("/")
+
+        if (json.role == 'maintainer') {
+          navigate("/maintainer")
+        } else {
+          navigate("/")
+        }
     }
   }
 
