@@ -19,7 +19,7 @@ const MaintainerPage = () => {
         setError('Please login to view users')  
         return
       }
-      const response = await getAllUsers()
+      const response = await getAllUsers(user.token)
       const json = await response.json()
       console.log(response)
 
@@ -31,19 +31,19 @@ const MaintainerPage = () => {
     fetchUsers()
   }, [refetchUsers])
 
-  const handleRoleChange = async (user, newRole) => {
+  const handleRoleChange = async (selectedUser, newRole) => {
     if (newRole === '') {
       setError('Invalid role')
       return
     }
     const updatedUser = {
-      username: user.username,
-      email: user.email,
-      password : user.password,
+      username: selectedUser.username,
+      email: selectedUser.email,
+      password : selectedUser.password,
       role: newRole
     }
     console.log(updatedUser)
-    const response = await updateUser(user._id, updatedUser)
+    const response = await updateUser(user.token, selectedUser._id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       // userListDispatch({ type : 'UPDATE_ROLE'})
