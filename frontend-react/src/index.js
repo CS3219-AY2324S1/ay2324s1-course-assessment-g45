@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { UserContextProvider } from './contexts/userContext';
 import { QuestionsContextProvider } from './contexts/QuestionContext';
+import { MaintainerContextProvider } from './contexts/MaintainerContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <UserContextProvider>
       <QuestionsContextProvider>
+        <MaintainerContextProvider>
         <App />
+        </MaintainerContextProvider>
       </QuestionsContextProvider>
     </UserContextProvider>
   </React.StrictMode>

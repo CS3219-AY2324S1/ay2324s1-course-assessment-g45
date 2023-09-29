@@ -9,7 +9,7 @@ async function post({ ...params }) {
   });
 }
 
-async function login({...params}) {
+async function loginUser({...params}) {
   return fetch('/api/userProfiles/login', {
     method: 'POST',
     headers: {
@@ -36,4 +36,10 @@ async function deleteUser(id) {
   })
 }
 
-export { post, login, updateUser, deleteUser };
+async function getAllUsers() {
+  return fetch('/api/userProfiles/', {
+    method: 'GET'
+  })
+}
+
+export { post, loginUser, updateUser, deleteUser, getAllUsers };
