@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
     console.log(data)
 
     // broadcast to everyone
-    socket.broadcast.emit("receive_message", data)
+    // socket.broadcast.emit("receive_message", data)
 
     // broatcast to only people in the room
     socket.to(data.roomNumber).emit("receive_message", data)
@@ -45,6 +45,6 @@ io.on("connection", (socket) => {
     console.log(data)
 
     // join room with the room number in data
-    socket.join(data)
+    socket.join(data.roomNumber)
   })
 })
