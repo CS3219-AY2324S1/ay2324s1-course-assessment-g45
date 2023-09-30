@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage';
 import Profile from './pages/Profile';
 import LoginPage from './pages/LoginPage';
 import NavBar from './components/NavBar';
+import CodingPage from './pages/CodingPage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path='/register' element={<RegisterPage/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/profile' element={<Profile/>}/>
+          <Route path='/codeEditor' element={<CodingPage/>}/>
         </Routes>
         </div>
       </BrowserRouter>

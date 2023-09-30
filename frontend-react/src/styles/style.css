@@ -4,6 +4,10 @@
   --error: #e7195a;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* shared */
 .material-symbols-outlined {
   font-variation-settings:
@@ -14,7 +18,7 @@
 }
 
 body {
-  background-color: rgba(146, 102, 102, 0.2);
+  background-color: rgba(175, 175, 175, 0.2);
 }
 
 /* form {
@@ -177,8 +181,17 @@ input {
 
 .icon {
   margin-right: 10px;
-} 
+}
 
+.code-editor .ql-editor {
+  height: 400px;
+  background-color: white;
+}
+
+.code-editor .ql-toolbar .ql-snow {
+  position: sticky;
+  bottom: 0;
+}
 
 
 

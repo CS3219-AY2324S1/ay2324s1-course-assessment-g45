@@ -47,4 +47,9 @@ io.on("connection", (socket) => {
     // join room with the room number in data
     socket.join(data.roomNumber)
   })
+
+  socket.on("send_changes", delta => {
+    console.log(delta)
+    socket.broadcast.emit("received_changes", delta)
+  })
 })
