@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Re } from 'react-router-dom';
 import Home from './pages/Home';
 import RegisterPage from './pages/RegisterPage';
 import Profile from './pages/Profile';
@@ -17,7 +17,7 @@ function App() {
           <Route path='/register' element={<RegisterPage/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/profile' element={<Profile/>}/>
-          <Route path='/codeEditor' element={<CodingPage/>}/>
+          <Route path='/codeEditor/:id' element={<CodingPage/>}/>
         </Routes>
         </div>
       </BrowserRouter>
