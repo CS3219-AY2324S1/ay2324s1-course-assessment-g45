@@ -1,0 +1,184 @@
+:root {
+  --primary: #ff8a41;
+  --secondary: rgb(137, 137, 137);
+  --error: #e7195a;
+}
+
+/* shared */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+body {
+  background-color: rgba(146, 102, 102, 0.2);
+}
+
+/* form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0px 30px 10px 30px;
+} */
+
+label, input {
+  display: block;
+}
+
+input {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.navbar {
+  background-color: white;
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.navbar a {
+  color: #333;
+  text-decoration: none;
+}
+
+.primary-btn {
+  background-color: var(--primary);
+  border: 0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  display: block;
+}
+
+.secondary-btn {
+  border: 0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  background-color: var(--secondary);
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.small-icons {
+  color: rgb(72, 72, 72);
+}
+
+
+/* register and login page */
+
+.register-page,
+.login-page {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+  align-items: center;
+  overflow-y: scroll;
+}
+
+.register-card,
+.login-card,
+.profile-card {
+  width: 30%;
+  max-width: 700px;
+  min-width: 330px;
+  background-color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: var(--primary);
+  margin-bottom: 30px;
+}
+
+.header h3 {
+  color: white;
+}
+
+.btn-container {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.error {
+  color: var(--error)
+}
+
+/* profile page */
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-card {
+  padding: 30px; 
+}
+
+.user-detail {
+  margin: 10px;
+}
+
+/* alert */
+.alert {
+  background-color: gray;
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid gray;
+  z-index: 2;
+  align-self: center;
+
+}
+
+.success {
+  background-color: rgb(192, 220, 192);
+  color: green;
+  border-color: green;
+}
+
+.info {
+  background-color: rgb(169, 226, 255);
+  color: rgb(0, 106, 193);
+  border-color: rgb(0, 106, 193);
+}
+
+.warning {
+  background-color: rgb(255, 218, 170);
+  color: rgb(125, 82, 0);
+  border-color: rgb(125, 82, 0);
+}
+
+.error-alert {
+  background-color: #ffecec;
+  color: red;
+  border-color: red;
+}
+
+
+.icon {
+  margin-right: 10px;
+} 
+
+
+
+
