@@ -1,15 +1,31 @@
+// import { useNavigate } from "react-router-dom"
+// import { useUserContext } from "../hooks/useUserContext"
+// import QuestionTable from "../components/question/QuestionTable"
+
+// const Home = () => {
+//   const { user, dispatch } = useUserContext()
+//   const navigate = useNavigate()
+//   return (
+//     <div>
+//       <QuestionTable/>
+//     </div>
+//   )
+// }
+
+// export default Home
+
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../hooks/useUserContext"
-import QuestionTable from "../components/question/QuestionTable"
+import CollabEditor from "../components/CollabEditor"
 
-const Home = () => {
+const CollabPage = () => {
   const { user, dispatch } = useUserContext()
   const navigate = useNavigate()
   return (
     <div>
-      <QuestionTable/>
+      <CollabEditor/>
     </div>
   )
 }
 
-export default Home
+export default CollabPage
