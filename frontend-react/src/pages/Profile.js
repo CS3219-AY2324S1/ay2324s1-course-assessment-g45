@@ -49,10 +49,10 @@ const Profile = () => {
       return
     }
 
-    if (password !== user.password) {
-      setPasswordError('Wrong current password, please try again')
-      return
-    }
+    // if (password !== user.password) {
+    //   setPasswordError('Wrong current password, please try again')
+    //   return
+    // }
     if (newPassword === '' || confirmNewPasword === '') {
       setPasswordError('Please key in your new password')
       return
@@ -60,8 +60,11 @@ const Profile = () => {
     const updatedUser = {
       username: username,
       email: email,
-      password : newPassword
+      currentPassword: password,
+      newPassword : newPassword
     }
+    console.log(user)
+    console.log(updatedUser)
     const response = await updateUser(user.token, user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {

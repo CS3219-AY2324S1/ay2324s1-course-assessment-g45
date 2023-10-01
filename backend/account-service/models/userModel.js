@@ -85,4 +85,32 @@ userProfileSchema.statics.loginUser = async function(username, password) {
     return user
 }
 
+userProfileSchema.statics.updateUserPassword = async function(id, reqBody) {
+    const { username, newPassword, currentPassword } = reqBody;
+
+    if (!username) {
+        throw Error("username must be filled")
+    }
+
+    const user = await this.findOne({ username })
+
+    if (!user) {
+        throw Error("Wrong password or username.")
+    }
+
+    const match = await bcrypt.compare(currentPassword, user.password)
+    if (!match) {
+        throw Error("Wrong password or username.")
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(newPassword, salt)
+  
+    const updatedUser = await this.findOneAndUpdate({_id: id}, {
+        password: hash
+      } , { new: true })
+
+    return updatedUser
+}
+
 module.exports = mongoose.model('UserProfile', userProfileSchema)

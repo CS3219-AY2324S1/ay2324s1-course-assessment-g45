@@ -74,16 +74,24 @@ const deleteUser = async (req, res) => {
 // UPDATE a user
 const updateUser = async (req, res) => {
   const { id } = req.params
+  const { newPassword, currentPassword } = req.body;
 
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({error: 'No such user.'})
     }
-    
-    const user = await User.findOneAndUpdate({_id: id}, {
-      ...req.body
-    })
-    
+
+    let user;
+
+    if (newPassword && currentPassword) {
+      user = await User.updateUserPassword(id, req.body)
+
+    } else {
+      user = await User.findOneAndUpdate({_id: id}, {
+        ...req.body
+      })
+    }
+
     if (!user) {
       return res.status(400).json({error : 'No such user.'})
     }
