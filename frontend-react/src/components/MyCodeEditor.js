@@ -6,6 +6,7 @@ import Quill from "quill"
 import { useParams } from 'react-router-dom'
 // import { v4 as uuidV4 } from 'uuid'
 
+const SAVE_INTERVAL_MS = 2000
 const MyCodeEditor = () => {
   const [ socket, setSocket ] = useState()
   const [quill, setQuill] = useState()
@@ -39,7 +40,7 @@ const MyCodeEditor = () => {
   // check session id
   useEffect(() => {
     if (socket == null || quill == null) return
-
+    console.log("load session call")
     // load once
     socket.once('load-session', doc => {
       quill.setContents(doc)
@@ -78,6 +79,19 @@ const MyCodeEditor = () => {
     return () => {
       // clean up
       socket.off("received_changes", handler)
+    }
+  }, [socket, quill])
+
+  // save document on interval
+  useEffect(() => {
+    if (socket == null || quill == null) return
+
+    const interval = setInterval(() => { 
+      socket.emit('save-document', quill.getContents())
+    }, SAVE_INTERVAL_MS)
+
+    return () => {
+      clearInterval(interval)
     }
   }, [socket, quill])
 
