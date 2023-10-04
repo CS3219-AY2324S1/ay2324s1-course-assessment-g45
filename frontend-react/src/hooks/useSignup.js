@@ -37,5 +37,5 @@ export const useSignup = () => {
     return response
   }
 
-  return {signup, isLoading, error}
+  return {signup, isLoading, error, setError}
 }

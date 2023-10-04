@@ -16,7 +16,7 @@ const RegisterPage = () => {
   const [ confirmPasswordError, setConfirmPasswordError ] = useState(null)
   const [ loading, setLoading ] = useState(false)
   const navigate = useNavigate()
-  const {signup, isLoading, error} = useSignup()
+  const {signup, isLoading, error, setError} = useSignup()
 
   const checkConfirmPassword = (pw) => {
     setConfirmPassword(pw)
