@@ -1,6 +1,9 @@
+import Config from '../Config';
+
+const baseUrl = Config.Common.UserApiBaseUrl;
 
 async function post({ ...params }) {
-  return fetch('/api/userProfiles/', {
+  return fetch(`${baseUrl}/api/userProfiles/`, {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
@@ -9,35 +12,36 @@ async function post({ ...params }) {
   });
 }
 
-async function loginUser({...params}) {
-  return fetch('/api/userProfiles/login', {
+async function loginUser({ ...params }) {
+  return fetch(`${baseUrl}/api/userProfiles/login`, {
     method: 'POST',
     headers: {
-      'Content-Type' : 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(params)
-  })
+    body: JSON.stringify(params),
+  });
 }
 
-async function updateUser(token, id, {...params}) {
-  return fetch('/api/UserProfiles/' + id, {
+
+async function updateUser(token, id, { ...params }) {
+  return fetch(`${baseUrl}/api/UserProfiles/` + id, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
-  })
+  });
 }
 
 async function deleteUser(token, id) {
-  return fetch('/api/userProfiles/' + id , {
+  return fetch(`${baseUrl}/api/userProfiles/` + id, {
     method: 'DELETE',
     headers: {
-    'Authorization': `Bearer ${token}`
-    }
-  })
+      'Authorization': `Bearer ${token}`
+      }
+  });
 }
 
 async function getAllUsers(token) {

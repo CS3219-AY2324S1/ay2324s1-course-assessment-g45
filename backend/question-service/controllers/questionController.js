@@ -28,7 +28,6 @@ const getSingleQuestion = async (req, res) => {
 // POST a new question
 const createQuestion = async (req, res) => {
   const { title, categories, complexity, description } = req.body;
-
   try {
     const question = await Question.create({
       title,

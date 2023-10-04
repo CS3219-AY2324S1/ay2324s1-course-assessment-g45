@@ -13,7 +13,6 @@ const RegisterPage = () => {
   const [ password, setPassword ] = useState("")
   const [ confirmPassword, setConfirmPassword ] = useState("")
   const [ email, setEmail ] = useState("")
-  //const [ error, setError ] = useState(null)
   const [ confirmPasswordError, setConfirmPasswordError ] = useState(null)
   const [ loading, setLoading ] = useState(false)
   const navigate = useNavigate()
@@ -37,6 +36,7 @@ const RegisterPage = () => {
     }
   }
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -45,32 +45,14 @@ const RegisterPage = () => {
       return
     }
 
-    await signup(username, password, email)
+    const response = await signup(username, password, email)
 
-    // const userInfo = { username, password, email }
-    // if (username == '' || password == '' || email == '' || confirmPasswordError) {
-    //   setError('Please fill in all the fields')
-    //   return
-    // }
-
-    // const response = await post(userInfo)
-    // const json = await response.json()
-
-    // console.log(json)
-
-    // if (!response.ok) {
-    //   setError(json.error)
-    // }
-
-    // if (response.ok) {
-    //   setUsername('')
-    //   setPassword('')
-    //   setConfirmPassword('')
-    //   setEmail('')
-    //   console.log('new user added', json)
-    //   dispatch({ type : 'SET_USER', payload: json })
-    //   navigate("/")
-    // }
+   if (response.ok) {
+      setUsername('')
+      setPassword('')
+      setConfirmPassword('')
+      setEmail('')
+    }
 
   }
 

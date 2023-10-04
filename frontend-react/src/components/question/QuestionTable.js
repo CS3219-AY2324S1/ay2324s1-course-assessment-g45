@@ -15,7 +15,6 @@ import { useUserContext } from '../../hooks/useUserContext';
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
-  //const [questions, setQuestions] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false);
   const handleCloseAddModal = () => setShowAddModal(false);
   const handleShowAddModal = () => setShowAddModal(true);
@@ -117,7 +116,7 @@ const QuestionTable = () => {
           }
         </Row>
         {questions && questions.map((qn, j) => (
-          <div>
+          <div key={j}>
             <Row className="justify-content-md-center">
               <Col xs="auto">
                 {j + 1}
