@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import style from '../styles/style.css'
 import { post } from '../apis/UserProfileApi'
+import { useSignup } from '../hooks/useSignup'
 
 
 const RegisterPage = () => {
@@ -12,10 +13,11 @@ const RegisterPage = () => {
   const [ password, setPassword ] = useState("")
   const [ confirmPassword, setConfirmPassword ] = useState("")
   const [ email, setEmail ] = useState("")
-  const [ error, setError ] = useState(null)
+  //const [ error, setError ] = useState(null)
   const [ confirmPasswordError, setConfirmPasswordError ] = useState(null)
   const [ loading, setLoading ] = useState(false)
   const navigate = useNavigate()
+  const {signup, isLoading, error} = useSignup()
 
   const checkConfirmPassword = (pw) => {
     setConfirmPassword(pw)
@@ -37,30 +39,38 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userInfo = { username, password, email }
+
     if (username == '' || password == '' || email == '' || confirmPasswordError) {
       setError('Please fill in all the fields')
       return
     }
 
-    const response = await post(userInfo)
-    const json = await response.json()
+    await signup(username, password, email)
 
-    console.log(json)
+    // const userInfo = { username, password, email }
+    // if (username == '' || password == '' || email == '' || confirmPasswordError) {
+    //   setError('Please fill in all the fields')
+    //   return
+    // }
 
-    if (!response.ok) {
-      setError(json.error)
-    }
+    // const response = await post(userInfo)
+    // const json = await response.json()
 
-    if (response.ok) {
-      setUsername('')
-      setPassword('')
-      setConfirmPassword('')
-      setEmail('')
-      console.log('new user added', json)
-      dispatch({ type : 'SET_USER', payload: json })
-      navigate("/")
-    }
+    // console.log(json)
+
+    // if (!response.ok) {
+    //   setError(json.error)
+    // }
+
+    // if (response.ok) {
+    //   setUsername('')
+    //   setPassword('')
+    //   setConfirmPassword('')
+    //   setEmail('')
+    //   console.log('new user added', json)
+    //   dispatch({ type : 'SET_USER', payload: json })
+    //   navigate("/")
+    // }
 
   }
 
@@ -122,7 +132,7 @@ const RegisterPage = () => {
             />
           </Form.Group>
 
-          <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)}> Register </Button>
+          <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)} disabled={isLoading}> Register </Button>
 
         </Form>
         {/* <form>

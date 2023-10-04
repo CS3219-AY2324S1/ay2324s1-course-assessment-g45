@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { UserContextProvider } from './contexts/userContext';
 import { QuestionsContextProvider } from './contexts/QuestionContext';
+import { MaintainerContextProvider } from './contexts/MaintainerContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <QuestionsContextProvider>
-      <UserContextProvider>
+    <UserContextProvider>
+      <QuestionsContextProvider>
+        <MaintainerContextProvider>
         <App />
-      </UserContextProvider>
-    </QuestionsContextProvider>
+        </MaintainerContextProvider>
+      </QuestionsContextProvider>
+    </UserContextProvider>
   </React.StrictMode>
 );
 
