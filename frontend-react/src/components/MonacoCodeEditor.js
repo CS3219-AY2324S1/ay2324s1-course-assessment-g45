@@ -1,8 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react'
-import ReactQuill from 'react-quill'
 import io from 'socket.io-client'
 import "quill/dist/quill.snow.css"
-import Quill from "quill"
 import Editor from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import loader from '@monaco-editor/loader';
@@ -11,8 +9,6 @@ import loader from '@monaco-editor/loader';
 const SAVE_INTERVAL_MS = 2000
 const MonacoCodeEditor = () => {
   const [ socket, setSocket ] = useState()
-  const [quill, setQuill] = useState()
-  // const sessionId = "sessionString"
   const { id : sessionId } = useParams()
   const [myEditor, setEditor] = useState()
   const editorRef = useRef(null)
@@ -57,8 +53,6 @@ const MonacoCodeEditor = () => {
     // load once
     socket.once('load-session', doc => {
       myEditor.setValue(doc)
-      console.log(doc)
-      //quill.enable() // enable after document is loaded
     })
     socket.emit('get-session', sessionId)
     console.log(sessionId)
@@ -67,10 +61,8 @@ const MonacoCodeEditor = () => {
   // when text change, emit changes (delta) to socket
   useEffect(() => {
     if (socket == null || myEditor == null) return
-    const handler = (delta, source) => {
-      console.log("CHANGE EVENT CALL")
+    const handler = (delta) => {
       if (isFlag == true) {
-        console.log("change event call, flag to false")
         isFlag = false
         return
       }
@@ -79,10 +71,6 @@ const MonacoCodeEditor = () => {
     }
 
     myEditor.onDidChangeModelContent((a) => handler(a.changes[0]))
-    // return () => {
-    //   //clean up
-    //   quill.off("text-change", handler) 
-    // }
   }, [socket, myEditor])
   
   // when receive changes, update quill
@@ -90,14 +78,10 @@ const MonacoCodeEditor = () => {
     if (socket == null || myEditor == null) return          
 
     const handler = (delta) => {
-      console.log("receive changes handler")
-      console.log(delta)
-      
       // set to true to prevent sending changes to socket again
       isFlag = true
       console.log(delta)
       myEditor.executeEdits("", [{ range : delta.range, text : delta.text }])
-      // myEditor.getModel().applyEdits(delta)
     }
     socket.on("received_changes", handler)
 
@@ -109,16 +93,16 @@ const MonacoCodeEditor = () => {
 
   // save document on interval
   useEffect(() => {
-    if (socket == null || quill == null) return
+    if (socket == null || myEditor == null) return
 
-    const interval = setInterval(() => { 
-      socket.emit('save-document', quill.getContents())
+    const interval = setInterval(() => {
+      socket.emit('save-document', myEditor.getModel().getValue())
     }, SAVE_INTERVAL_MS)
 
     return () => {
       clearInterval(interval)
     }
-  }, [socket, quill])
+  }, [socket, myEditor])
 
   return (
     <div className='code-editor' ref={wrapperRef}></div>
