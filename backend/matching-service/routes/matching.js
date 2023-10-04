@@ -6,7 +6,7 @@ const receiveRequest = async (req, res) => {
   rabbitMQHandler((connection) => {
     connection.createChannel((error, channel) => {
       if (error) {
-        throw error;
+        return res.status(400).json({ error });
       }
       const queue = 'matching';
 
@@ -20,6 +20,8 @@ const receiveRequest = async (req, res) => {
       channel.close(() => {
         connection.close();
       });
+
+      res.status(200).json({ message: 'Matching request queued' });
     });
   });
 };

@@ -8,7 +8,7 @@ import * as yup from 'yup';
 import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
 
-const socket = io.connect('http://localhost:3004/matching'); // connect to backend
+const socket = io.connect('http://localhost:3004'); // connect to backend
 
 const Matching = () => {
   const [showModal, setShowModal] = useState(false);
@@ -40,8 +40,10 @@ const Matching = () => {
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
-    await post(values);
-    const timeout = setTimeout(handleFailedMatch, 30000);
+    const response = await post(values);
+    const json = await response.json();
+    console.log(json);
+    const timeout = setTimeout(handleFailedMatch, 3000);
   };
 
   return (

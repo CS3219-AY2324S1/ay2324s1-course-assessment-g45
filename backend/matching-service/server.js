@@ -47,7 +47,7 @@ rabbitMQHandler((connection) => {
       queue,
       (msg) => {
         console.log(' [x] Received %s', msg.content.toString());
-        io.of('/matching').emit('matching', msg.content.toString());
+        io.emit('matching', msg.content.toString());
       },
       { noAck: true }
     );
