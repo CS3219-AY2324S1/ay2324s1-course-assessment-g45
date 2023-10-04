@@ -8,6 +8,7 @@ import * as yup from 'yup';
 
 const Matching = () => {
   const [ showModal, setShowModal ] = useState(false)
+  const [ error, setError ] = useState('')
   const { Formik } = formik
   const formRef = useRef()
 
@@ -17,9 +18,15 @@ const Matching = () => {
     complexity: yup.string().required('Required')
   })
 
+  const handleFailedMatch = () => {
+    setIsLoading(false)
+    setError('Unable to find match, please try again later!')
+  }
+
   const handleSubmit = () => {
     setIsLoading(true)
     console.log(formRef)
+    const timeout = setTimeout(handleFailedMatch, 30000)
   }
 
   return (
@@ -64,11 +71,14 @@ const Matching = () => {
                       {props.errors.complexity}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  { isLoading && 
-                  <div>
-                    <Spinner animation='border'/>
-                  </div> }
-                  <Button type='submit' variant='primary'>
+                  { 
+                    isLoading && 
+                    <div >
+                      <div className='d-flex justify-content-center'> Find match in progress... </div>
+                      <div className='bg-primary d-flex justify-content-center'> <Spinner animation='border'/></div>
+                    </div> 
+                  }
+                  <Button type='submit' variant='primary' disabled={isLoading}>
                     Find Match
                   </Button>
                 </Form>
