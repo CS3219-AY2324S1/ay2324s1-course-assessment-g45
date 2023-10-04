@@ -12,8 +12,8 @@ const SAVE_INTERVAL_MS = 2000
 const MonacoCodeEditor = () => {
   const [ socket, setSocket ] = useState()
   const [quill, setQuill] = useState()
-  const sessionId = "sessionString"
-  //const { id : sessionId } = useParams()
+  // const sessionId = "sessionString"
+  const { id : sessionId } = useParams()
   const [myEditor, setEditor] = useState()
   const editorRef = useRef(null)
   // initialized to true to block initial delta from socket on load

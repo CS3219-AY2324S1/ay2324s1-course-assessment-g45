@@ -1,5 +1,6 @@
 import React from 'react'
-import MyCodeEditor from '../components/MyCodeEditor'
+// import MyCodeEditor from '../components/MyCodeEditor'
+import MonacoCodeEditor from '../components/MonacoCodeEditor'
 
 const CodingPage = () => {
   return (
@@ -8,7 +9,7 @@ const CodingPage = () => {
         question description
       </div>
       <div className='col-6'>
-        <MyCodeEditor/>
+        <MonacoCodeEditor/>
       </div>
     </div>
   )
