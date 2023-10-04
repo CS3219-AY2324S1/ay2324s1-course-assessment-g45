@@ -14,7 +14,6 @@ async function post({ ...params }) {
     body: JSON.stringify(params),
     headers: {
       'Content-type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
   });
 }
@@ -22,9 +21,6 @@ async function post({ ...params }) {
 async function deleteQuestion({ id }) {
   return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
   });
 }
 
@@ -34,7 +30,6 @@ async function patch(id, { ...params }) {
     body: JSON.stringify(params),
     headers: {
       'Content-type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
   });
 }

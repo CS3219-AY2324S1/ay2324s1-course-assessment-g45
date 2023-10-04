@@ -1,10 +1,5 @@
 const User = require('../models/userModel')
 const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-
-const createToken = (_id) => {
-  return jwt.sign({_id}, process.env.JWT_SECRET, {expiresIn: '3d'})
-}
 
 // GET all users
 const getAllUsers = async (req, res) => {
@@ -35,15 +30,8 @@ const createUser = async (req, res) => {
   const {username, password, email} = req.body
 
   try {
-    const defaultUserRole = "user"
-    const user = await User.signUp(username, password, email, defaultUserRole)
-
-    // create token
-    const token = createToken(user._id)
-
-   // res.status(200).json(user)
-    res.status(200).json({username, email, token})
-
+    const user = await User.create({username, password, email})
+    res.status(200).json(user)
   } catch (error) {
     if (error.code == 11000) {
       var errMsg = Object.keys(error.keyValue)[0] + " already exists."
@@ -53,7 +41,7 @@ const createUser = async (req, res) => {
     res.status(400).json({error: errMsg})
   }
 }
- 
+
 // DELETE a user
 const deleteUser = async (req, res) => {
    const { id } = req.params
@@ -74,24 +62,16 @@ const deleteUser = async (req, res) => {
 // UPDATE a user
 const updateUser = async (req, res) => {
   const { id } = req.params
-  const { newPassword, currentPassword } = req.body;
 
   try {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({error: 'No such user.'})
     }
-
-    let user;
-
-    if (newPassword && currentPassword) {
-      user = await User.updateUserPassword(id, req.body)
-
-    } else {
-      user = await User.findOneAndUpdate({_id: id}, {
-        ...req.body
-      })
-    }
-
+    
+    const user = await User.findOneAndUpdate({_id: id}, {
+      ...req.body
+    })
+    
     if (!user) {
       return res.status(400).json({error : 'No such user.'})
     }
@@ -111,16 +91,17 @@ const updateUser = async (req, res) => {
 
 const login = async (req, res) => {
   const { username, password } = req.body
+  const user = await User.findOne({username: username})
 
-  try {
-    const user = await User.loginUser(username, password)
-
-    // create token
-    const token = createToken(user._id)
-    res.status(200).json({id: user._id, username, token, role: user.role})
-  } catch (error) {
-    res.status(400).json({error: error.message})
+  if (!user) {
+    return res.status(400).json({error : 'No such user.'})
   }
+
+  if (password !== user.password) {
+    return res.status(400).json({error : 'Wrong password or username.'})
+  }
+
+  res.status(200).json(user)
 }
 
 module.exports = {

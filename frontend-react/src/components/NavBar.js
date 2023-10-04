@@ -1,17 +1,10 @@
 import { Link } from "react-router-dom"
-import { useLogout } from "../hooks/useLogout"
+
 import React from 'react'
 import { useUserContext } from "../hooks/useUserContext"
 
-
 const NavBar = () => {
   const { user } = useUserContext()
-  const { logout } = useLogout()
-  const handleClick = () => { 
-    logout()
-  }
-
-
   return (
     <div className="navbar">
       <div className="container">
@@ -27,7 +20,6 @@ const NavBar = () => {
         {/* TODO: Log out logic*/}
         { user && 
           <div> 
-            <button onClick={handleClick}>Log Out</button>
             <h4> Log out </h4>
           </div>
         }
