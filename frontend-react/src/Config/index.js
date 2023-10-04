@@ -13,6 +13,8 @@ const Config = {
       environment === Environment.production
         ? 'http://localhost:3001'
         : 'http://localhost:3001',
+    MatchingApiBaseUrl:
+        'http://localhost:3004'
   },
 };
 
