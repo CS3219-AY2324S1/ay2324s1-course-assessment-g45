@@ -3,39 +3,24 @@ import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-import { login } from '../apis/UserProfileApi'
+//import { login } from '../apis/UserProfileApi'
+import { useLogin } from '../hooks/useLogin'
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ error, setError ] = useState(null)
+  const {login, isLoading, error} = useLogin()
   const navigate = useNavigate()
+  console.log(password)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const response = await fetch('/api/userProfiles/login', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type' : 'application/json'
-    //   },
-    //   body: JSON.stringify({ username, password})
-    // })
 
-    const response = await login({ username, password })
-    const json = await response.json()
-
-    if (!response.ok) {
-      setError(json.error)
-    }
-
+    const response  = await login(username, password)
     if (response.ok) {
       setUsername('')
       setPassword('')
-      console.log('Logged in successfully!', json)
-      dispatch({ type: 'SET_USER', payload: json })
-      console.log(user)
-      navigate("/")
     }
 
   }
@@ -79,6 +64,7 @@ const LoginPage = () => {
             type='submit' 
             className='primary-btn' 
             onClick={(e) => handleSubmit(e)}
+            disabled={isLoading}
           >
             Log in
           </Button>
