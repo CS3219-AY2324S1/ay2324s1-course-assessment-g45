@@ -15,9 +15,10 @@ const MonacoCodeEditor = () => {
   const sessionId = "sessionString"
   //const { id : sessionId } = useParams()
   const [myEditor, setEditor] = useState()
-  const [isFromSocket, setIsFromSocket] = useState()
   const editorRef = useRef(null)
-  var isFlag = false;
+  // initialized to true to block initial delta from socket on load
+  // if value = true, do not send changes to socket!
+  var isFlag = true;
 
   // connect to socket
   useEffect(() => {
@@ -36,15 +37,8 @@ const MonacoCodeEditor = () => {
     wrapper.innerHTML = ""
     const editor = document.createElement("div")
     wrapper.append(editor)
-    // const q = //new Quill(editor, {theme: "snow" })
-    // setQuill(q)
-
-    // // initially disabled while loading the data 
-    // q.disable()
-    // q.setText('Loading..')
 
      loader.init().then((monaco) => {
-    //   //const wrapper = document.getElementById('root');
       wrapper.style.height = '100vh';
       const properties = {
         value: '',
@@ -53,7 +47,6 @@ const MonacoCodeEditor = () => {
       };
       const q = monaco.editor.create(wrapper, properties);
       setEditor(q)
-      //editorRef.current = monaco.editor.create(wrapper, properties);
     });
   }, []);
 
@@ -76,10 +69,6 @@ const MonacoCodeEditor = () => {
     if (socket == null || myEditor == null) return
     const handler = (delta, source) => {
       console.log("CHANGE EVENT CALL")
-      // if (isFromSocket == true) {
-      //   setIsFromSocket(false)
-      //   return
-      // }
       if (isFlag == true) {
         console.log("change event call, flag to false")
         isFlag = false
@@ -102,13 +91,13 @@ const MonacoCodeEditor = () => {
 
     const handler = (delta) => {
       console.log("receive changes handler")
-      //setIsFromSocket("hi im random shit")
       console.log(delta)
-
+      
+      // set to true to prevent sending changes to socket again
       isFlag = true
-      console.log(isFlag)
-      //myEditor.executeEdits("", [{ range : delta.range, text : delta.text }])
-      myEditor.getModel().applyEdits(delta)
+      console.log(delta)
+      myEditor.executeEdits("", [{ range : delta.range, text : delta.text }])
+      // myEditor.getModel().applyEdits(delta)
     }
     socket.on("received_changes", handler)
 

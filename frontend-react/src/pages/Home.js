@@ -10,7 +10,7 @@ const Home = () => {
   const navigate = useNavigate()
   return (
     <div>
-      {/* <MonacoCodeEditor/> */}
+      <MonacoCodeEditor/>
       {/* <CodeEditor/> */}
       <Matching/>
       <QuestionTable/>
