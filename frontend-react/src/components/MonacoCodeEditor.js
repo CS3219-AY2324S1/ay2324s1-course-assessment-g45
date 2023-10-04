@@ -12,9 +12,12 @@ const SAVE_INTERVAL_MS = 2000
 const MonacoCodeEditor = () => {
   const [ socket, setSocket ] = useState()
   const [quill, setQuill] = useState()
-  const { id : sessionId } = useParams()
+  const sessionId = "sessionString"
+  //const { id : sessionId } = useParams()
   const [myEditor, setEditor] = useState()
+  const [isFromSocket, setIsFromSocket] = useState()
   const editorRef = useRef(null)
+  var isFlag = false;
 
   // connect to socket
   useEffect(() => {
@@ -44,7 +47,7 @@ const MonacoCodeEditor = () => {
     //   //const wrapper = document.getElementById('root');
       wrapper.style.height = '100vh';
       const properties = {
-        value: 'function hello() {\n\talert("Hello world!");\n}',
+        value: '',
         language: 'javascript',
         theme: 'vs-dark'
       };
@@ -54,11 +57,9 @@ const MonacoCodeEditor = () => {
     });
   }, []);
 
-  //myEditor.setValue('tasdfasdfest')
-
   // check session id
   useEffect(() => {
-    if (socket == null || quill == null) return
+    if (socket == null || myEditor == null) return
     console.log("load session call")
     // load once
     socket.once('load-session', doc => {
@@ -73,26 +74,41 @@ const MonacoCodeEditor = () => {
   // when text change, emit changes (delta) to socket
   useEffect(() => {
     if (socket == null || myEditor == null) return
-
-    const handler = (delta, oldDelta, source) => {
-      if (source !== "user") return
+    const handler = (delta, source) => {
+      console.log("CHANGE EVENT CALL")
+      // if (isFromSocket == true) {
+      //   setIsFromSocket(false)
+      //   return
+      // }
+      if (isFlag == true) {
+        console.log("change event call, flag to false")
+        isFlag = false
+        return
+      }
       socket.emit("send_changes", delta)
+      console.log(delta)
     }
-    //quill.on("text-change", handler)
-    myEditor.onDidChangeModelContent((a) => console.log(a))//(a) => handler(a.changes[0].text)) // how to pass in?
 
-    return () => {
-      // clean up
-      //quill.off("text-change", handler) 
-    }
+    myEditor.onDidChangeModelContent((a) => handler(a.changes[0]))
+    // return () => {
+    //   //clean up
+    //   quill.off("text-change", handler) 
+    // }
   }, [socket, myEditor])
-
+  
   // when receive changes, update quill
   useEffect(() => {
-    if (socket == null || quill == null) return
+    if (socket == null || myEditor == null) return          
 
     const handler = (delta) => {
-      quill.updateContents(delta)
+      console.log("receive changes handler")
+      //setIsFromSocket("hi im random shit")
+      console.log(delta)
+
+      isFlag = true
+      console.log(isFlag)
+      //myEditor.executeEdits("", [{ range : delta.range, text : delta.text }])
+      myEditor.getModel().applyEdits(delta)
     }
     socket.on("received_changes", handler)
 
@@ -100,7 +116,7 @@ const MonacoCodeEditor = () => {
       // clean up
       socket.off("received_changes", handler)
     }
-  }, [socket, quill])
+  }, [socket, myEditor])
 
   // save document on interval
   useEffect(() => {

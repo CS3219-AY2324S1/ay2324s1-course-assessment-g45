@@ -67,13 +67,15 @@ io.on("connection", (socket) => {
   // })
 
   socket.on("get-session", async documentId => {
+    console.log("get session call")
     const document = await findOrCreateDocument(documentId)
     socket.join(documentId)
     socket.emit("load-session", document.data)
 
+    console.log("socket join")
     socket.on("send_changes", delta => {
-      console.log(delta)
-      socket.broadcast.to(documentId).emit("received_changes", delta)
+      console.log("send changes to " + documentId)
+      socket.broadcast.to(documentId).emit("received_changes", delta) //broadcast.to(documentId)
     })
 
     socket.on("save-document", async data => {
