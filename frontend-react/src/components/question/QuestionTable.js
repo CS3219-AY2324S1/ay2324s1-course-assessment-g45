@@ -9,20 +9,24 @@ import QuestionPopUp from './QuestionPopUp';
 import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import ConfirmationPopup from '../ConfirmationPopup';
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
   const [showAddModal, setShowAddModal] = useState(false);
-  const handleCloseAddModal = () => setShowAddModal(false);
-  const handleShowAddModal = () => setShowAddModal(true);
+  // const handleCloseAddModal = () => setShowAddModal(false);
+  // const handleShowAddModal = () => setShowAddModal(true);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const handleCloseEditModal = () => setShowEditModal(false);
-  const handleShowEditModal = () => setShowEditModal(true);
+  // const [showEditModal, setShowEditModal] = useState(false);
+  // const handleCloseEditModal = () => setShowEditModal(false);
+  // const handleShowEditModal = () => setShowEditModal(true);
   const [editQn, setEditQn] = useState(null)
+  const [ deleteQn, setDeleteQn ] = useState(null)
 
   const [selectedQn, setSelectedQn] = useState(null)
 
+  const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false)
+ 
   useEffect(() => {
     const fetchQuestions = async () => {
       const response = await getAllQuestions()
@@ -46,6 +50,7 @@ const QuestionTable = () => {
 
     if (response.ok) {
       dispatch({ type: 'DELETE_QUESTION', payload: json })
+      setDeleteQn(null)
     } else {
       setError(json.error)
       console.log(error)
@@ -55,7 +60,7 @@ const QuestionTable = () => {
   return (
     <div>
       <Button variant="success" className='ms-3 mt-3 pull-left'
-        onClick={handleShowAddModal}>Add a question
+        onClick={() => setShowAddModal(true)}>Add a question
       </Button>
       {
         showAddModal &&
@@ -65,6 +70,7 @@ const QuestionTable = () => {
         />
       }
 
+      {/* show edit popup */}
       {
         editQn &&
         <QuestionForm
@@ -74,6 +80,18 @@ const QuestionTable = () => {
         />
       }
 
+      {/* show delete confirmation popup  */}
+      {
+        deleteQn &&
+        <ConfirmationPopup
+          title={'Delete Question'}
+          message={'Are you sure to proceed? This action cannot be undone.'}
+          handleClose={() => setDeleteQn(null)}
+          handleSubmit={() => handleDeleteQuestion(deleteQn._id)}
+        />
+      }
+
+      {/* description popup */}
       {
         selectedQn &&
         <QuestionPopUp
@@ -106,7 +124,7 @@ const QuestionTable = () => {
                 {j + 1}
               </Col>
               <Col onClick={() => setSelectedQn(qn)}>
-                {qn.title}
+                <span role='button'>{qn.title}</span>
               </Col>
               <Col>
                 {qn.categories.map((category, i) => (
@@ -119,7 +137,7 @@ const QuestionTable = () => {
               <Col xs="2">
                 <div>
                   <Button variant="danger" className='ms-2'
-                    onClick={() => handleDeleteQuestion(qn._id)}>Delete</Button>
+                    onClick={() => setDeleteQn(qn)}>Delete</Button>
                   <Button variant="primary" className='ms-4'
                     onClick={() => setEditQn(qn)}>Update</Button>
                 </div>

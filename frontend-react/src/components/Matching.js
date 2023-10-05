@@ -111,7 +111,7 @@ const Matching = () => {
                   { 
                     timeLeft > 0 &&  
                     <div className='d-flex justify-content-center'> 
-                      <h4> { timeLeft }s left </h4> 
+                      <h4> { timeLeft }s remaining </h4> 
                     </div> 
                   }
 
