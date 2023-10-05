@@ -70,6 +70,21 @@ rabbitMQHandler((connection) => {
       },
       { noAck: true }
     );
+
+    // Delete requests from buffer 30 seconds after the request and notify deleted requests
+    setInterval(() => {
+      var time = Date.now();
+      const newBuffer = requestBuffer.filter((request) => {
+        return time < request.time + 30 * 1000;
+      });
+      const deletedRequests = requestBuffer.filter(
+        (request) => !newBuffer.includes(request)
+      );
+      for (let i = 0; i < deletedRequests.length; i++) {
+        io.to(deletedRequests[i].socketId).emit('timeout', 'Request timed out');
+      }
+      requestBuffer = newBuffer;
+    }, 500);
   });
 });
 

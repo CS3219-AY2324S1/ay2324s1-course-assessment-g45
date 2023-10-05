@@ -29,38 +29,43 @@ const Matching = () => {
     complexity: yup.string().required('Required'),
   });
 
-  const handleReceiveMsg = (msg) => {
+  const handleMatch = (msg) => {
     console.log(msg);
+    setIsLoading(false);
+  };
+
+  const handleTimeout = (msg) => {
+    console.log(msg);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    socket.on('matching', handleReceiveMsg);
+    socket.on('matching', handleMatch);
+    socket.on('timeout', handleTimeout);
 
     return () => {
-      socket.off('matching', handleReceiveMsg);
+      socket.off('matching', handleMatch);
+      socket.off('timeout', handleTimeout);
     };
   }, []);
 
-  const handleFailedMatch = () => {
-    setIsLoading(false);
-    setError('Unable to find match, please try again later!');
-  };
-
   const handleSubmit = async (values) => {
-    setIsLoading(true);
-    if (user) {
-      const response = await post({
-        ...values,
-        socketId,
-        uid: user._id,
-        username: user.username,
-      });
-      const json = await response.json();
-      if (!response.ok) {
-        console.log(json);
-      }
+    // Temporary solution. Make sure user is always logged in in the future.
+    if (!user) {
+      return;
     }
-    const timeout = setTimeout(handleFailedMatch, 3000);
+    setIsLoading(true);
+    const response = await post({
+      ...values,
+      time: Date.now(),
+      socketId,
+      uid: user._id,
+      username: user.username,
+    });
+    const json = response.json();
+    if (!response.ok) {
+      console.log(json);
+    }
   };
 
   return (
