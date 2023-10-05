@@ -43,11 +43,30 @@ rabbitMQHandler((connection) => {
       durable: false,
     });
 
+    let requestBuffer = [];
+
     channel.consume(
       queue,
       (msg) => {
         console.log(' [x] Received %s', msg.content.toString());
-        io.emit('matching', msg.content.toString());
+        const request = JSON.parse(msg.content.toString());
+        const socketId = request.socketId;
+        const uid = request.uid;
+        const complexity = request.complexity;
+        for (let i = 0; i < requestBuffer.length; i++) {
+          const bufferedRequest = requestBuffer[i];
+          if (
+            bufferedRequest.complexity == complexity &&
+            bufferedRequest.uid != uid
+          ) {
+            const matchPair = [bufferedRequest, request];
+            io.to(socketId).emit('matching', matchPair);
+            io.to(bufferedRequest.socketId).emit('matching', matchPair);
+            requestBuffer.slice(i, i); // Remove matched request from buffer
+            return;
+          }
+        }
+        requestBuffer.push(request);
       },
       { noAck: true }
     );

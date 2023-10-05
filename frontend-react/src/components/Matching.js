@@ -7,10 +7,18 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
+import Config from '../Config';
+import { useUserContext } from '../hooks/useUserContext';
 
-const socket = io.connect('http://localhost:3004'); // connect to backend
+const baseUrl = Config.Common.MatchingApiBaseUrl;
+var socketId = '';
+const socket = io.connect(baseUrl); // connect to backend
+socket.on('connect', () => {
+  socketId = socket.id;
+});
 
 const Matching = () => {
+  const { user } = useUserContext();
   const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState('');
   const { Formik } = formik;
@@ -40,9 +48,18 @@ const Matching = () => {
 
   const handleSubmit = async (values) => {
     setIsLoading(true);
-    const response = await post(values);
-    const json = await response.json();
-    console.log(json);
+    if (user) {
+      const response = await post({
+        ...values,
+        socketId,
+        uid: user._id,
+        username: user.username,
+      });
+      const json = await response.json();
+      if (!response.ok) {
+        console.log(json);
+      }
+    }
     const timeout = setTimeout(handleFailedMatch, 3000);
   };
 
