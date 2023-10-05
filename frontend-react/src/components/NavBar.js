@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom"
-
+import { useLogout } from "../hooks/useLogout"
 import React from 'react'
 import { useUserContext } from "../hooks/useUserContext"
 
+
 const NavBar = () => {
   const { user } = useUserContext()
+  const { logout } = useLogout()
+  const handleClick = () => { 
+    logout()
+  }
+
   return (
     <div className="navbar">
       <div className="container">

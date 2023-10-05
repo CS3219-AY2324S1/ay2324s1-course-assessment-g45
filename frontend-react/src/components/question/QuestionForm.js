@@ -12,10 +12,12 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
+import { UserContext } from '../../contexts/userContext';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
   const formRef = useRef()
+  const {user} = useUserContext()
 
   const schema = yup.object().shape({
     title: yup.string().required('Required'),
