@@ -2,16 +2,13 @@ import Config from '../Config';
 
 const baseUrl = Config.Common.QuestionApiBaseUrl;
 
-async function getAllQuestions(token) {
+async function getAllQuestions() {
   return fetch(`${baseUrl}/api/questions/`, {
     method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
   });
 }
 
-async function post(token, { ...params }) {
+async function post({ ...params }) {
   return fetch(`${baseUrl}/api/questions/`, {
     method: 'POST',
     body: JSON.stringify(params),
@@ -21,15 +18,13 @@ async function post(token, { ...params }) {
   });
 }
 
-
-async function deleteQuestion(token, { id }) {
+async function deleteQuestion({ id }) {
   return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'DELETE',
   });
 }
 
-
-async function patch(token, id, { ...params }) {
+async function patch(id, { ...params }) {
   return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),

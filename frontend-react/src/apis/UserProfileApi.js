@@ -12,7 +12,7 @@ async function post({ ...params }) {
   });
 }
 
-async function loginUser({ ...params }) {
+async function login({ ...params }) {
   return fetch(`${baseUrl}/api/userProfiles/login`, {
     method: 'POST',
     headers: {
@@ -22,25 +22,20 @@ async function loginUser({ ...params }) {
   });
 }
 
-
-async function updateUser(token, id, { ...params }) {
+async function updateUser(id, { ...params }) {
   return fetch(`${baseUrl}/api/UserProfiles/` + id, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
   });
 }
 
-async function deleteUser(token, id) {
+async function deleteUser(id) {
   return fetch(`${baseUrl}/api/userProfiles/` + id, {
     method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`
-      }
   });
 }
 

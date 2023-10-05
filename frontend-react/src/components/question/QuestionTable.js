@@ -10,9 +10,6 @@ import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
 import ConfirmationPopup from '../ConfirmationPopup';
-import { useUserContext } from '../../hooks/useUserContext';
-
-// Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()

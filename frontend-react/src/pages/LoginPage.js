@@ -9,17 +9,33 @@ const LoginPage = () => {
   const { user, dispatch } = useUserContext()
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  const {login, isLoading, error} = useLogin()
+  const [ error, setError ] = useState(null)
   const navigate = useNavigate()
-  console.log(password)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // const response = await fetch('/api/userProfiles/login', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type' : 'application/json'
+    //   },
+    //   body: JSON.stringify({ username, password})
+    // })
 
-    const response  = await login(username, password)
+    const response = await login({ username, password })
+    const json = await response.json()
+
+    if (!response.ok) {
+      setError(json.error)
+    }
+
     if (response.ok) {
       setUsername('')
       setPassword('')
+      console.log('Logged in successfully!', json)
+      dispatch({ type: 'SET_USER', payload: json })
+      console.log(user)
+      navigate("/")
     }
 
   }
