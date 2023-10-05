@@ -20,7 +20,7 @@ const NavBar = () => {
         {/* TODO: Log out logic*/}
         { user && 
           <div> 
-            <h4> Log out </h4>
+            <button onClick={handleClick}>Log Out</button>
           </div>
         }
 
