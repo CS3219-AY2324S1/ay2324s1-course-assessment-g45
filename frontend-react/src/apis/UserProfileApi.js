@@ -44,4 +44,4 @@ async function deleteUser(token, id) {
   });
 }
 
-export { post, loginUser, updateUser, deleteUser };
+export { post, login, updateUser, deleteUser };
