@@ -1,69 +1,88 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
-import * as formik from 'formik'
+import * as formik from 'formik';
 import * as yup from 'yup';
+import io from 'socket.io-client';
+import { post } from '../apis/MatchingApi';
+import Config from '../Config';
+import { useUserContext } from '../hooks/useUserContext';
+
+const baseUrl = Config.Common.MatchingApiBaseUrl;
+var socketId = '';
+const socket = io.connect(baseUrl); // connect to backend
+socket.on('connect', () => {
+  socketId = socket.id;
+});
 
 const Matching = () => {
-  const [ showModal, setShowModal ] = useState(false)
-  const [ error, setError ] = useState('')
-  const { Formik } = formik
-  const formRef = useRef()
-  const [ isFirstTry, setIsFirstTry ] = useState(true)
+  const { user } = useUserContext();
+  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState('');
+  const { Formik } = formik;
 
-  const timerCountDown = 30000 // 30s
-  const [ timeLeft, setTimeLeft ] = useState(null) // keep track of the remaining time
-  const [ isLoading, setIsLoading ] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const schema = yup.object().shape({
-    complexity: yup.string().required('Required')
-  })
+    complexity: yup.string().required('Required'),
+  });
 
-  const handleFailedMatch = (timer, interval) => {
-    setIsLoading(false)
-    setError('Unable to find match, please try again later!')
-    setIsFirstTry(false)
-    clearTimeout(timer)
-    clearInterval(interval)
-  }
+  const handleMatch = (msg) => {
+    console.log(msg);
+    setIsLoading(false);
+  };
 
-  const handleSubmit = () => {
-    setIsLoading(true)
-    setError('')
+  const handleTimeout = (msg) => {
+    console.log(msg);
+    setIsLoading(false);
+  };
 
-    // if sucess, redirect to collab page
+  useEffect(() => {
+    socket.on('matching', handleMatch);
+    socket.on('timeout', handleTimeout);
 
-    console.log(formRef)
-    const startTime = (new Date()).getTime()
-    console.log(startTime)
-    const myInterval = setInterval(() => {
-      setTimeLeft(getTimeLeft(startTime))
-    }, 1000)
-    const timeout = setTimeout(() => handleFailedMatch(timeout, myInterval), timerCountDown)
-  }
+    return () => {
+      socket.off('matching', handleMatch);
+      socket.off('timeout', handleTimeout);
+    };
+  }, []);
 
-  function getTimeLeft(startTime) {
-    return Math.round((timerCountDown - (new Date().getTime() - startTime)) / 1000)
-  }
-
-  const handleClose = () => {
-    setShowModal(false)
-    setError('')
-  }
+  const handleSubmit = async (values) => {
+    // Temporary solution. Make sure user is always logged in in the future.
+    if (!user) {
+      return;
+    }
+    setIsLoading(true);
+    const response = await post({
+      ...values,
+      time: Date.now(),
+      socketId,
+      uid: user._id,
+      username: user.username,
+    });
+    const json = response.json();
+    if (!response.ok) {
+      console.log(json);
+    }
+  };
 
   return (
     <div>
-      <Button 
-        className='ms-3 mt-3' 
-        onClick={() => {setShowModal(true)}}
-      > Find Match </Button>
+      <Button
+        className="ms-3 mt-3"
+        onClick={() => {
+          setShowModal(true);
+        }}
+      >
+        {' '}
+        Find Match{' '}
+      </Button>
 
-      { 
-        showModal &&
-        <Modal show={true} onHide={handleClose}>
-          <Modal.Header closeButton> 
+      {showModal && (
+        <Modal show={true} onHide={() => setShowModal(false)}>
+          <Modal.Header closeButton>
             <Modal.Title> Find Match </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -71,71 +90,54 @@ const Matching = () => {
               validationSchema={schema}
               onSubmit={handleSubmit}
               initialValues={{
-                complexity: ''
+                complexity: '',
               }}
-              innerRef={formRef}
             >
-              {props => (
+              {(props) => (
                 <Form noValidate onSubmit={props.handleSubmit}>
-                  <Form.Group className='mb-3'>
+                  <Form.Group className="mb-3">
                     <Form.Label> Complexity</Form.Label>
                     <Form.Select
                       required
-                      name='complexity'
+                      name="complexity"
                       onChange={props.handleChange}
                       value={props.values.complexity}
                       isInvalid={!!props.errors.complexity}
                     >
-                      {!props.values.complexity && <option> Select Complexity </option>}
-                      <option value='Easy'> Easy</option>
-                      <option value='Medium'> Medium</option>
-                      <option value='Hard'> Hard</option>
+                      {!props.values.complexity && (
+                        <option> Select Complexity </option>
+                      )}
+                      <option value="Easy"> Easy</option>
+                      <option value="Medium"> Medium</option>
+                      <option value="Hard"> Hard</option>
                     </Form.Select>
                     <Form.Control.Feedback type="invalid">
                       {props.errors.complexity}
                     </Form.Control.Feedback>
                   </Form.Group>
-                  
-                  { 
-                    isLoading && 
-                    <div >
-                      <div className='d-flex justify-content-center mb-3'> Find match in progress... </div>
-                      <div className='d-flex justify-content-center mb-3'> <Spinner animation='border'/></div>
-                    </div> 
-                  }
-                  {
-                    error &&
-                    <div className='error mb-3'> {error} </div>
-                  }
-
-                  { 
-                    timeLeft > 0 &&  
-                    <div className='d-flex justify-content-center'> 
-                      <h4> { timeLeft }s remaining </h4> 
-                    </div> 
-                  }
-
-                  {
-                    !isLoading && 
-                    <div className='d-flex justify-content-center'>
-                      <Button 
-                        type='submit' 
-                        variant='primary' 
-                        disabled={isLoading}
-                        className='align-self-center'
-                        >
-                        { isFirstTry ? 'Find Match' : 'Try again' }
-                      </Button>
+                  {isLoading && (
+                    <div>
+                      <div className="d-flex justify-content-center">
+                        {' '}
+                        Find match in progress...{' '}
+                      </div>
+                      <div className="bg-primary d-flex justify-content-center">
+                        {' '}
+                        <Spinner animation="border" />
+                      </div>
                     </div>
-                  }
+                  )}
+                  <Button type="submit" variant="primary" disabled={isLoading}>
+                    Find Match
+                  </Button>
                 </Form>
-              )} 
+              )}
             </Formik>
           </Modal.Body>
         </Modal>
-      }
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Matching
+export default Matching;
