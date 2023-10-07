@@ -92,7 +92,7 @@ input {
   border-radius: 10px;
 }
 
-.loginHeader {
+.card-header {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,12 +103,12 @@ input {
   border-radius: 10px;
 }
 
-.loginHeader img {
+.card-header  img {
   width: 100px;
   height: 100px;
 }
 
-.loginHeader h2 {
+.card-header h2 {
   color: rgb(35, 31, 31);
 }
 

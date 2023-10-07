@@ -29,7 +29,7 @@ const LoginPage = () => {
   return (
     <div className='login-page'>
       <div className='login-card'>
-        <div className='loginHeader'>
+        <div className='card-header'>
         <img  src="https://img.logoipsum.com/224.svg">
             </img>  
           <h2> Log In </h2>
@@ -75,7 +75,7 @@ const LoginPage = () => {
           </Button>
         </Form>
         <div className="text-center mt-4 mb-4 font-weight-light">
-                    Don't have an account? <Link to="/register" className="textlink-primary">Create</Link>
+                    Don't have an account? <Link to="/register"  className="textlink-primary">Create</Link>
           </div>
       </div>
     </div>  

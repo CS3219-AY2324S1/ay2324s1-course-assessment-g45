@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import style from '../styles/style.css'
 import { post } from '../apis/UserProfileApi'
@@ -17,6 +17,9 @@ const RegisterPage = () => {
   const [ loading, setLoading ] = useState(false)
   const navigate = useNavigate()
   const {signup, isLoading, error, setError} = useSignup()
+
+  console.log(username)
+  console.log(password)
 
   const checkConfirmPassword = (pw) => {
     setConfirmPassword(pw)
@@ -59,8 +62,10 @@ const RegisterPage = () => {
   return (
     <div className='register-page'>
       <div className='register-card'>
-        <div className='header'>
-          <h3> Register </h3>
+      <div className='card-header'>
+        <img  src="https://img.logoipsum.com/224.svg">
+            </img>  
+          <h2> Register </h2>
         </div>
 
         {/* <div>
@@ -69,7 +74,7 @@ const RegisterPage = () => {
           <div> {confirmPassword }</div>
         </div> */}
 
-        <Form className='m-4'>
+        <Form className='m-4'> 
           {
             error && 
             <div className='error'> {error} </div>
@@ -78,15 +83,27 @@ const RegisterPage = () => {
             <Form.Label> <b>Username: </b> </Form.Label>
             <Form.Control 
               type='text'
+              autocomplete="new-text"
               onChange={(e) => setUsername(e.target.value)}
               value={username}
               />
           </Form.Group>
 
           <Form.Group className='mb-3'>
+            <Form.Label> <b> Email: </b> </Form.Label>
+            <Form.Control 
+              type='email'
+              autocomplete="new-email"
+              onChange={(e) => setEmail(e.target.value)}
+              value = {email}
+            />
+          </Form.Group>
+
+          <Form.Group className='mb-3'>
             <Form.Label> <b> Password: </b> </Form.Label>
             <Form.Control 
               type='password'
+              autocomplete="new-password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               />
@@ -100,64 +117,16 @@ const RegisterPage = () => {
             <Form.Label> <b> Confirm password: </b> </Form.Label>
             <Form.Control 
               type='password'
+              autocomplete="new-password"
               onChange={(e) => checkConfirmPassword(e.target.value)}
               value={confirmPassword}
             />
           </Form.Group>
-
-          <Form.Group className='mb-3'>
-            <Form.Label> <b> Email: </b> </Form.Label>
-            <Form.Control 
-              type='email'
-              onChange={(e) => setEmail(e.target.value)}
-              value = {email}
-            />
-          </Form.Group>
-
           <Button type="submit" className='primary-btn' onClick={(e) => handleSubmit(e)} disabled={isLoading}> Register </Button>
-
         </Form>
-        {/* <form>
-          <label> User Name: </label>
-          <input
-            type='text' 
-            onChange={(e) => setUsername(e.target.value)}
-            value = {username} 
-            required={true}
-          />
-
-          <label> Password: </label>
-          <input
-            type='password' 
-            onChange={(e) => checkPassword(e.target.value)}
-            value = {password}
-            required
-          />
-
-          {
-            confirmPasswordError &&
-            <div className='error'> { confirmPasswordError }</div>
-          }
-          <label> Confirm password: </label>
-          <input
-            type='password' 
-            onChange={(e) => checkConfirmPassword(e.target.value)}
-            value={confirmPassword}
-            required
-          />
-
-          <label> Email: </label>
-          <input
-            type='text' 
-            onChange={(e) => setEmail(e.target.value)}
-            value = {email}
-            required
-          />
-
-          <div className='btn-container'>
-            <input type='submit' className='primary-btn' onClick={(e) => handleSubmit(e)}/>
+        <div className="text-center mt-4 mb-4 font-weight-light">
+                    Already have an account? <Link to="/login"  className="textlink-primary">Log In</Link>
           </div>
-        </form> */}
       </div>
     </div>
   )
