@@ -145,9 +145,10 @@ input {
 
 /* profile page */
 .profile-container {
-  display: flex;
+  padding: 30px;
+  /* display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; */
 }
 
 .profile-card {
@@ -427,6 +428,20 @@ h3 span{
     }
 }
 
+.profileHeader {
+  display: flex;
+  justify-content: space-between; 
+}
 
+.profileHeader div{
+  flex: 1;
+  display: flex;
+  justify-content: center; 
+}
+
+
+.profileForm {
+  margin-bottom: 50px;
+}
 
 

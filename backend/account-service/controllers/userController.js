@@ -97,7 +97,9 @@ const updateUser = async (req, res) => {
     }
 
     const updatedUser = await User.findById(id)
-    res.status(200).json(updatedUser)
+    // create token
+    const token = createToken(updatedUser._id)
+    res.status(200).json({id: updatedUser._id, username: updatedUser.username, token, role: updatedUser.role, email: updatedUser.email})
     
   } catch (error) {
     if (error.code == 11000) {
@@ -117,7 +119,7 @@ const login = async (req, res) => {
 
     // create token
     const token = createToken(user._id)
-    res.status(200).json({id: user._id, username, token, role: user.role})
+    res.status(200).json({id: user._id, username, token, role: user.role, email: user.email})
   } catch (error) {
     res.status(400).json({error: error.message})
   }

@@ -5,7 +5,7 @@ import { Form, Button } from 'react-bootstrap'
 import style from '../styles/style.css'
 import { post } from '../apis/UserProfileApi'
 import { useSignup } from '../hooks/useSignup'
-
+import logo from '../assets/images/logo.svg'
 
 const RegisterPage = () => {
   const { dispatch } = useUserContext()
@@ -63,7 +63,7 @@ const RegisterPage = () => {
     <div className='register-page'>
       <div className='register-card'>
       <div className='card-header'>
-        <img  src="https://img.logoipsum.com/224.svg">
+        <img  src={logo}>
             </img>  
           <h2> Register </h2>
         </div>
@@ -83,7 +83,7 @@ const RegisterPage = () => {
             <Form.Label> <b>Username: </b> </Form.Label>
             <Form.Control 
               type='text'
-              autocomplete="new-text"
+              autoComplete="new-text"
               onChange={(e) => setUsername(e.target.value)}
               value={username}
               />
@@ -93,7 +93,7 @@ const RegisterPage = () => {
             <Form.Label> <b> Email: </b> </Form.Label>
             <Form.Control 
               type='email'
-              autocomplete="new-email"
+              autoComplete="new-email"
               onChange={(e) => setEmail(e.target.value)}
               value = {email}
             />
@@ -103,7 +103,7 @@ const RegisterPage = () => {
             <Form.Label> <b> Password: </b> </Form.Label>
             <Form.Control 
               type='password'
-              autocomplete="new-password"
+              autoComplete="new-password"
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               />
@@ -117,7 +117,7 @@ const RegisterPage = () => {
             <Form.Label> <b> Confirm password: </b> </Form.Label>
             <Form.Control 
               type='password'
-              autocomplete="new-password"
+              autoComplete="new-password"
               onChange={(e) => checkConfirmPassword(e.target.value)}
               value={confirmPassword}
             />

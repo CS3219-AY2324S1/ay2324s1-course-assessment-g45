@@ -2,7 +2,8 @@ import { Link, useNavigate} from "react-router-dom"
 import { useLogout } from "../hooks/useLogout"
 import React, { useState, useEffect, useRef } from 'react';
 import { useUserContext } from "../hooks/useUserContext"
-import "../styles/style.css"
+import logo from '../assets/images/logo.svg'
+
 
 const NavBar = () => {
   const { user } = useUserContext()
@@ -36,6 +37,7 @@ const NavBar = () => {
   }
 
   const navigateToProfile = () => {
+    setOpen(false)
     navigate('/Profile')
   }
 
@@ -46,7 +48,7 @@ const NavBar = () => {
      
       <div className="navdiv" > 
       <Link to = "/">
-      <img className = "logoImage" src="https://img.logoipsum.com/224.svg">
+      <img className = "logoImage" src={logo}>
             </img>      
       </Link>
       <h4 className="card-title ms-2" style={{color: 'white'}}>Peer Prep</h4>
@@ -54,10 +56,10 @@ const NavBar = () => {
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
+         <li><Link className={location.pathname === "/home" ? "active" : ""}
+          to = "/home"> Home </Link></li>  
          <li><Link className={location.pathname === "/" ? "active" : ""}
-          to = "/"> Home </Link></li>  
-          <li><Link className={location.pathname === "/Profile" ? "active" : ""}
-          to = "/Profile"> Profile </Link></li>
+          to = "/"> Questions </Link></li>  
         </ul>
          }
       </div>  

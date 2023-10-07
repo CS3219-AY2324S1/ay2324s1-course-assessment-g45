@@ -27,6 +27,15 @@ export const UserContextProvider = ({children}) => {
     }
   }, [])
 
+   // Save the state back to localStorage whenever it changes
+   useEffect(() => {
+    if (state.user) {
+      localStorage.setItem('user', JSON.stringify(state.user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [state.user]);
+
   console.log('Auth context state: ', state)
 
   return (

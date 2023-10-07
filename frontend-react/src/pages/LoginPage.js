@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-//import { login } from '../apis/UserProfileApi'
 import { useLogin } from '../hooks/useLogin'
+import logo from '../assets/images/logo.svg'
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
@@ -30,7 +30,7 @@ const LoginPage = () => {
     <div className='login-page'>
       <div className='login-card'>
         <div className='card-header'>
-        <img  src="https://img.logoipsum.com/224.svg">
+        <img  src={logo}>
             </img>  
           <h2> Log In </h2>
         </div>
