@@ -42,24 +42,21 @@ const NavBar = () => {
   return (
     <>
     <nav>
+ 
+     
+      <div className="navdiv" > 
       <Link to = "/">
       <img className = "logoImage" src="https://img.logoipsum.com/224.svg">
             </img>      
-        
       </Link>
-
-     
-      <div>
       {user &&
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
-      
          <li><Link className={location.pathname === "/" ? "active" : ""}
           to = "/"> Home </Link></li>  
           <li><Link className={location.pathname === "/Profile" ? "active" : ""}
           to = "/Profile"> Profile </Link></li>
-          
         </ul>
          }
       </div>  

@@ -195,6 +195,12 @@ nav{
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
 }
 
+.navdiv {
+  display: flex;
+  align-items: center; 
+}
+
+
 #navbar {
   display: flex;
   align-items: center;
@@ -402,7 +408,6 @@ h3 span{
         background: linear-gradient(to left, #f06, #9f6);
     }
 }
-
 
 
 
