@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -64,13 +64,18 @@ const QuestionTable = () => {
     }
   }
 
+  const getBadgeClass = (complexity) => {
+    switch (complexity) {
+      case 'Hard': return 'badge bg-danger';
+      case 'Medium': return 'badge bg-warning';
+      case 'Easy': return 'badge bg-success';
+      default: return 'badge bg-info'; 
+    }
+  }
+  
+
   return (
     <div>
-      { user.role == 'admin' && 
-      <Button variant="success" className='ms-3 mt-3 pull-left'
-        onClick={handleShowAddModal}>Add a question
-      </Button>
-      }
       {
         showAddModal &&
         <QuestionForm
@@ -96,56 +101,67 @@ const QuestionTable = () => {
         />
       }
 
-      <Container className='p-3 m-0 border-0 bd-example m-0 border-0 bd-example-row'>
-        <Row className="justify-content-md-center">
-          <Col xs="auto">
-            &nbsp;&nbsp;
-          </Col>
-          <Col>
-            Title
-          </Col>
-          <Col>
-            Categories
-          </Col>
-          <Col>
-            Complexity
-          </Col>
-          { user.role == 'admin' && 
-          <Col xs="2">
-          </Col>
-          }
-        </Row>
-        {questions && questions.map((qn, j) => (
-          <div key={j}>
-            <Row className="justify-content-md-center">
-              <Col xs="auto">
-                {j + 1}
-              </Col>
-              <Col onClick={() => setSelectedQn(qn)}>
-                {qn.title}
-              </Col>
-              <Col>
-                {qn.categories.map((category, i) => (
-                  qn.categories[i + 1] ? category + ", " : category
-                ))}
-              </Col>
-              <Col>
-                {qn.complexity}
-              </Col>
-              { user.role == 'admin' && 
-              <Col xs="2">
-                <div>
-                  <Button variant="danger" className='ms-2'
-                    onClick={() => handleDeleteQuestion(qn._id)}>Delete</Button>
-                  <Button variant="primary" className='ms-4'
-                    onClick={() => setEditQn(qn)}>Update</Button>
+
+      <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-5">
+            <div className="card">
+              <div className="card-body">
+                <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
+                  <h4 className="card-title">Questions</h4>
+                  { user.role == 'admin' && 
+                  <button type="button"  class="btn btn btn-primary" onClick={handleShowAddModal}>
+                              Add a question <i class="fa-solid fa-plus"></i>
+                            </button>
+                  }
                 </div>
-              </Col>
-              }
-            </Row>
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Complexity</th>
+                        { user.role == 'admin' && 
+                            <th></th>
+                        }
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                    {questions && questions.map((qn, j) => (
+                        <tr onClick={() => setSelectedQn(qn)}>
+                        <td>{j + 1}</td>
+                        <td>{qn.title}</td>
+                        <td>
+                          {qn.categories.map((category, i) => (
+                            qn.categories[i + 1] ? category + ", " : category
+                          ))}
+                        </td>
+                        <td>
+                          <label className={getBadgeClass(qn.complexity)}>
+                            {qn.complexity}
+                          </label>
+                        </td>
+                        { user.role == 'admin' && 
+                          <td>
+                          <div class="d-flex justify-content-end">
+                          <button type="button"  class="btn btn-outline-secondary me-2" onClick={(e) => {e.stopPropagation(); setEditQn(qn)} }>
+                            Edit <i class="fa-regular fa-pen-to-square"></i>
+                          </button>
+                          <button type="button"  class="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); handleDeleteQuestion(qn._id)}}>
+                            Delete <i class="fa-regular fa-trash"></i>
+                          </button>
+                          </div>
+                          </td>
+                        }
+                      </tr>
+                  ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
           </div>
-        ))}
-      </Container>
     </div>
   );
 }

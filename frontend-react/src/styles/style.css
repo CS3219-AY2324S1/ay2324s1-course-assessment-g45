@@ -390,3 +390,20 @@ h3 span{
   width: 40px;
   height: 40px;
 }
+
+
+.btn-gradient {
+    background:  linear-gradient(to right, #e7ebf0, #868e96);
+    border: none;
+    color: white;
+    transition: all 0.5s;
+
+    &:hover {
+        background: linear-gradient(to left, #f06, #9f6);
+    }
+}
+
+
+
+
+
