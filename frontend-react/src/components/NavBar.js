@@ -49,6 +49,7 @@ const NavBar = () => {
       <img className = "logoImage" src="https://img.logoipsum.com/224.svg">
             </img>      
       </Link>
+      <h4 className="card-title ms-2" style={{color: 'white'}}>Peer Prep</h4>
       {user &&
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}

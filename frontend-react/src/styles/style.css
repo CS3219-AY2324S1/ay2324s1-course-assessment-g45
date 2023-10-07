@@ -21,7 +21,7 @@
 }
 
 body {
-  background-color: rgba(146, 102, 102, 0.2);
+  background-color: rgba(240, 211, 211, 0.2);
 }
 
 /* form {
@@ -44,21 +44,6 @@ input {
   border-radius: 4px;
   box-sizing: border-box;
 }
-
-/* .navbar {
-  background-color: white;
-}
-
-.navbar .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.navbar a {
-  color: #333;
-  text-decoration: none;
-} */
 
 .primary-btn {
   background-color: var(--primary);
@@ -100,24 +85,54 @@ input {
 .register-card,
 .login-card,
 .profile-card {
-  width: 30%;
+  width: 25%;
   max-width: 700px;
   min-width: 330px;
   background-color: white;
+  border-radius: 10px;
 }
 
-.header {
+.loginHeader {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  background-color: var(--primary);
-  margin-bottom: 30px;
+  /* background-color: var(--primary); */
+  margin-top: 30px;
+  border-radius: 10px;
 }
 
-.header h3 {
-  color: white;
+.loginHeader img {
+  width: 100px;
+  height: 100px;
 }
+
+.loginHeader h2 {
+  color: rgb(35, 31, 31);
+}
+
+.password-icon {
+  margin-left: -25px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.textlink-primary {
+  color: var(--primary);
+  text-decoration: none; /* This will remove the default underline */
+  transition: text-decoration 0.3s; /* This provides a smooth transition for the underline effect */
+}
+
+.textlink-primary:hover {
+  text-decoration: underline;
+}
+
+.textlink-primary:hover {
+  text-decoration: underline;
+}
+
+
 
 .btn-container {
   width: 100%;
@@ -193,6 +208,9 @@ nav{
   background: #1b2430;
   padding: 20px 80px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+  position: sticky;
+  top: 0;
+  z-index: 1000; 
 }
 
 .navdiv {
