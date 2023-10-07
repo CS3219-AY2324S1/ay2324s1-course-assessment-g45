@@ -1,44 +1,107 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate} from "react-router-dom"
 import { useLogout } from "../hooks/useLogout"
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react';
 import { useUserContext } from "../hooks/useUserContext"
-
+import "../styles/style.css"
 
 const NavBar = () => {
   const { user } = useUserContext()
   const { logout } = useLogout()
-  const handleClick = () => { 
+  const [isClicked, setIsClicked] = useState(false);
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+  let menuRef = useRef();
+
+  useEffect(() => {
+    // Only set up the event listeners if the user is logged in
+    if (user) {
+      let handler = (e) => {
+        if (!menuRef.current.contains(e.target)) {
+          setOpen(false)
+        }
+      };
+  
+      document.addEventListener("mousedown", handler)
+  
+      // Cleanup event listener when component is unmounted or when user logs out
+      return () => {
+        document.removeEventListener("mousedown", handler)
+      };
+    }
+  }, [user]);
+
+  const handleLogout = () => { 
     logout()
+    setOpen(false)
   }
 
+  const navigateToProfile = () => {
+    navigate('/Profile')
+  }
 
   return (
-    <div className="navbar">
-      <div className="container">
-        <Link to="/"><h4> PeerPrep </h4></Link>
-        {/* <Link to="/register"><h4> Register </h4></Link>
-        <Link to="/login"><h4> Log in </h4></Link>  */}
-        { !user && <Link to="/register"><h4> Register </h4></Link> }
-        { !user && <Link to="/login"><h4> Log in </h4></Link> }
-        {/* <Link to="/profile">
-            <span class="material-symbols-outlined small-icons">account_circle</span>  
-        </Link> */}
+    <>
+    <nav>
+      <Link to = "/">
+      <img className = "logoImage" src="https://img.logoipsum.com/224.svg">
+            </img>      
+        
+      </Link>
 
-        {/* TODO: Log out logic*/}
-        { user && 
-          <div> 
-            <button onClick={handleClick}>Log Out</button>
+     
+      <div>
+      {user &&
+        <ul id = "navbar" 
+         className = {isClicked ? "#navbar active" : "#navbar"}
+        > 
+      
+         <li><Link className={location.pathname === "/" ? "active" : ""}
+          to = "/"> Home </Link></li>  
+          <li><Link className={location.pathname === "/Profile" ? "active" : ""}
+          to = "/Profile"> Profile </Link></li>
+          
+        </ul>
+         }
+      </div>  
+   
+      
+      {user &&
+      <div className='menu-container' ref={menuRef}>
+          <div className='menu-trigger' onClick={()=>{setOpen(!open)}}>
+          <img src="https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350">
+            </img>
           </div>
-        }
-
-        { 
-          user && <Link to="/profile"> 
-          <span class="material-symbols-outlined small-icons">account_circle</span>
-          </Link>
-        }
+          <div className={`dropdown-menu ${open? 'active' : 'inactive'}`}> 
+            <h3>{user.username}<br/><span>Role: {user.role}</span></h3>
+            <ul>
+              <DropdownItem img = {"https://img.icons8.com/ios-filled/50/user-male-circle.png"} text = {"My Profile"} onClick ={navigateToProfile}/>
+              <DropdownItem img = {"https://img.icons8.com/ios-filled/50/logout-rounded-left.png"} text = {"Logout"} onClick ={handleLogout}/>
+            </ul>
+          </div>
       </div>
-    </div>
+    }
+
+      <div id = "collapse"> 
+        <i id = "bar"
+        className = {isClicked ? "fas fa-times" : "fas fa-bars"}
+        onClick={() => setIsClicked(prevState => !prevState)}
+        >
+        </i>
+      </div>
+
+      </nav>
+      </>
   )
 }
+
+function DropdownItem(props) {
+  return (
+    <li className="dropdownItem">
+      <img src={props.img}></img>
+      <a onClick={props.onClick}> {props.text}</a>
+    </li>
+  );
+}
+
 
 export default NavBar
