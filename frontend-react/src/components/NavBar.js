@@ -72,7 +72,7 @@ const NavBar = () => {
             </img>
           </div>
           <div className={`dropdown-menu ${open? 'active' : 'inactive'}`}> 
-            <h3>{user.username}<br/><span>Role: {user.role}</span></h3>
+            <h3>{user.username}<br/>{user.role != "user" && <span>Role: {user.role}</span>}</h3>
             <ul>
               <DropdownItem img = {"https://img.icons8.com/ios-filled/50/user-male-circle.png"} text = {"My Profile"} onClick ={navigateToProfile}/>
               <DropdownItem img = {"https://img.icons8.com/ios-filled/50/logout-rounded-left.png"} text = {"Logout"} onClick ={handleLogout}/>

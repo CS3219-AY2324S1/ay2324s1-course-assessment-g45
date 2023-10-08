@@ -331,7 +331,7 @@ nav{
   right: 20px;
   background-color: #fff;
   border-radius: var(--border-radius);
-  padding: 10px 20px;
+  /* padding: 10px 10px; */
   width: 200px;
 }
 
