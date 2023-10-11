@@ -25,6 +25,18 @@ const getSingleQuestion = async (req, res) => {
   res.status(200).json(question);
 };
 
+// GET list of question by complexity
+const getQuestionsByComplexity = async(req, res) => {
+  const { complexity } = req.params
+
+  const question = await Question.findOne({ complexity: complexity})
+  if (!question) {
+    return res.status(400).json({error: `No questions found with ${complexity} complexity`})
+  }
+
+  res.status(200).json(question)
+}
+
 // POST a new question
 const createQuestion = async (req, res) => {
   const { title, categories, complexity, description } = req.body;
@@ -90,6 +102,7 @@ const updateQuestion = async (req, res) => {
 module.exports = {
   getAllQuestions,
   getSingleQuestion,
+  getQuestionsByComplexity,
   createQuestion,
   deleteQuestion,
   updateQuestion,

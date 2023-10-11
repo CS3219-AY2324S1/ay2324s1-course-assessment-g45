@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const rabbitMQHandler = require('./connection');
 const matchingRoutes = require('./routes/matching');
+const { v4: uuidv4 } = require('uuid');
 
 const PORT = process.env.PORT || 3004;
 
@@ -37,16 +38,21 @@ rabbitMQHandler((connection) => {
     if (error) {
       throw error;
     }
-    const queue = 'matching';
+    const matchingQueue = 'matching';
+    const questionQueue = 'question'
 
-    channel.assertQueue(queue, {
+    channel.assertQueue(matchingQueue, {
       durable: false,
     });
+
+    channel.assertQueue(questionQueue, {
+      durable: false
+    })
 
     let requestBuffer = [];
 
     channel.consume(
-      queue,
+      matchingQueue,
       (msg) => {
         console.log(' [x] Received %s', msg.content.toString());
         const request = JSON.parse(msg.content.toString());
@@ -60,9 +66,48 @@ rabbitMQHandler((connection) => {
             bufferedRequest.uid != uid
           ) {
             const matchPair = [bufferedRequest, request];
-            io.to(socketId).emit('matching', matchPair);
-            io.to(bufferedRequest.socketId).emit('matching', matchPair);
-            requestBuffer.slice(i, i); // Remove matched request from buffer
+
+            // send to question queue to request for qns
+            // channel.sendToQueue(questionQueue, Buffer.from(JSON.stringify({ complexity : complexity})))
+            // console.log(`Sent to queue: ${complexity}`)
+
+            channel.assertQueue('', {
+              exclusive: true,
+            }, (err, queue) => {
+              if (err) {
+                throw err
+              }
+
+              // send to request for question
+              channel.sendToQueue('question', 
+                Buffer.from(JSON.stringify({ complexity : complexity})),
+                { 
+                  correlationId : 'matching_service' , 
+                  replyTo: queue.queue, 
+                }
+              )
+              console.log('sent request to queue!')
+
+              // read from queue to get the requested question
+              channel.consume(queue.queue, (msg) => {
+                if (msg.properties.correlationId == 'matching_service') {
+                  console.log(`Got message: ${msg.content.toString()}`)
+                  const question_id = msg.content.toString()
+                  const session_id = uuidv4()
+                  const collab_session = { question_id, session_id }
+  
+                  console.log(question_id)
+                  io.to(socketId).emit('matching', collab_session);
+                  io.to(bufferedRequest.socketId).emit('matching', collab_session);
+                  requestBuffer.slice(i, i); // Remove matched request from buffer
+                }
+              })
+            })
+
+
+            // io.to(socketId).emit('matching', matchPair);
+            // io.to(bufferedRequest.socketId).emit('matching', matchPair);
+            // requestBuffer.slice(i, i); // Remove matched request from buffer
             return;
           }
         }

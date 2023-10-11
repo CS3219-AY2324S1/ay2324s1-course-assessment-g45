@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getAllQuestions,
   getSingleQuestion,
+  getQuestionsByComplexity,
   createQuestion,
   deleteQuestion,
   updateQuestion,
@@ -14,6 +15,9 @@ router.get('/', getAllQuestions);
 
 // GET a single question
 router.get('/:id', getSingleQuestion);
+
+// GET all questions of given complexity
+router.get('/complexity/:complexity', getQuestionsByComplexity)
 
 // POST a new question
 router.post('/', createQuestion);

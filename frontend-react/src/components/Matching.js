@@ -32,6 +32,12 @@ const Matching = () => {
   const handleMatch = (msg) => {
     console.log(msg);
     setIsLoading(false);
+
+    // get questions
+    // const response = await getQuestionsByComplexity({ complexity: selectedComplexity})
+    // const json = response.json()
+    // console.log(json)
+
   };
 
   const handleTimeout = (msg) => {
@@ -71,13 +77,12 @@ const Matching = () => {
   return (
     <div>
       <Button
-        className="ms-3 mt-3"
+        className="ms-3 mt-3 px-3"
         onClick={() => {
           setShowModal(true);
         }}
       >
-        {' '}
-        Find Match{' '}
+        Find Match
       </Button>
 
       {showModal && (
@@ -121,7 +126,7 @@ const Matching = () => {
                         {' '}
                         Find match in progress...{' '}
                       </div>
-                      <div className="bg-primary d-flex justify-content-center">
+                      <div className="d-flex justify-content-center">
                         {' '}
                         <Spinner animation="border" />
                       </div>
