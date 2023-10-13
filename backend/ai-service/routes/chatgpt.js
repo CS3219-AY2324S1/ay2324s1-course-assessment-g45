@@ -7,7 +7,7 @@ const requireAuth = require('../middleware/requireAuth');
 const router = express.Router();
 
 // Require auth for all question routes
-router.use(requireAuth);
+// router.use(requireAuth);
 
 // POST a new request
 router.post('/', generateResponse);

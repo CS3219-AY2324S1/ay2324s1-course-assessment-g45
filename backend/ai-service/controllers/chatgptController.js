@@ -9,7 +9,7 @@ const openai = new OpenAI (process.env.OPENAI_API_KEY);
 const generateResponse = async (req, res) => {
   const { message } = req.body;
   try {
-    // const completion = await openai.completions.create({
+    // const completion = await openai.chat.completions.create({
     //   model: "gpt-3.5-turbo",
     //   messages: [{ role: "user", content: `${explainPrompt}${message}` }],
     //   max_tokens: 200,
