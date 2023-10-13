@@ -146,9 +146,11 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
     console.log(' [x] Awaiting create session requests')
 
     channel.consume(queueName, async (msg) => {
-      const data = JSON.parse(msg.content.toString())
+      const data = JSON.parse(msg.content)
       console.log(`[x] Received session: ${data}`)
+      channel.ack(msg)
       try {
+        console.log(data)
         const session = await Session.create(data)
         console.log(session)
 
@@ -158,10 +160,10 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
             Buffer.from(JSON.stringify(session))  
           )
           console.log(`[x] Sent session created to queue`)
-          channel.ack(msg)
         }
       } catch (err) {
         // handle unable to create
+        console.log(err)
       }
     })
   })

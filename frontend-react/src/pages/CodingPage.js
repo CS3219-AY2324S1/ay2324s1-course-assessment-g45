@@ -15,7 +15,7 @@ const CodingPage = () => {
 
   useEffect(() => {
     const getQuestion = async (id) => {
-      const response = await getQuestionById({ id })
+      const response = await getQuestionById(user.token, { id })
       const json = await response.json()
       console.log(json)
       if (response.ok) {

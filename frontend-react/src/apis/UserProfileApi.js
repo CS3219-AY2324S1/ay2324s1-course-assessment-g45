@@ -22,7 +22,7 @@ async function loginUser({...params}) {
   });
 }
 
-async function updateUser(id, { ...params }) {
+async function updateUser(token, id, { ...params }) {
   return fetch(`${baseUrl}/api/UserProfiles/` + id, {
     method: 'PATCH',
     body: JSON.stringify(params),
@@ -34,7 +34,7 @@ async function updateUser(id, { ...params }) {
   });
 }
 
-async function deleteUser(id) {
+async function deleteUser(token, id) {
   return fetch(`${baseUrl}/api/userProfiles/` + id, {
     method: 'DELETE',
     headers: {

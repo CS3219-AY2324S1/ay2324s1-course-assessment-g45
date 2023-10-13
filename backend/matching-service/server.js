@@ -65,11 +65,14 @@ rabbitMQHandler((connection) => {
       (msg) => {
         console.log(' [x] Received %s', msg.content.toString());
         const request = JSON.parse(msg.content.toString());
+        let isMatched = false;
         const socketId = request.socketId;
         const uid = request.uid;
         const complexity = request.complexity;
         for (let i = 0; i < requestBuffer.length; i++) {
           const bufferedRequest = requestBuffer[i];
+          console.log(request, bufferedRequest)
+          isMatched = true;
           if (
             bufferedRequest.complexity == complexity &&
             bufferedRequest.uid != uid
@@ -125,7 +128,7 @@ rabbitMQHandler((connection) => {
                     console.log(session._id)
                     io.to(socketId).emit('matching', session);
                     io.to(bufferedRequest.socketId).emit('matching', session);
-                    requestBuffer.slice(i, 1); // Remove matched request from buffer
+                    requestBuffer.slice(i, i); // Remove matched request from buffer
                   })
                 }
               })
@@ -138,7 +141,9 @@ rabbitMQHandler((connection) => {
             return;
           }
         }
-        requestBuffer.push(request);
+        if (!isMatched) {
+          requestBuffer.push(request);
+        }
       },
       { noAck: true }
     );

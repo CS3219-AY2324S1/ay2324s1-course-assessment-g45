@@ -67,11 +67,12 @@ const Matching = () => {
       return;
     }
     setIsLoading(true);
+    // console.log(user)
     const response = await post({
       ...values,
       time: Date.now(),
       socketId,
-      uid: user._id,
+      uid: user.id,
       username: user.username,
     });
     const json = response.json();
