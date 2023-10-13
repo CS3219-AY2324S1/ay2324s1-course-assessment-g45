@@ -17,7 +17,7 @@ function App() {
           <Route path='/register' element={<RegisterPage/>}/>
           <Route path='/login' element={<LoginPage/>}/>
           <Route path='/profile' element={<Profile/>}/>
-          <Route path='/codeEditor/:id' element={<CodingPage/>}/>
+          <Route path='/codeEditor/:sessionId' element={<CodingPage/>}/>
         </Routes>
         </div>
       </BrowserRouter>

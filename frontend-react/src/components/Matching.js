@@ -9,6 +9,7 @@ import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
 import Config from '../Config';
 import { useUserContext } from '../hooks/useUserContext';
+import { useNavigate } from 'react-router-dom';
 
 const baseUrl = Config.Common.MatchingApiBaseUrl;
 var socketId = '';
@@ -25,6 +26,8 @@ const Matching = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const navigate = useNavigate()
+
   const schema = yup.object().shape({
     complexity: yup.string().required('Required'),
   });
@@ -32,6 +35,9 @@ const Matching = () => {
   const handleMatch = (msg) => {
     console.log(msg);
     setIsLoading(false);
+    navigate(`/codeEditor/${msg._id}`)
+
+    // navigate(`/codeEditor/${msg.sessionId}/${msg.questionId}/${msg.uid1}/${msg.uid2}`)
 
     // get questions
     // const response = await getQuestionsByComplexity({ complexity: selectedComplexity})

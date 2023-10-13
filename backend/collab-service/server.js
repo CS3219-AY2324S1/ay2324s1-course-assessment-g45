@@ -8,6 +8,13 @@ const { Server } = require('socket.io')
 const mongoose = require("mongoose")
 const Document = require("./Document")
 
+// api calls
+const collabSessionRoutes = require('./routes/collabSession')
+
+const Session = require('./models/sessionModel')
+
+const amqp = require('amqplib/callback_api')
+
 const PORT = process.env.PORT || 3003;
 
 mongoose
@@ -24,6 +31,16 @@ mongoose
 const app = express();
 
 app.use(cors());
+
+app.use(express.json());
+
+
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
+
+app.use('/api/collabSession', collabSessionRoutes)
 
 const server = createServer(app);
 
@@ -42,9 +59,6 @@ const defaultValue = ""
 
 io.on("connection", (socket) => {
    console.log("user connected", socket.id)
-
-  // socket.on("send_message", (data) => {
-  //   console.log(data)
 
   //   // broadcast to everyone
   //   // socket.broadcast.emit("receive_message", data)
@@ -66,22 +80,44 @@ io.on("connection", (socket) => {
   //   socket.emit('load-session', data)
   // })
 
-  socket.on("get-session", async documentId => {
-    const document = await findOrCreateDocument(documentId)
-    socket.join(documentId)
-    socket.emit("load-session", document.data)
+  // socket.on("get-session", async documentId => {
+  //   const document = await findOrCreateDocument(documentId)
+  //   socket.join(documentId)
+  //   socket.emit("load-session", document.data)
 
+  //   console.log("socket join")
+  //   socket.on("send_changes", delta => {
+  //     socket.broadcast.to(documentId).emit("received_changes", delta) //broadcast.to(documentId)
+  //   })
+
+  //   socket.on("save-document", async data => {
+  //     await Document.findByIdAndUpdate(documentId, { data })
+  //   })
+  // })
+
+  socket.on("get-session", async sessionId => {
+    const session = await findSession(sessionId)
+    socket.join(sessionId)
+    socket.emit("load-session", session.data)
+    
     console.log("socket join")
     socket.on("send_changes", delta => {
-      socket.broadcast.to(documentId).emit("received_changes", delta) //broadcast.to(documentId)
+      socket.broadcast.to(sessionId).emit("received_changes", delta) //broadcast.to(sessionId)
     })
 
     socket.on("save-document", async data => {
-      await Document.findByIdAndUpdate(documentId, { data })
+      await Session.findByIdAndUpdate(sessionId, { data })
     })
   })
 })
 
+async function findSession(id) {
+  if (id == null) return
+  const session = await Session.findById(id)
+  if (session) return session
+  return null
+  // return await Document.create({ _id: id, data: defaultValue })
+}
 
 async function findOrCreateDocument(id) {
   if (id == null) return
@@ -89,3 +125,44 @@ async function findOrCreateDocument(id) {
   if (document) return document
   return await Document.create({ _id: id, data: defaultValue })
 }
+
+amqp.connect(`amqp://localhost`, (err, connection) => {
+  if (err) {
+    throw err
+  }
+
+  connection.createChannel((err, channel) => {
+    if (err) {
+      throw err
+    }
+
+    let queueName = 'collabSession'
+
+    channel.assertQueue(queueName, {
+      durable: true
+    })
+
+    channel.prefetch(1)
+    console.log(' [x] Awaiting create session requests')
+
+    channel.consume(queueName, async (msg) => {
+      const data = JSON.parse(msg.content.toString())
+      console.log(`[x] Received session: ${data}`)
+      try {
+        const session = await Session.create(data)
+        console.log(session)
+
+        // if session created, send to queue for matching service
+        if (session) {
+          channel.sendToQueue(msg.properties.replyTo,
+            Buffer.from(JSON.stringify(session))  
+          )
+          console.log(`[x] Sent session created to queue`)
+          channel.ack(msg)
+        }
+      } catch (err) {
+        // handle unable to create
+      }
+    })
+  })
+})

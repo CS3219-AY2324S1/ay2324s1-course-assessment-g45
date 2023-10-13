@@ -47,7 +47,6 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
 
 
     let queueName = "question"
-    let message = "this is a message"
     channel.assertQueue(queueName, {
       durable: false
     })
@@ -58,24 +57,15 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
       const complexity = JSON.parse(msg.content.toString()).complexity
       console.log(`[x] Received request for question of ${complexity} complexity`)
       const question = await Question.findOne({ complexity: complexity})
-      channel.sendToQueue(msg.properties.replyTo, 
-        Buffer.from(question.id),
-        { correlationId: 'matching_service'}  
-      )
-      console.log(`[x] Sent questions to queue`)
-      channel.ack(msg)
+      if (question) {
+        channel.sendToQueue(msg.properties.replyTo, 
+          Buffer.from(question.id),
+          { correlationId: 'matching_service'}  
+        )
+        console.log(`[x] Sent questions to queue`)
+        channel.ack(msg)
+      }
+      // handle error if no question found
     })
-
-    // channel.sendToQueue(queueName, Buffer.from(message))
-    // console.log(message)
-    // setTimeout(() => connection.close(), 1000)
-    // channel.consume(queueName, async (msg) => {
-    //   console.log(JSON.parse(msg.content.toString()))
-    //   const complexity = JSON.parse(msg.content.toString()).complexity
-    //   const question = await Question.findOne({ complexity: complexity})
-    //   console.log(question)
-    //   channel.ack(msg)
-    // })
-
   })
 })

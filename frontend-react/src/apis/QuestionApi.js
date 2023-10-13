@@ -8,6 +8,12 @@ async function getAllQuestions() {
   });
 }
 
+async function getQuestionById({ id }) {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
+    method: 'GET',
+  })
+}
+
 async function post({ ...params }) {
   return fetch(`${baseUrl}/api/questions/`, {
     method: 'POST',
@@ -34,4 +40,10 @@ async function patch(id, { ...params }) {
   });
 }
 
-export { getAllQuestions, post, deleteQuestion, patch };
+export { 
+  getAllQuestions, 
+  getQuestionById,
+  post, 
+  deleteQuestion, 
+  patch 
+};

@@ -4,12 +4,11 @@ import "quill/dist/quill.snow.css"
 import Editor from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import loader from '@monaco-editor/loader';
-// import { v4 as uuidV4 } from 'uuid'
 
 const SAVE_INTERVAL_MS = 2000
 const MonacoCodeEditor = () => {
   const [ socket, setSocket ] = useState()
-  const { id : sessionId } = useParams()
+  const { sessionId } = useParams()
   const [myEditor, setEditor] = useState()
   const editorRef = useRef(null)
   // initialized to true to block initial delta from socket on load
