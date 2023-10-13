@@ -10,6 +10,9 @@ import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
 import ConfirmationPopup from '../ConfirmationPopup';
+import { useUserContext } from '../../hooks/useUserContext';
+
+// Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
@@ -27,9 +30,14 @@ const QuestionTable = () => {
 
   const [ showDeleteConfirmation, setShowDeleteConfirmation ] = useState(false)
  
+  const {user} = useUserContext();
   useEffect(() => {
     const fetchQuestions = async () => {
-      const response = await getAllQuestions()
+      if (!user) {
+        setError('Please login to view questions')  
+        return
+      }
+      const response = await getAllQuestions(user.token)
       const json = await response.json()
       console.log(response)
 
@@ -44,7 +52,12 @@ const QuestionTable = () => {
   const [error, setError] = useState(null)
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
-    const response = await deleteQuestion({ id: deleteQuestionId })
+    if (!user) {
+      setError('Please login to delete questions')  
+      return
+    }
+
+    const response = await deleteQuestion(user.token, { id: deleteQuestionId })
     const json = await response.json()
     console.log(json);
 
@@ -59,9 +72,11 @@ const QuestionTable = () => {
 
   return (
     <div>
+      { user.role == 'admin' && 
       <Button variant="success" className='ms-3 mt-3 pull-left'
         onClick={() => setShowAddModal(true)}>Add a question
       </Button>
+      }
       {
         showAddModal &&
         <QuestionForm
@@ -114,8 +129,10 @@ const QuestionTable = () => {
           <Col>
             Complexity
           </Col>
+          { user.role == 'admin' && 
           <Col xs="2">
           </Col>
+          }
         </Row>
         {questions && questions.map((qn, j) => (
           <div key={j}>
@@ -134,6 +151,7 @@ const QuestionTable = () => {
               <Col>
                 {qn.complexity}
               </Col>
+              { user.role == 'admin' && 
               <Col xs="2">
                 <div>
                   <Button variant="danger" className='ms-2'
@@ -142,6 +160,7 @@ const QuestionTable = () => {
                     onClick={() => setEditQn(qn)}>Update</Button>
                 </div>
               </Col>
+              }
             </Row>
           </div>
         ))}

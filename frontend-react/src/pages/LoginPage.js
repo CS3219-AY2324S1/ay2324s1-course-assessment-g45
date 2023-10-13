@@ -3,17 +3,21 @@ import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-import { login } from '../apis/UserProfileApi'
+//import { login } from '../apis/UserProfileApi'
+import { useLogin } from '../hooks/useLogin'
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ error, setError ] = useState(null)
+  //const [ error, setError ] = useState(null)
+  const {login, isLoading, error} = useLogin()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    await login(username, password)
     // const response = await fetch('/api/userProfiles/login', {
     //   method: 'POST',
     //   headers: {
@@ -22,21 +26,21 @@ const LoginPage = () => {
     //   body: JSON.stringify({ username, password})
     // })
 
-    const response = await login({ username, password })
-    const json = await response.json()
+    // const response = await login({ username, password })
+    // const json = await response.json()
 
-    if (!response.ok) {
-      setError(json.error)
-    }
+    // if (!response.ok) {
+    //   setError(json.error)
+    // }
 
-    if (response.ok) {
-      setUsername('')
-      setPassword('')
-      console.log('Logged in successfully!', json)
-      dispatch({ type: 'SET_USER', payload: json })
-      console.log(user)
-      navigate("/")
-    }
+    // if (response.ok) {
+    //   setUsername('')
+    //   setPassword('')
+    //   console.log('Logged in successfully!', json)
+    //   dispatch({ type: 'SET_USER', payload: json })
+    //   console.log(user)
+    //   navigate("/")
+    // }
 
   }
 
@@ -79,6 +83,7 @@ const LoginPage = () => {
             type='submit' 
             className='primary-btn' 
             onClick={(e) => handleSubmit(e)}
+            disabled={isLoading}
           >
             Log in
           </Button>

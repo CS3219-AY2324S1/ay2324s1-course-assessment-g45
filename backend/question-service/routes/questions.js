@@ -7,8 +7,12 @@ const {
   deleteQuestion,
   updateQuestion,
 } = require('../controllers/questionController');
+const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router();
+
+// Require auth for all question routes
+router.use(requireAuth);
 
 // GET all questions
 router.get('/', getAllQuestions);
