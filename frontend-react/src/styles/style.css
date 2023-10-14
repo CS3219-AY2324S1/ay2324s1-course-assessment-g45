@@ -836,6 +836,10 @@ h3 span {
   color: #007BFF;
 }
 
+.btn-custom:hover {
+  background-color: #ff5555;
+  border-color: #ff5555;
+}
 
 
 

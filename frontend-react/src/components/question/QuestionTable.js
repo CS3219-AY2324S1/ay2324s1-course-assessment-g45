@@ -19,8 +19,8 @@ const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
 
   const [filteredQuestions, setFilteredQuestions] = useState([])
-  const [categoryFilter, setCategoryFilter] = useState(null)
-  const [complexityFilter, setComplexityFilter] = useState(null)
+  const [categoryFilter, setCategoryFilter] = useState("")
+  const [complexityFilter, setComplexityFilter] = useState("")
 
   const [showAddModal, setShowAddModal] = useState(false);
   // const handleCloseAddModal = () => setShowAddModal(false);
@@ -111,15 +111,15 @@ const QuestionTable = () => {
   useEffect(() => {
     if (questions) {
       setFilteredQuestions(questions.filter((question) => {
-        if (complexityFilter && categoryFilter) {
+        if (complexityFilter !== "" && categoryFilter !== "") {
           return question.complexity === complexityFilter && question.categories.includes(categoryFilter)
         }
 
-        if (complexityFilter) {
+        if (complexityFilter !== "") {
           return question.complexity === complexityFilter
         }
 
-        if (categoryFilter) {
+        if (categoryFilter !== "") {
           return question.categories.includes(categoryFilter)
         }
 

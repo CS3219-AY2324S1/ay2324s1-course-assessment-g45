@@ -11,7 +11,7 @@ socket.on('connect', () => {
 });
 
 const FilterBar = ({ label, values, setValue, className }) => {
-  const [selectedValue, setSelectedValue] = useState(null)
+  const [selectedValue, setSelectedValue] = useState("")
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
     setValue(event.target.value);
@@ -26,7 +26,7 @@ const FilterBar = ({ label, values, setValue, className }) => {
         {values.map((value) => <option key={value} option={value}>{value}</option>)}
       </select>
       <Button variant="danger"
-        onClick={() => { setSelectedValue(null); setValue(null) }}>Clear Filter
+        onClick={() => { setSelectedValue(""); setValue("") }}>Clear Filter
       </Button>
     </div>
   );

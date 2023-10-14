@@ -17,22 +17,23 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   const schema = yup.object().shape({
     title: yup.string().required('Required'),
-    categories: yup.string().required('Required'),
+    categories: yup.array().of(yup.string()).min(1, 'Required'),
     complexity: yup.string().required('Required'),
     description: yup.string().required('Required').notOneOf(['<p><br></p>'], 'Required')
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
-  const {user} = useUserContext();
+  const { user } = useUserContext();
 
-  const [ categories, setCategories ] = useState(editedQn ? editedQn.categories : [])
-  const [ inputCat, setInputCat ] = useState('')
+  const [categoryList, setCategoryList] = useState(editedQn ? editedQn.categories : [])
+  const [newCategory, setNewCategory] = useState('')
 
-  const removeCategory = (arr, cat) => {
-    const index = arr.indexOf(cat)
-    if (index > - 1) {
-      arr.splice(index, 1)
-    }
+  const addCategory = (category) => {
+    setCategoryList((prevCategories) => [...prevCategories, category])
+  }
+
+  const removeCategory = (category) => {
+    setCategoryList((prevCategories) => prevCategories.filter((item) => item !== category))
   }
 
   const handleSubmitFunct = () => {
@@ -86,16 +87,16 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
             onSubmit={handleSubmitFunct}
             initialValues={{
               title: editedQn ? editedQn.title : '',
-              categories: editedQn ? editedQn.categories.toString() : '',
+              categories: editedQn ? editedQn.categories : [],
               complexity: editedQn ? editedQn.complexity : '',
               description: editedQn ? editedQn.description : ''
             }}
             validateOnChange={false}
             innerRef={formRef}
           >
-            {({ handleSubmit, handleChange, errors, values }) =>
+            {({ handleSubmit, handleChange, errors, values, setFieldValue }) =>
               <Form noValidate onSubmit={handleSubmit}>
-                
+
                 {/* <div> { categories } </div> */}
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
@@ -177,11 +178,35 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label>Categories</Form.Label>
+                  {categoryList.map((category) =>
+                    <Button
+                      className='me-2 mb-2 btn-custom'
+                      onClick={() => {
+                        const tempArr = [...categoryList]
+                        removeCategory(category);
+                        setFieldValue('categories', tempArr.filter((item) => item !== category))
+                      }}
+                    >
+                      {category}
+                    </Button>
+                  )}
+                  <input type='text' value={newCategory} onChange={(event) => setNewCategory(event.target.value)} />
+                  <Button
+                    variant='success'
+                    onClick={() => {
+                      if (newCategory.length > 0 && !categoryList.includes(newCategory)) {
+                        addCategory(newCategory);
+                        setFieldValue('categories', [...categoryList, newCategory])
+                        setNewCategory('');
+                      }
+                    }}
+                  >
+                    Add Category
+                  </Button>
+
                   <Form.Control
-                    type="text"
+                    type="hidden"
                     name="categories"
-                    onChange={handleChange}
-                    value={values.categories}
                     isInvalid={!!errors.categories}
                     className="mb-0" />
                   <Form.Control.Feedback type="invalid">
@@ -228,14 +253,14 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                   <Form.Label> Description </Form.Label>
-                  <div style={{ height : 250, overflowY: 'auto'}}>
-                      <ReactQuill 
+                  <div style={{ height: 250, overflowY: 'auto' }}>
+                    <ReactQuill
                       name="description"
                       theme='snow' value={values.description}
-                      onChange={(e)=> values.description = e}
+                      onChange={(e) => values.description = e}
                       isInvalid={!!errors.description}
                       style={{ height: 200 }}
-                      />
+                    />
                   </div>
                   <div className='error'> {errors.description} </div>
                   <Form.Control.Feedback type="invalid">
