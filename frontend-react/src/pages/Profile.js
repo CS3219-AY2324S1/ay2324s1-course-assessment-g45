@@ -14,6 +14,8 @@ const Profile = () => {
   const [ newPassword, setNewPassword ] = useState('')
   const [ confirmNewPasword, setConfirmNewPassword ] = useState('')
   const [ passwordError, setPasswordError ] = useState('')
+  const [ usernameError, setUsernameError ] = useState('')
+  const [ emailError, setEmailError] = useState('')
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
@@ -47,11 +49,14 @@ const Profile = () => {
 
   const handleChangePw = async (e) => {
     e.preventDefault();
+    console.log(newPassword)
+    console.log(confirmNewPasword)
 
-    if (newPassword === '' || confirmNewPasword === '') {
-      setPasswordError('Please key in your new password')
+    if (newPassword !== confirmNewPasword) {
+      setPasswordError('The new password and confirm new password do not match.')
       return
     }
+
     const updatedUser = {
       username: username,
       email: email,
@@ -66,12 +71,11 @@ const Profile = () => {
       setPassword('')
       setNewPassword('')
       setConfirmNewPassword('')
-      setIsChangePassword(false)
+      // setIsChangePassword(false)
       setPasswordError('')
     }
     if (!response.ok) {
-      setPasswordError('Error changing password')
-      setError(json.error)
+      setPasswordError(json.error)
     }
   }
 
@@ -104,11 +108,17 @@ const Profile = () => {
     }
     if (!response.ok) {
       setError(json.error)
+
     }
   }
 
   const handleUsernameEdit = async (e) => {
     e.preventDefault();
+
+    if (username === user.username ) {
+      setUsernameError('The username is the same as the current one.')
+      return
+    }
 
     const updatedUser = {
       username: username,
@@ -119,16 +129,21 @@ const Profile = () => {
     console.log(json)
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
-      setUsername(user.username)
-      setError('')
+      setUsername('')
+      setUsernameError('')
     }
     if (!response.ok) {
-      setError(json.error)
+      setUsernameError(json.error)
     }
   }
 
   const handleEmailEdit = async (e) => {
     e.preventDefault();
+
+    if (email === user.email ) {
+      setEmailError('The email is the same as the current one.')
+      return
+    }
 
     const updatedUser = {
       email: email,
@@ -139,28 +154,28 @@ const Profile = () => {
     console.log(json)
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
-      setUsername(user.username)
-      setError('')
+      setEmail('')
+      setEmailError('')
     }
     if (!response.ok) {
-      setError(json.error)
+      setEmailError(json.error)
     }
   }
 
 
   const handleDelete = async() => {
-    const response = await fetch('/api/userProfiles/' + user._id , {
-      method: 'DELETE'
-    })
+    // const response = await fetch('/api/userProfiles/' + user._id , {
+    //   method: 'DELETE'
+    // })
 
-    const json = await response.json()
-    if (response.ok) {
-      dispatch({ type : 'LOGOUT', payload : json })
-      navigate('/')
-    }
-    if (!response.ok) {
-      setError(json.error)
-    }
+    // const json = await response.json()
+    // if (response.ok) {
+    //   dispatch({ type : 'LOGOUT', payload : json })
+    //   navigate('/')
+    // }
+    // if (!response.ok) {
+    //   setError(json.error)
+    // }
   }
 
   return (
@@ -254,10 +269,14 @@ const Profile = () => {
                   <Form autoComplete="off" onSubmit={handleUsernameEdit} className="profileForm">
                     {/* New email */}
                     <Row className="mb-3">
+                   
                       <Form.Label className="col-sm-4" htmlFor="newEmailAddress">New Username</Form.Label>
                       <Col md={8} xs={12}>
                         <Form.Control type="text" placeholder="Enter your new username" id="newUsername" 
-                              onChange={(e) => setUsername(e.target.value)}  required/>
+                             value={username} onChange={(e) => setUsername(e.target.value)}  required/>
+                      </Col>
+                      <Col  md={{ offset: 4, span: 8 }} xs={12}> 
+                        {usernameError && <div className='error'> {usernameError}</div>}
                       </Col>
                       <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-3">
                         <Button variant="primary" type="submit">
@@ -279,7 +298,10 @@ const Profile = () => {
                       <Form.Label className="col-sm-4" htmlFor="newEmailAddress">New email</Form.Label>
                       <Col md={8} xs={12}>
                         <Form.Control type="email" placeholder="Enter your new email address" id="newEmailAddress" 
-                         onChange={(e) => setEmail(e.target.value)} required />
+                          value={email}  onChange={(e) => setEmail(e.target.value)} required />
+                      </Col>
+                      <Col  md={{ offset: 4, span: 8 }} xs={12}> 
+                        { emailError && <div className='error'> {emailError}</div>}
                       </Col>
                       <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-3">
                         <Button variant="primary" type="submit">
@@ -291,7 +313,6 @@ const Profile = () => {
                   <div className="mb-6 mt-6">
                     <h4 className="mb-1">Change your password</h4>
                   </div>
-                  { passwordError && <div className='error'> {passwordError} </div>}
                   <Form autoComplete="off" onSubmit={handleChangePw} className="profileForm">
                     {/* Current password */}
                     <Row className="mb-3">
@@ -316,9 +337,12 @@ const Profile = () => {
                       <Form.Label className="col-sm-4" htmlFor="confirmNewpassword">Confirm new password</Form.Label>
                       <Col md={8} xs={12}>
                         <Form.Control type="password" placeholder="Confirm new password" id="confirmNewpassword" autoComplete="new-password" 
-                                value={confirmNewPasword} onChange={(e) => checkConfirmNewPassword(e.target.value)} required />
+                                value={confirmNewPasword} onChange={(e) => setConfirmNewPassword(e.target.value)} required />
                       </Col>
                       {/* list */}
+                      <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                       { passwordError && <div className='error'> {passwordError} </div>}
+                      </Col>
                       <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
                         <h6 className="mb-1">Password requirements:</h6>
                         <p>Ensure that these requirements are met:</p>
@@ -354,8 +378,8 @@ const Profile = () => {
                   <h4 className="mb-1">Danger Zone </h4>
                 </div>
                 <div>
-                  <p>WARNING! this will permanently delete your account.</p>
-                  <Link href="#" className="btn btn-danger">Delete Account</Link>
+                  <p>WARNING! This will permanently delete your account.</p>
+                  <Link href="#" className="btn btn-danger" onClick={handleDelete}>Delete Account</Link>
                 </div>
               </Card.Body>
             </Card>
