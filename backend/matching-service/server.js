@@ -2,7 +2,6 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const rabbitMQHandler = require('./connection');
 const matchingRoutes = require('./routes/matching');
@@ -62,7 +61,7 @@ rabbitMQHandler((connection) => {
             const matchPair = [bufferedRequest, request];
             io.to(socketId).emit('matching', matchPair);
             io.to(bufferedRequest.socketId).emit('matching', matchPair);
-            requestBuffer.slice(i, i); // Remove matched request from buffer
+            requestBuffer = requestBuffer.splice(i, i); // Remove matched request from buffer
             return;
           }
         }
@@ -88,13 +87,6 @@ rabbitMQHandler((connection) => {
   });
 });
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    server.listen(PORT, () => {
-      console.log('listening on port', PORT);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+server.listen(PORT, () => {
+  console.log('listening on port', PORT);
+});
