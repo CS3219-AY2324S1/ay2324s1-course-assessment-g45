@@ -3,7 +3,8 @@ import { useLogout } from "../hooks/useLogout"
 import React, { useState, useEffect, useRef } from 'react';
 import { useUserContext } from "../hooks/useUserContext"
 import logo from '../assets/images/logo.svg'
-
+import { useWaitingBanner } from '../hooks/useWaitingBanner';
+import WaitingBanner from "./WaitingBanner";
 
 const NavBar = () => {
   const { user } = useUserContext()
@@ -11,7 +12,9 @@ const NavBar = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { state } = useWaitingBanner();
   let menuRef = useRef();
+
 
   useEffect(() => {
     // Only set up the event listeners if the user is logged in
@@ -63,7 +66,13 @@ const NavBar = () => {
         </ul>
          }
       </div>  
-   
+
+      <div>
+            {state.showBanner && <div><WaitingBanner></WaitingBanner></div>}
+            {/* ... other navbar contents ... */}
+        </div>
+
+
       
       {user &&
       <div className='menu-container' ref={menuRef}>
