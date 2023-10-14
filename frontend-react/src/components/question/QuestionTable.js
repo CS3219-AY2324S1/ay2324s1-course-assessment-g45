@@ -108,8 +108,8 @@ const QuestionTable = () => {
                 <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
                   <h4 className="card-title">Questions</h4>
                   { user.role == 'admin' && 
-                  <button type="button"  class="btn btn btn-primary" onClick={handleShowAddModal}>
-                              Add a question <i class="fa-solid fa-plus"></i>
+                  <button type="button"  className="btn btn btn-primary" onClick={handleShowAddModal}>
+                              Add a question <i className="fa-solid fa-plus"></i>
                             </button>
                   }
                 </div>
@@ -129,7 +129,7 @@ const QuestionTable = () => {
                     <tbody>
 
                     {questions && questions.map((qn, j) => (
-                        <tr onClick={() => setSelectedQn(qn)}>
+                        <tr key ={j} onClick={() => setSelectedQn(qn)}>
                         <td>{j + 1}</td>
                         <td>{qn.title}</td>
                         <td>
@@ -144,12 +144,12 @@ const QuestionTable = () => {
                         </td>
                         { user.role == 'admin' && 
                           <td>
-                          <div class="d-flex justify-content-end">
-                          <button type="button"  class="btn btn-outline-secondary me-2" onClick={(e) => {e.stopPropagation(); setEditQn(qn)} }>
-                            Edit <i class="fa-regular fa-pen-to-square"></i>
+                          <div className="d-flex justify-content-end">
+                          <button type="button"  className="btn btn-outline-secondary me-2" onClick={(e) => {e.stopPropagation(); setEditQn(qn)} }>
+                            Edit <i className="fa-regular fa-pen-to-square"></i>
                           </button>
-                          <button type="button"  class="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); handleDeleteQuestion(qn._id)}}>
-                            Delete <i class="fa-regular fa-trash"></i>
+                          <button type="button"  className="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); handleDeleteQuestion(qn._id)}}>
+                            Delete <i className="fa-regular fa-trash"></i>
                           </button>
                           </div>
                           </td>
