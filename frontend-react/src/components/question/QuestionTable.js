@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -79,6 +79,16 @@ const QuestionTable = () => {
   }
   const showLeftArrow = startingPageNumber > 1;
   const showRightArrow = startingPageNumber + MAX_PAGE_NUMS - 1 < totalPages;
+  const categoryList = useMemo(() => {
+    if (!questions) {
+      return []
+    }
+    const categories = new Set()
+    questions.forEach((question) => {
+      question.categories.forEach((category) => categories.add(category))
+    })
+    return Array.from(categories)
+  }, [questions])
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -150,7 +160,8 @@ const QuestionTable = () => {
 
   return (
     <div>
-      <FilterBar label={'Filter Category'} setValue={setCategoryFilter} values={['Easy', 'Medium', 'Hard']} className='ms-3 mt-3 w-full'/>
+      <FilterBar label={'Filter Complexity'} setValue={setComplexityFilter} values={['Easy', 'Medium', 'Hard']} className='ms-3 mt-3 ' />
+      <FilterBar label={'Filter Category'} setValue={setCategoryFilter} values={categoryList} className='ms-3 mt-3 ' />
       {user.role == 'admin' &&
         <Button variant="success" className='ms-3 mt-3 pull-left'
           onClick={() => setShowAddModal(true)}>Add a question

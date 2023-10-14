@@ -20,7 +20,7 @@ const FilterBar = ({ label, values, setValue, className }) => {
   console.log('Selected', selectedValue)
   return (
     <div className={className + ' d-flex flex-row gap-3 align-items-center'}>
-      <label htmlFor={label}>{label}</label>
+      <label htmlFor={label} className='col-sm-1'>{label}</label>
       <select id={label} value={selectedValue} onChange={handleSelectChange} className='w-25'>
         <option disabled selected value="">None</option>
         {values.map((value) => <option key={value} option={value}>{value}</option>)}
