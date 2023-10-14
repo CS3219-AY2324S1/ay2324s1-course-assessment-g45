@@ -56,8 +56,8 @@ const NavBar = () => {
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
-         <li><Link className={location.pathname === "/home" ? "active" : ""}
-          to = "/home"> Home </Link></li>  
+         <li><Link className={location.pathname === "/match" ? "active" : ""}
+          to = "/match"> Home </Link></li>  
          <li><Link className={location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
         </ul>
@@ -81,6 +81,7 @@ const NavBar = () => {
       </div>
     }
 
+   {user &&
       <div id = "collapse"> 
         <i id = "bar"
         className = {isClicked ? "fas fa-times" : "fas fa-bars"}
@@ -88,7 +89,7 @@ const NavBar = () => {
         >
         </i>
       </div>
-
+    }
       </nav>
       </>
   )

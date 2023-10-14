@@ -445,3 +445,282 @@ h3 span{
 }
 
 
+.custom-match-btn {
+  width: 160px;
+  height: 100px;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 25px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 500;
+  font-size: 30px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+   box-shadow:inset 2px 2px 2px 0px rgba(255,255,255,.5),
+   7px 7px 20px 0px rgba(0,0,0,.1),
+   4px 4px 5px 0px rgba(0,0,0,.1);
+  outline: none;
+}
+
+
+/* Easy btn */
+.easy-btn {
+  background-color: #f0ecfc;
+  background-image: linear-gradient(315deg, #66FF19 0%, #44CC00 74%);
+  line-height: 100px;
+  padding: 0;
+  border: none;
+}
+.easy-btn span {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.easy-btn:before,
+.easy-btn:after {
+  position: absolute;
+  content: "";
+  right: 0;
+  bottom: 0;
+  background: #44CC00;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.easy-btn:before{
+   height: 0%;
+   width: 2px;
+}
+.easy-btn:after {
+  width: 0%;
+  height: 2px;
+}
+.easy-btn:hover:before {
+  height: 100%;
+}
+.easy-btn:hover:after {
+  width: 100%;
+}
+.easy-btn:hover{
+  background: transparent;
+}
+.easy-btn span:hover{
+  color: #44CC00;
+}
+.easy-btn span:before,
+.easy-btn span:after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  background: #44CC00;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.easy-btn span:before {
+  width: 2px;
+  height: 0%;
+}
+.easy-btn span:after {
+  height: 2px;
+  width: 0%;
+}
+.easy-btn span:hover:before {
+  height: 100%;
+}
+.easy-btn span:hover:after {
+  width: 100%;
+}
+
+
+/* Medium btn */
+.medium-btn {
+  background-color: #f0ecfc;
+  background-image: linear-gradient(315deg, #FFD480 0%, #FFAA00 74%);
+  line-height: 100px;
+  padding: 0;
+  border: none;
+}
+.medium-btn span {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.medium-btn:before,
+.medium-btn:after {
+  position: absolute;
+  content: "";
+  right: 0;
+  bottom: 0;
+  background: #FFAA00;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.medium-btn:before{
+   height: 0%;
+   width: 2px;
+}
+.medium-btn:after {
+  width: 0%;
+  height: 2px;
+}
+.medium-btn:hover:before {
+  height: 100%;
+}
+.medium-btn:hover:after {
+  width: 100%;
+}
+.medium-btn:hover{
+  background: transparent;
+}
+.medium-btn span:hover{
+  color: #FFAA00 ;
+}
+.medium-btn span:before,
+.medium-btn span:after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  background: #FFAA00 ;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.medium-btn span:before {
+  width: 2px;
+  height: 0%;
+}
+.medium-btn span:after {
+  height: 2px;
+  width: 0%;
+}
+.medium-btn span:hover:before {
+  height: 100%;
+}
+.medium-btn span:hover:after {
+  width: 100%;
+}
+
+/* Hard btn */
+.hard-btn {
+  background-color: #f0ecfc;
+  background-image: linear-gradient(315deg, #FF8066 0%, #E62600 74%);
+  line-height: 100px;
+  padding: 0;
+  border: none;
+}
+.hard-btn span {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.hard-btn:before,
+.hard-btn:after {
+  position: absolute;
+  content: "";
+  right: 0;
+  bottom: 0;
+  background: #E62600;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.hard-btn:before{
+   height: 0%;
+   width: 2px;
+}
+.hard-btn:after {
+  width: 0%;
+  height: 2px;
+}
+.hard-btn:hover:before {
+  height: 100%;
+}
+.hard-btn:hover:after {
+  width: 100%;
+}
+.hard-btn:hover{
+  background: transparent;
+}
+.hard-btn span:hover{
+  color: #E62600;
+}
+.hard-btn span:before,
+.hard-btn span:after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  background: #E62600;
+  box-shadow:  4px 4px 6px 0 rgba(255,255,255,.5),
+              -4px -4px 6px 0 rgba(116, 125, 136, .2), 
+    inset -4px -4px 6px 0 rgba(255,255,255,.5),
+    inset 4px 4px 6px 0 rgba(116, 125, 136, .3);
+  transition: all 1s ease;
+}
+.hard-btn span:before {
+  width: 2px;
+  height: 0%;
+}
+.hard-btn span:after {
+  height: 2px;
+  width: 0%;
+}
+.hard-btn span:hover:before {
+  height: 100%;
+}
+.hard-btn span:hover:after {
+  width: 100%;
+}
+
+
+/*for match page*/
+.match-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.match-gradient-div {
+  width: 50px;  /* Adjust this to comfortably fit the icon and text */
+  height: 50px; 
+  background-image: linear-gradient(to right,#AA00FF, #EECCFF);
+  display: flex;
+  align-items: center; 
+  justify-content: center; /* This will space out the icon and text */
+  border-radius: 10px;  
+  padding: 0 10px;  /* Add some padding to the sides so that the icon and text don't touch the edges */
+  margin-right: 10px;
+}
+
+.match-text {
+  color: #000; 
+  font-size: 30px; 
+  margin: 0;  /* Remove any external margins */
+  font-family: 'Roboto', sans-serif;
+}
+
+
+.card {
+  border: 2px solid #cccccc; /* Adds a 2px solid light gray border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow effect */
+}

@@ -25,11 +25,11 @@ const QuestionTable = () => {
   const [editQn, setEditQn] = useState(null)
 
   const [selectedQn, setSelectedQn] = useState(null)
-  const {user} = useUserContext();
+  const { user } = useUserContext();
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!user) {
-        setError('Please login to view questions')  
+        setError('Please login to view questions')
         return
       }
       const response = await getAllQuestions(user.token)
@@ -48,7 +48,7 @@ const QuestionTable = () => {
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
     if (!user) {
-      setError('Please login to delete questions')  
+      setError('Please login to delete questions')
       return
     }
 
@@ -69,27 +69,27 @@ const QuestionTable = () => {
       case 'Hard': return 'badge bg-danger';
       case 'Medium': return 'badge bg-warning';
       case 'Easy': return 'badge bg-success';
-      default: return 'badge bg-info'; 
+      default: return 'badge bg-info';
     }
   }
-  
+
 
   return (
     <div>
       {
         showAddModal &&
         <QuestionForm
-        handleClose={() => setShowAddModal(false)}
-        formTitle={'Add Question'}
+          handleClose={() => setShowAddModal(false)}
+          formTitle={'Add Question'}
         />
       }
 
       {
         editQn &&
         <QuestionForm
-        editedQn={editQn}
-        handleClose={() => setEditQn(null)}
-        formTitle={'Edit Question'}
+          editedQn={editQn}
+          handleClose={() => setEditQn(null)}
+          formTitle={'Edit Question'}
         />
       }
 
@@ -103,65 +103,65 @@ const QuestionTable = () => {
 
 
       <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-5">
-            <div className="card">
-              <div className="card-body">
-                <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
-                  <h4 className="card-title">Questions</h4>
-                  { user.role == 'admin' && 
-                  <button type="button"  className="btn btn btn-primary" onClick={handleShowAddModal}>
-                              Add a question <i className="fa-solid fa-plus"></i>
-                            </button>
-                  }
-                </div>
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Complexity</th>
-                        { user.role == 'admin' && 
-                            <th></th>
-                        }
-                      </tr>
-                    </thead>
-                    <tbody>
+        <div className="card">
+          <div className="card-body">
+            <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
+              <h4 className="card-title">Questions</h4>
+              {user.role == 'admin' &&
+                <button type="button" className="btn btn-primary" onClick={handleShowAddModal}>
+                  Add a question <i className="fa-solid fa-plus"></i>
+                </button>
+              }
+            </div>
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Complexity</th>
+                    {user.role == 'admin' &&
+                      <th></th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
 
-                    {questions && questions.map((qn, j) => (
-                        <tr key ={j} onClick={() => setSelectedQn(qn)}>
-                        <td>{j + 1}</td>
-                        <td>{qn.title}</td>
+                  {questions && questions.map((qn, j) => (
+                    <tr key={j} onClick={() => setSelectedQn(qn)}>
+                      <td>{j + 1}</td>
+                      <td>{qn.title}</td>
+                      <td>
+                        {qn.categories.map((category, i) => (
+                          qn.categories[i + 1] ? category + ", " : category
+                        ))}
+                      </td>
+                      <td>
+                        <label className={getBadgeClass(qn.complexity)}>
+                          {qn.complexity}
+                        </label>
+                      </td>
+                      {user.role == 'admin' &&
                         <td>
-                          {qn.categories.map((category, i) => (
-                            qn.categories[i + 1] ? category + ", " : category
-                          ))}
-                        </td>
-                        <td>
-                          <label className={getBadgeClass(qn.complexity)}>
-                            {qn.complexity}
-                          </label>
-                        </td>
-                        { user.role == 'admin' && 
-                          <td>
                           <div className="d-flex justify-content-end">
-                          <button type="button"  className="btn btn-outline-secondary me-2" onClick={(e) => {e.stopPropagation(); setEditQn(qn)} }>
-                            Edit <i className="fa-regular fa-pen-to-square"></i>
-                          </button>
-                          <button type="button"  className="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); handleDeleteQuestion(qn._id)}}>
-                            Delete <i className="fa-regular fa-trash"></i>
-                          </button>
+                            <button type="button" className="btn btn-outline-secondary me-2" onClick={(e) => { e.stopPropagation(); setEditQn(qn) }}>
+                              Edit <i className="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteQuestion(qn._id) }}>
+                              Delete <i className="fa-regular fa-trash"></i>
+                            </button>
                           </div>
-                          </td>
-                        }
-                      </tr>
+                        </td>
+                      }
+                    </tr>
                   ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+                </tbody>
+              </table>
             </div>
           </div>
+        </div>
+      </div>
     </div>
   );
 }
