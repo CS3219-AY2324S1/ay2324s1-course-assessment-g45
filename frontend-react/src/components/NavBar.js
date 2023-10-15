@@ -50,7 +50,7 @@ const NavBar = () => {
  
      
       <div className="navdiv" > 
-      <Link to = "/">
+      <Link to = "/match">
       <img className = "logoImage" src={logo}>
             </img>      
       </Link>
