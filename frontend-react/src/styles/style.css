@@ -784,16 +784,16 @@ h3 span {
   align-items: center;
 }
 
-.EASY_BANNER {
+.WAITING_EASY_MATCH {
   animation: easyBannerGlowing 1.5s infinite;
 }
 
-.MEDIUM_BANNER {
+.WAITING_MEDIUM_MATCH {
   animation: mediumBannerGlowing 1.5s infinite;
 
 }
 
-.HARD_BANNER {
+.WAITING_HARD_MATCH {
   animation: hardBannerGlowing 1.5s infinite;
 
 }
@@ -874,18 +874,18 @@ h3 span {
 
 .tree-image-left {
   position: absolute;
-  left: 0px;  /* Positioned to the leftmost side */
-  bottom: 0px;  /* Positioned at the bottom */
-  width: 350px; /* Adjust this as per your design requirement */
+  left: 0px;  
+  bottom: 0px;  
+  width: 350px; 
   height: auto;
-  z-index: -1; /* Optional: To make sure it stays behind other elements if they overlap */
+  z-index: -1; 
 }
 
 .tree-image-right {
   position: absolute;
-  right: 0;  /* Positioned to the leftmost side */
-  top: 80px;  /* Positioned at the bottom */
-  width: 400px; /* Adjust this as per your design requirement */
+  right: 0;  
+  top: 80px;  
+  width: 400px; 
   height: auto;
-  z-index: -1; /* Optional: To make sure it stays behind other elements if they overlap */
+  z-index: -1; 
 }

@@ -1,12 +1,12 @@
 import { useUserContext } from "./useUserContext"
 import { useQuestionsContext } from "./useQuestionContext"
-import { useWaitingBanner } from "./useWaitingBanner"
+import { useMatchContext } from "./useMatchContext"
 import { useNavigate } from 'react-router-dom'
 
 export const useLogout = () => { 
     const {dispatch} = useUserContext()
     const {dispatch : questionsDispatch} = useQuestionsContext()
-    const {dispatch : bannerDispatch} = useWaitingBanner()
+    const {dispatch : bannerDispatch} = useMatchContext()
     const navigate = useNavigate()
 
     const logout = () => {
