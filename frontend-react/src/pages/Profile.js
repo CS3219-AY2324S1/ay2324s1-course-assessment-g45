@@ -8,8 +8,8 @@ import { Col, Row, Form, Card, Button } from 'react-bootstrap';
 const Profile = () => {
   const { user, dispatch } = useUserContext()
 
-  const [ username, setUsername ] = useState(user.username)
-  const [ email, setEmail ] = useState(user.email)
+  const [ username, setUsername ] = useState('')
+  const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
   const [ confirmNewPasword, setConfirmNewPassword ] = useState('')
