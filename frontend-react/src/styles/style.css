@@ -24,13 +24,6 @@ body {
   background-color: rgba(240, 211, 211, 0.2);
 }
 
-/* form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 0px 30px 10px 30px;
-} */
-
 label,
 input {
   display: block;
@@ -136,7 +129,6 @@ input {
 }
 
 
-
 .btn-container {
   width: 100%;
   margin-bottom: 10px;
@@ -144,6 +136,24 @@ input {
 
 .error {
   color: var(--error)
+}
+
+.tree-image-left {
+  position: absolute;
+  left: 0px;  
+  bottom: 0px;  
+  width: 350px; 
+  height: auto;
+  z-index: -1; 
+}
+
+.tree-image-right {
+  position: absolute;
+  right: 0;  
+  top: 80px;  
+  width: 400px; 
+  height: auto;
+  z-index: -1; 
 }
 
 /* profile page */
@@ -205,6 +215,7 @@ input {
   margin-right: 10px;
 }
 
+/* nav bar*/
 nav {
   display: flex;
   align-items: center;
@@ -330,7 +341,6 @@ nav {
   right: 20px;
   background-color: #fff;
   border-radius: var(--border-radius);
-  /* padding: 10px 10px; */
   width: 200px;
 }
 
@@ -444,6 +454,7 @@ h3 span {
 }
 
 
+/* Match Button */
 .custom-match-btn {
   width: 160px;
   height: 100px;
@@ -464,8 +475,7 @@ h3 span {
   outline: none;
 }
 
-
-/* Easy btn */
+/* easy button */
 .easy-btn {
   background-color: #f0ecfc;
   background-image: linear-gradient(315deg, #66FF19 0%, #44CC00 74%);
@@ -846,7 +856,6 @@ h3 span {
 
 }
 
-
 @keyframes mediumBannerGlowing {
   0%,
   100% {
@@ -858,8 +867,6 @@ h3 span {
   }
 }
 
-
-
 @keyframes hardBannerGlowing {
   0%,
   100% {
@@ -869,22 +876,4 @@ h3 span {
   50% {
     box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500, 0 0 30px #FF0000, 0 0 40px #FF0000, 0 0 50px #FF0000, 0 0 60px #FF0000, 0 0 75px #FF0000;
   }
-}
-
-.tree-image-left {
-  position: absolute;
-  left: 0px;  
-  bottom: 0px;  
-  width: 350px; 
-  height: auto;
-  z-index: -1; 
-}
-
-.tree-image-right {
-  position: absolute;
-  right: 0;  
-  top: 80px;  
-  width: 400px; 
-  height: auto;
-  z-index: -1; 
 }
