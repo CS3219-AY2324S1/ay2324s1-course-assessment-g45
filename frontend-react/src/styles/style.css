@@ -871,3 +871,21 @@ h3 span {
     box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500, 0 0 30px #FF0000, 0 0 40px #FF0000, 0 0 50px #FF0000, 0 0 60px #FF0000, 0 0 75px #FF0000;
   }
 }
+
+.tree-image-left {
+  position: absolute;
+  left: 0px;  /* Positioned to the leftmost side */
+  bottom: 0px;  /* Positioned at the bottom */
+  width: 350px; /* Adjust this as per your design requirement */
+  height: auto;
+  z-index: -1; /* Optional: To make sure it stays behind other elements if they overlap */
+}
+
+.tree-image-right {
+  position: absolute;
+  right: 0;  /* Positioned to the leftmost side */
+  top: 80px;  /* Positioned at the bottom */
+  width: 400px; /* Adjust this as per your design requirement */
+  height: auto;
+  z-index: -1; /* Optional: To make sure it stays behind other elements if they overlap */
+}

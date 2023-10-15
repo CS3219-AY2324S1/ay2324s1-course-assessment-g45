@@ -63,6 +63,9 @@ const NavBar = () => {
           to = "/match"> Home </Link></li>  
          <li><Link className={location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
+          {user && user.role === "maintainer" &&
+          <li><Link className={location.pathname === "/maintainer" ? "active" : ""}
+          to = "/maintainer"> Dashboard </Link></li>  }
         </ul>
          }
       </div>  

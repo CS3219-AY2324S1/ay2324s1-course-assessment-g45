@@ -5,6 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
 import { useLogin } from '../hooks/useLogin'
 import logo from '../assets/images/logo.svg'
+import orangeTreeImg from '../assets/images/orangeTree.png'; 
+import orangeTreeImg2 from '../assets/images/orangeTree2.png'; 
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
@@ -78,7 +80,11 @@ const LoginPage = () => {
                     Don't have an account? <Link to="/register"  className="textlink-primary">Create</Link>
           </div>
       </div>
+
+      <img src={orangeTreeImg} alt="Tree" className="tree-image-left" />
+      <img src={orangeTreeImg2} alt="Tree3" className="tree-image-right" />
     </div>  
+    
   )
 }
 
