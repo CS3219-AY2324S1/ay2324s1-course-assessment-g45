@@ -26,6 +26,58 @@ const QuestionTable = () => {
 
   const [selectedQn, setSelectedQn] = useState(null)
   const { user } = useUserContext();
+
+
+
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startingPageNumber, setStartingPageNumber] = useState(1);
+  const MAX_PAGE_NUMS = 4;
+  const questionsPerPage = 8;
+  const totalPages = questions ? Math.ceil(questions.length / questionsPerPage) : 0;
+
+  const indexOfLastQn = currentPage * questionsPerPage;
+  const indexOfFirstQn = indexOfLastQn - questionsPerPage;
+  const currentQuestions = questions ? questions.slice(indexOfFirstQn, indexOfLastQn) : [];
+
+
+
+  const handleLeftClick = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+    if (currentPage === startingPageNumber) {
+      setStartingPageNumber(prevStart => prevStart - 1);
+    }
+  };
+
+  const handleRightClick = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+    if (currentPage === startingPageNumber + MAX_PAGE_NUMS - 1) {
+      setStartingPageNumber(prevStart => prevStart + 1);
+    }
+  };
+
+  const renderPageNumbers = [];
+  for (let i = startingPageNumber; i < startingPageNumber + MAX_PAGE_NUMS; i++) {
+    if (i > totalPages) break;
+    renderPageNumbers.push(
+      <span
+        key={i}
+        className={`page-number ${currentPage === i ? 'active' : ''}`}
+        onClick={() => setCurrentPage(i)}
+      >
+        {i}
+      </span>
+    );
+  }
+  const showLeftArrow = startingPageNumber > 1;
+  const showRightArrow = startingPageNumber + MAX_PAGE_NUMS - 1 < totalPages;
+
+
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!user) {
@@ -102,11 +154,14 @@ const QuestionTable = () => {
       }
 
 
-      <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-5">
+      <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-3 mb-3">
         <div className="card">
           <div className="card-body">
             <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
-              <h4 className="card-title">Questions</h4>
+              <div className="question-wrapper">
+                <i className="fa-solid fa-clipboard-list fa-2xl"></i>
+                <span className="question-title">Questions</span>
+              </div>
               {user.role == 'admin' &&
                 <button type="button" className="btn btn-primary" onClick={handleShowAddModal}>
                   Add a question <i className="fa-solid fa-plus"></i>
@@ -128,7 +183,7 @@ const QuestionTable = () => {
                 </thead>
                 <tbody>
 
-                  {questions && questions.map((qn, j) => (
+                  {currentQuestions && currentQuestions.map((qn, j) => (
                     <tr key={j} onClick={() => setSelectedQn(qn)}>
                       <td>{j + 1}</td>
                       <td>{qn.title}</td>
@@ -158,6 +213,11 @@ const QuestionTable = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className="pagination-wrapper">
+              {showLeftArrow && <button className="pagination-arrow" onClick={handleLeftClick}>←</button>}
+              {renderPageNumbers}
+              {showRightArrow && <button className="pagination-arrow" onClick={handleRightClick}>→</button>}
             </div>
           </div>
         </div>

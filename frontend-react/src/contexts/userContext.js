@@ -5,7 +5,7 @@ export const UserContext = createContext()
 export const userReducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
-      return { user : action.payload }
+      return { user: action.payload }
     case 'LOGOUT':
       return { user: null }
     case 'EDIT_USER':
@@ -15,9 +15,9 @@ export const userReducer = (state, action) => {
   }
 }
 
-export const UserContextProvider = ({children}) => {
+export const UserContextProvider = ({ children }) => {
   const user = JSON.parse(localStorage.getItem('user'))
-  const [ state, dispatch ] = useReducer(userReducer, {
+  const [state, dispatch] = useReducer(userReducer, {
     user: (user ? user : null)
   })
 
@@ -27,8 +27,8 @@ export const UserContextProvider = ({children}) => {
     }
   }, [])
 
-   // Save the state back to localStorage whenever it changes
-   useEffect(() => {
+  // Save the state back to localStorage whenever it changes
+  useEffect(() => {
     if (state.user) {
       localStorage.setItem('user', JSON.stringify(state.user));
     } else {
@@ -37,8 +37,8 @@ export const UserContextProvider = ({children}) => {
   }, [state.user]);
 
   return (
-    <UserContext.Provider value = {{...state, dispatch}}>
-      { children }
+    <UserContext.Provider value={{ ...state, dispatch }}>
+      {children}
     </UserContext.Provider>
   )
 }

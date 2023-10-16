@@ -92,8 +92,7 @@ input {
   justify-content: center;
   align-items: center;
   position: relative;
-  /* background-color: var(--primary); */
-  margin-top: 30px;
+  margin-top: 10px;
   border-radius: 10px;
 }
 
@@ -115,9 +114,7 @@ input {
 .textlink-primary {
   color: var(--primary);
   text-decoration: none;
-  /* This will remove the default underline */
   transition: text-decoration 0.3s;
-  /* This provides a smooth transition for the underline effect */
 }
 
 .textlink-primary:hover {
@@ -159,9 +156,6 @@ input {
 /* profile page */
 .profile-container {
   padding: 30px;
-  /* display: flex;
-  flex-direction: column;
-  align-items: center; */
 }
 
 .profile-card {
@@ -456,14 +450,15 @@ h3 span {
 
 /* Match Button */
 .custom-match-btn {
-  width: 160px;
-  height: 100px;
+  --custom-match-btn-height: 80px;
+  width: 140px;
+  height:  var(--custom-match-btn-height);
   color: #fff;
   border-radius: 5px;
   padding: 10px 25px;
   font-family: 'Lato', sans-serif;
-  font-weight: 500;
-  font-size: 30px;
+  font-weight: 300;
+  font-size: 25px;
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -479,7 +474,7 @@ h3 span {
 .easy-btn {
   background-color: #f0ecfc;
   background-image: linear-gradient(315deg, #66FF19 0%, #44CC00 74%);
-  line-height: 100px;
+  line-height:  var(--custom-match-btn-height);
   padding: 0;
   border: none;
 }
@@ -568,7 +563,7 @@ h3 span {
 .medium-btn {
   background-color: #f0ecfc;
   background-image: linear-gradient(315deg, #FFD480 0%, #FFAA00 74%);
-  line-height: 100px;
+  line-height: var(--custom-match-btn-height);
   padding: 0;
   border: none;
 }
@@ -656,7 +651,7 @@ h3 span {
 .hard-btn {
   background-color: #f0ecfc;
   background-image: linear-gradient(315deg, #FF8066 0%, #E62600 74%);
-  line-height: 100px;
+  line-height: var(--custom-match-btn-height);
   padding: 0;
   border: none;
 }
@@ -742,6 +737,11 @@ h3 span {
 
 
 /*for match page*/
+.card {
+  border: 2px solid #cccccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .match-wrapper {
   display: flex;
   align-items: center;
@@ -762,16 +762,70 @@ h3 span {
 
 .match-text {
   color: #000;
-  font-size: 30px;
+  font-size: 25px;
   margin: 0;
   font-family: 'Roboto', sans-serif;
 }
 
-
-.card {
-  border: 2px solid #cccccc;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/*for question page*/
+.question-wrapper {
+  display: flex;
+  align-items: center;
 }
+
+.question-title {
+  color: #000;
+  font-size: 25px;
+  margin-left: 10px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.table-hover tbody tr:hover {
+  --bs-table-hover-bg: #FFE6B3;
+}
+
+.pagination-wrapper {
+  display: flex;            
+  justify-content: center;  
+  margin-top: 20px;         
+}
+
+.page-number {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: 20px;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  transition: background-color 0.3s;
+}
+
+.page-number:hover {
+  background-color: #ddd;
+}
+
+.page-number.active {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+
+.pagination-arrow {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: black;
+  transition: color 0.3s;
+}
+
+.pagination-arrow:hover {
+  color: #007BFF;
+}
+
+
+
+
 
 
 /* Nav bar loading */

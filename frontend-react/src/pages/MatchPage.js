@@ -39,7 +39,7 @@ const MatchPage = () => {
                                 <span className="match-text">Quick Match</span>
                             </div>
                         </div>
-                        <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
+                        <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
                             <button className="custom-match-btn easy-btn" onClick={handleShowEasyBanner}><span>
                                 <i className="fa-regular fa-star fa-bounce"></i> Easy</span></button>
                             <button className="custom-match-btn medium-btn" onClick={handleShowMediumBanner}><span>
@@ -51,7 +51,7 @@ const MatchPage = () => {
                 </div>
             </div>
             {(bannerState.showModal) &&
-                <NoMatchFoundPopUp/>
+                <NoMatchFoundPopUp />
             }
         </div>
     )
