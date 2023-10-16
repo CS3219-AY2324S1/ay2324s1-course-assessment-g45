@@ -22,13 +22,23 @@ app.use((req, res, next) => {
 
 app.use('/api/userProfiles', userProfileRoutes);
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log('listening on port', PORT);
-    });
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+// mongoose
+//   .connect(process.env.MONGO_URI)
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log('listening on port', PORT);
+//     });
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
+const pool = mysql.createPool({
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE
+});
+
+
+
+module.exports = { pool }
