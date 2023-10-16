@@ -6,7 +6,6 @@ import { useMatchContext } from '../../hooks/useMatchContext';
 const NoMatchFoundPopUp = () => {
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
 
-
     const handleClose = () => {
         bannerDispatch({ type: 'HIDE_MODAL' });
     };
@@ -16,7 +15,7 @@ const NoMatchFoundPopUp = () => {
     };
 
     return (
-        <Modal onHide={handleClose} centered>
+        <Modal show={bannerState.showModal} onHide={handleClose} centered>
             <Modal.Header>
                 <Modal.Title>No match found</Modal.Title>
             </Modal.Header>
