@@ -1,6 +1,5 @@
-const mysql = require('mysql2/promise');
 require('dotenv').config();
-const pool = require('../server')
+const { pool } = require('../database')
 
 // Create a user
 // async function createUser(username, password, email) {
@@ -70,9 +69,23 @@ const createUser = async (req, res) => {
 //     console.error(error);
 //   }
 // }
+const getAllUsers = async (req, res) => {
+  try {
+    const connection = await pool.getConnection(); // Get a connection from the pool
 
-// Get a user from username
-// async function getSingleUser(id) {
+    // Use the connection to query the database
+    const [rows] = await connection.query(`SELECT * FROM users`);
+
+    connection.release(); // Release the connection back to the pool
+    
+    return res.status(200).json(rows)
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Get a user from id
+// async function getSingleUserFunction(id) {
 //   try {
 //     const connection = await pool.getConnection(); // Get a connection from the pool
 
@@ -153,6 +166,7 @@ const getSingleUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params
+  const { username, password, email } = req.body
 
   try {
     const connection = await pool.getConnection();
@@ -187,13 +201,15 @@ const updateUser = async (req, res) => {
     // Execute the update query
     const [result] = await connection.query(updateQuery, updateValues);
 
-    connection.release();
-
     if (result.affectedRows == 0) {
       return res.status(400).json({ error: "No such user." })
     }
 
-    return result;
+    const[rows] = await connection.query(`SELECT * FROM users WHERE id = ?`, id)
+
+    connection.release();
+
+    return res.status(200).json(rows[0]);
   } catch (error) {
 
     if (error.code == 'ER_DUP_ENTRY') {
@@ -237,7 +253,7 @@ const deleteUser = async (req, res) => {
       return res.status(400).json({ error: "No such user." })
     }
 
-    return res.status(200).json();
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json(error)
   }
@@ -250,7 +266,7 @@ const login = async (req, res) => {
     const connection = await pool.getConnection(); // Get a connection from the pool
 
     // Use the connection to query the database
-    const [rows] = await connection.query(`SELECT password FROM users WHERE username = ?;`, [username]);
+    const [rows] = await connection.query(`SELECT * FROM users WHERE username = ?;`, [username]);
 
     connection.release(); // Release the connection back to the pool
 
@@ -262,7 +278,7 @@ const login = async (req, res) => {
       return res.status(400).json({ error: "Wrong password." })
     }
 
-    return res.status(200).json()
+    return res.status(200).json(rows[0])
 
   } catch (error) {
     return res.status(400).json(error);

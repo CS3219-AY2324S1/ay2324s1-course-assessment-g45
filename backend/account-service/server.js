@@ -1,9 +1,11 @@
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const userProfileRoutes = require('./routes/userProfiles');
+//const mongoose = require('mongoose');
+//const userProfileRoutes = require('./routes/userProfiles');
+const userProfileRoutes = require('./routes/userSqlRoute');
 
 const PORT = process.env.PORT || 3001;
 
@@ -32,13 +34,7 @@ app.use('/api/userProfiles', userProfileRoutes);
 //   .catch((err) => {
 //     console.log(err);
 //   });
-const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
+
+app.listen(PORT, () => {
+  console.log('Server is running on port', PORT);
 });
-
-
-
-module.exports = { pool }

@@ -1,6 +1,6 @@
 const express = require('express')
 const {
-    //getAllUsers,
+    getAllUsers,
     getSingleUser,
     createUser,
     deleteUser,
@@ -11,7 +11,7 @@ const {
 const router = express.Router()
 
 // GET all profiles
-//router.get('/', getAllUsers)
+router.get('/', getAllUsers)
 
 // GET a single profile
 router.get('/:id', getSingleUser)

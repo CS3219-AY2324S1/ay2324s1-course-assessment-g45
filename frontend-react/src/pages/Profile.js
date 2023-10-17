@@ -62,7 +62,8 @@ const Profile = () => {
       email: email,
       password : newPassword
     }
-    const response = await updateUser(user._id, updatedUser)
+
+    const response = await updateUser(user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
@@ -85,6 +86,7 @@ const Profile = () => {
   }
 
   const handleEditSubmit = async () => {
+    console.log(user.id);
     if (username === '' || email === '') {
       setError('User name or email cannot be empty')
       return
@@ -94,7 +96,7 @@ const Profile = () => {
       email: email,
       password: username.password
     }
-    const response = await updateUser(user._id, updatedUser)
+    const response = await updateUser(user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
@@ -110,7 +112,7 @@ const Profile = () => {
   }
 
   const handleDelete = async() => {
-    const response = await fetch('/api/userProfiles/' + user._id , {
+    const response = await fetch('/api/userProfiles/' + user.id , {
       method: 'DELETE'
     })
 
