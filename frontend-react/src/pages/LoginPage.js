@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap'
-//import { login } from '../apis/UserProfileApi'
 import { useLogin } from '../hooks/useLogin'
+import logo from '../assets/images/logo.svg'
+import orangeTreeImg from '../assets/images/orangeTree.png'; 
+import orangeTreeImg2 from '../assets/images/orangeTree2.png'; 
 
 const LoginPage = () => {
   const { user, dispatch } = useUserContext()
@@ -13,6 +15,8 @@ const LoginPage = () => {
   //const [ error, setError ] = useState(null)
   const {login, isLoading, error} = useLogin()
   const navigate = useNavigate()
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,14 +51,12 @@ const LoginPage = () => {
   return (
     <div className='login-page'>
       <div className='login-card'>
-        <div className='header'>
-          <h3> Log in </h3>
+        <div className='card-header'>
+        <img  src={logo}>
+            </img>  
+          <h2> Log In </h2>
         </div>
-        {/* <div>
-          debug:
-          <div> {password} </div>
-          <div> {username }</div>
-        </div> */}
+
         <Form className='m-4'>
           {
             error &&
@@ -72,11 +74,17 @@ const LoginPage = () => {
 
           <Form.Group>
             <Form.Label><b>Password: </b></Form.Label>
-            <Form.Control
-              type='password' 
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-            />
+            <div className="d-flex">
+              <Form.Control
+                  type={showPassword ? 'text' : 'password'} 
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={password}
+                />
+                <i 
+                  className={`fa ${showPassword ? 'fa-eye-slash' : 'fa-eye'} password-icon`} 
+                  onClick={() => setShowPassword(prev => !prev)}
+                ></i>
+            </div>
           </Form.Group>
 
           <Button 
@@ -85,11 +93,18 @@ const LoginPage = () => {
             onClick={(e) => handleSubmit(e)}
             disabled={isLoading}
           >
-            Log in
+            Log In
           </Button>
         </Form>
+        <div className="text-center mt-4 mb-4 font-weight-light">
+                    Don't have an account? <Link to="/register"  className="textlink-primary">Create</Link>
+          </div>
       </div>
+
+      <img src={orangeTreeImg} alt="Tree" className="tree-image-left" />
+      <img src={orangeTreeImg2} alt="Tree3" className="tree-image-right" />
     </div>  
+    
   )
 }
 

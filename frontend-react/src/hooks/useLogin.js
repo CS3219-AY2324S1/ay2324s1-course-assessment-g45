@@ -32,7 +32,7 @@ export const useLogin = () => {
         if (json.role == 'maintainer') {
           navigate("/maintainer")
         } else {
-          navigate("/")
+          navigate("/match")
         }
     }
   }
