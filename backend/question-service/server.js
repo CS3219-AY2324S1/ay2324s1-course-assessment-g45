@@ -56,7 +56,8 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
     channel.consume(queueName, async (msg) => {
       const complexity = JSON.parse(msg.content.toString()).complexity
       console.log(`[x] Received request for question of ${complexity} complexity`)
-      const question = await Question.findOne({ complexity: complexity})
+      // const question = await Question.findOne({ complexity: complexity})
+      const question = await findRandomQuestion(complexity)
       if (question) {
         channel.sendToQueue(msg.properties.replyTo, 
           Buffer.from(question.id),
@@ -69,3 +70,13 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
     })
   })
 })
+
+const findRandomQuestion = async(complexity) => {
+  const count = Question.countDocuments({ complexity: complexity})
+  console.log(`Count: ${count}`)
+  // Get a random entry
+  var random = Math.floor(Math.random() * count)
+  const question = await Question.findOne({ complexity: complexity }).skip(random)
+  console.log(question)
+  return question
+}
