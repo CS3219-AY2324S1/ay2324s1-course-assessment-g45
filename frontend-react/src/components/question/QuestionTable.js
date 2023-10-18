@@ -18,7 +18,7 @@ const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
   const [showAddModal, setShowAddModal] = useState(false);
   // const handleCloseAddModal = () => setShowAddModal(false);
-  // const handleShowAddModal = () => setShowAddModal(true);
+  const handleShowAddModal = () => setShowAddModal(true);
 
   // const [showEditModal, setShowEditModal] = useState(false);
   // const handleCloseEditModal = () => setShowEditModal(false);
