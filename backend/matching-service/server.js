@@ -94,7 +94,7 @@ rabbitMQHandler((connection) => {
                   replyTo: queue.queue, 
                 }
               )
-              console.log('sent request to queue!')
+              console.log('sent question request to queue!')
 
               // read from queue to get the requested question
               channel.consume(queue.queue, (msg) => {
