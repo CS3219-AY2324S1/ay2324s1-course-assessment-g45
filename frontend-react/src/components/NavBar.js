@@ -2,8 +2,10 @@ import { Link, useNavigate} from "react-router-dom"
 import { useLogout } from "../hooks/useLogout"
 import React, { useState, useEffect, useRef } from 'react';
 import { useUserContext } from "../hooks/useUserContext"
+import { useMatchContext } from '../hooks/useMatchContext';
+import WaitingBanner from "./match/WaitingBanner";
 import logo from '../assets/images/logo.svg'
-
+import profile from '../assets/images/profile.png'
 
 const NavBar = () => {
   const { user } = useUserContext()
@@ -11,7 +13,9 @@ const NavBar = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { state } = useMatchContext();
   let menuRef = useRef();
+
 
   useEffect(() => {
     // Only set up the event listeners if the user is logged in
@@ -47,7 +51,7 @@ const NavBar = () => {
  
      
       <div className="navdiv" > 
-      <Link to = "/">
+      <Link to = "/match">
       <img className = "logoImage" src={logo}>
             </img>      
       </Link>
@@ -56,19 +60,25 @@ const NavBar = () => {
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
-         <li><Link className={location.pathname === "/home" ? "active" : ""}
-          to = "/home"> Home </Link></li>  
+         <li><Link className={location.pathname === "/match" ? "active" : ""}
+          to = "/match"> Home </Link></li>  
          <li><Link className={location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
+          {user && user.role === "maintainer" &&
+          <li><Link className={location.pathname === "/maintainer" ? "active" : ""}
+          to = "/maintainer"> Dashboard </Link></li>  }
         </ul>
          }
       </div>  
-   
+
+      <div>
+            {state.showBanner && <div><WaitingBanner></WaitingBanner></div>}
+        </div>
       
       {user &&
       <div className='menu-container' ref={menuRef}>
           <div className='menu-trigger' onClick={()=>{setOpen(!open)}}>
-          <img src="https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350">
+          <img src={profile}>
             </img>
           </div>
           <div className={`dropdown-menu ${open? 'active' : 'inactive'}`}> 
@@ -80,7 +90,7 @@ const NavBar = () => {
           </div>
       </div>
     }
-
+   {user &&
       <div id = "collapse"> 
         <i id = "bar"
         className = {isClicked ? "fas fa-times" : "fas fa-bars"}
@@ -88,7 +98,7 @@ const NavBar = () => {
         >
         </i>
       </div>
-
+    }
       </nav>
       </>
   )

@@ -25,11 +25,63 @@ const QuestionTable = () => {
   const [editQn, setEditQn] = useState(null)
 
   const [selectedQn, setSelectedQn] = useState(null)
-  const {user} = useUserContext();
+  const { user } = useUserContext();
+
+
+
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [startingPageNumber, setStartingPageNumber] = useState(1);
+  const MAX_PAGE_NUMS = 4;
+  const questionsPerPage = 8;
+  const totalPages = questions ? Math.ceil(questions.length / questionsPerPage) : 0;
+
+  const indexOfLastQn = currentPage * questionsPerPage;
+  const indexOfFirstQn = indexOfLastQn - questionsPerPage;
+  const currentQuestions = questions ? questions.slice(indexOfFirstQn, indexOfLastQn) : [];
+
+
+
+  const handleLeftClick = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+    if (currentPage === startingPageNumber) {
+      setStartingPageNumber(prevStart => prevStart - 1);
+    }
+  };
+
+  const handleRightClick = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+    if (currentPage === startingPageNumber + MAX_PAGE_NUMS - 1) {
+      setStartingPageNumber(prevStart => prevStart + 1);
+    }
+  };
+
+  const renderPageNumbers = [];
+  for (let i = startingPageNumber; i < startingPageNumber + MAX_PAGE_NUMS; i++) {
+    if (i > totalPages) break;
+    renderPageNumbers.push(
+      <span
+        key={i}
+        className={`page-number ${currentPage === i ? 'active' : ''}`}
+        onClick={() => setCurrentPage(i)}
+      >
+        {i}
+      </span>
+    );
+  }
+  const showLeftArrow = startingPageNumber > 1;
+  const showRightArrow = startingPageNumber + MAX_PAGE_NUMS - 1 < totalPages;
+
+
   useEffect(() => {
     const fetchQuestions = async () => {
       if (!user) {
-        setError('Please login to view questions')  
+        setError('Please login to view questions')
         return
       }
       const response = await getAllQuestions(user.token)
@@ -48,7 +100,7 @@ const QuestionTable = () => {
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
     if (!user) {
-      setError('Please login to delete questions')  
+      setError('Please login to delete questions')
       return
     }
 
@@ -69,27 +121,27 @@ const QuestionTable = () => {
       case 'Hard': return 'badge bg-danger';
       case 'Medium': return 'badge bg-warning';
       case 'Easy': return 'badge bg-success';
-      default: return 'badge bg-info'; 
+      default: return 'badge bg-info';
     }
   }
-  
+
 
   return (
     <div>
       {
         showAddModal &&
         <QuestionForm
-        handleClose={() => setShowAddModal(false)}
-        formTitle={'Add Question'}
+          handleClose={() => setShowAddModal(false)}
+          formTitle={'Add Question'}
         />
       }
 
       {
         editQn &&
         <QuestionForm
-        editedQn={editQn}
-        handleClose={() => setEditQn(null)}
-        formTitle={'Edit Question'}
+          editedQn={editQn}
+          handleClose={() => setEditQn(null)}
+          formTitle={'Edit Question'}
         />
       }
 
@@ -102,66 +154,74 @@ const QuestionTable = () => {
       }
 
 
-      <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-5">
-            <div className="card">
-              <div className="card-body">
-                <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
-                  <h4 className="card-title">Questions</h4>
-                  { user.role == 'admin' && 
-                  <button type="button"  class="btn btn btn-primary" onClick={handleShowAddModal}>
-                              Add a question <i class="fa-solid fa-plus"></i>
-                            </button>
-                  }
-                </div>
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Title</th>
-                        <th>Category</th>
-                        <th>Complexity</th>
-                        { user.role == 'admin' && 
-                            <th></th>
-                        }
-                      </tr>
-                    </thead>
-                    <tbody>
-
-                    {questions && questions.map((qn, j) => (
-                        <tr onClick={() => setSelectedQn(qn)}>
-                        <td>{j + 1}</td>
-                        <td>{qn.title}</td>
-                        <td>
-                          {qn.categories.map((category, i) => (
-                            qn.categories[i + 1] ? category + ", " : category
-                          ))}
-                        </td>
-                        <td>
-                          <label className={getBadgeClass(qn.complexity)}>
-                            {qn.complexity}
-                          </label>
-                        </td>
-                        { user.role == 'admin' && 
-                          <td>
-                          <div class="d-flex justify-content-end">
-                          <button type="button"  class="btn btn-outline-secondary me-2" onClick={(e) => {e.stopPropagation(); setEditQn(qn)} }>
-                            Edit <i class="fa-regular fa-pen-to-square"></i>
-                          </button>
-                          <button type="button"  class="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); handleDeleteQuestion(qn._id)}}>
-                            Delete <i class="fa-regular fa-trash"></i>
-                          </button>
-                          </div>
-                          </td>
-                        }
-                      </tr>
-                  ))}
-                    </tbody>
-                  </table>
-                </div>
+      <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-3 mb-3">
+        <div className="card">
+          <div className="card-body">
+            <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
+              <div className="question-wrapper">
+                <i className="fa-solid fa-clipboard-list fa-2xl"></i>
+                <span className="question-title">Questions</span>
               </div>
+              {user.role == 'admin' &&
+                <button type="button" className="btn btn-primary" onClick={handleShowAddModal}>
+                  Add a question <i className="fa-solid fa-plus"></i>
+                </button>
+              }
+            </div>
+            <div className="table-responsive">
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Complexity</th>
+                    {user.role == 'admin' &&
+                      <th></th>
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {currentQuestions && currentQuestions.map((qn, j) => (
+                    <tr key={j} onClick={() => setSelectedQn(qn)}>
+                      <td>{j + 1}</td>
+                      <td>{qn.title}</td>
+                      <td>
+                        {qn.categories.map((category, i) => (
+                          qn.categories[i + 1] ? category + ", " : category
+                        ))}
+                      </td>
+                      <td>
+                        <label className={getBadgeClass(qn.complexity)}>
+                          {qn.complexity}
+                        </label>
+                      </td>
+                      {user.role == 'admin' &&
+                        <td>
+                          <div className="d-flex justify-content-end">
+                            <button type="button" className="btn btn-outline-secondary me-2" onClick={(e) => { e.stopPropagation(); setEditQn(qn) }}>
+                              Edit <i className="fa-regular fa-pen-to-square"></i>
+                            </button>
+                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteQuestion(qn._id) }}>
+                              Delete <i className="fa-regular fa-trash"></i>
+                            </button>
+                          </div>
+                        </td>
+                      }
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="pagination-wrapper">
+              {showLeftArrow && <button className="pagination-arrow" onClick={handleLeftClick}>←</button>}
+              {renderPageNumbers}
+              {showRightArrow && <button className="pagination-arrow" onClick={handleRightClick}>→</button>}
             </div>
           </div>
+        </div>
+      </div>
     </div>
   );
 }

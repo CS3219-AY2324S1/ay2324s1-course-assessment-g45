@@ -6,6 +6,8 @@ import style from '../styles/style.css'
 import { post } from '../apis/UserProfileApi'
 import { useSignup } from '../hooks/useSignup'
 import logo from '../assets/images/logo.svg'
+import orangeTreeImg from '../assets/images/orangeTree.png'; 
+import orangeTreeImg2 from '../assets/images/orangeTree2.png'; 
 
 const RegisterPage = () => {
   const { dispatch } = useUserContext()
@@ -128,6 +130,8 @@ const RegisterPage = () => {
                     Already have an account? <Link to="/login"  className="textlink-primary">Log In</Link>
           </div>
       </div>
+      <img src={orangeTreeImg} alt="Tree" className="tree-image-left" />
+      <img src={orangeTreeImg2} alt="Tree3" className="tree-image-right" />
     </div>
   )
 }
