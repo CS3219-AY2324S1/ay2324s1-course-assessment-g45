@@ -11,6 +11,9 @@ const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router()
 
+// Require auth for all question routes
+router.use(requireAuth);
+
 // GET all profiles
 router.get('/', requireAuth, getAllUsers)
 

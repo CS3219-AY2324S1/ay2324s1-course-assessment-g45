@@ -6,8 +6,8 @@ const requireAuth = require('../middleware/requireAuth');
 
 const router = express.Router();
 
-// Require auth for all question routes
-// router.use(requireAuth);
+// Require auth for all chatgpt routes
+router.use(requireAuth);
 
 // POST a new request
 router.post('/', generateResponse);

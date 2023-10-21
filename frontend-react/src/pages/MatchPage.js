@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom"
+import React, { useEffect, useState } from 'react';
 import { useUserContext } from "../hooks/useUserContext"
 import { useMatchContext } from '../hooks/useMatchContext';
 import NoMatchFoundPopUp from '../components/match/NoMatchFoundPopUp';
+import AiAssistantSideBar from '../components/aiAssistant/aiAssistantSideBar';
 
 const MatchPage = () => {
     const { user, dispatch } = useUserContext()
@@ -25,6 +27,12 @@ const MatchPage = () => {
             bannerDispatch({ type: 'WAITING_HARD_MATCH' });
         }
     }
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const handleSidebarToggle = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
 
     return (
         <div>
@@ -53,6 +61,13 @@ const MatchPage = () => {
             {(bannerState.showModal) &&
                 <NoMatchFoundPopUp />
             }
+
+            <div className={`sideBarButton ${sidebarOpen ? 'with-sidebar' : ''}`}>
+                <button onClick={handleSidebarToggle}>
+                    Open AI Assistant
+                </button>
+            </div>
+            {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
         </div>
     )
 }
