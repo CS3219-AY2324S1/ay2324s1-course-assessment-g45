@@ -72,11 +72,8 @@ amqp.connect(`amqp://localhost`, (err, connection) => {
 })
 
 const findRandomQuestion = async(complexity) => {
-  const count = Question.countDocuments({ complexity: complexity})
-  console.log(`Count: ${count}`)
-  // Get a random entry
+  const count = await Question.countDocuments({ complexity: complexity}).count().exec()
   var random = Math.floor(Math.random() * count)
   const question = await Question.findOne({ complexity: complexity }).skip(random)
-  console.log(question)
   return question
 }

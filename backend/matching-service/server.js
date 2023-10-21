@@ -72,11 +72,12 @@ rabbitMQHandler((connection) => {
         for (let i = 0; i < requestBuffer.length; i++) {
           const bufferedRequest = requestBuffer[i];
           console.log(request, bufferedRequest)
-          isMatched = true;
           if (
             bufferedRequest.complexity == complexity &&
             bufferedRequest.uid != uid
           ) {
+            console.log('Match found!')
+            isMatched = true;
             const matchPair = [bufferedRequest, request];
 
             channel.assertQueue('', {
@@ -126,6 +127,8 @@ rabbitMQHandler((connection) => {
                     const session = JSON.parse(msg.content)
                     console.log(session)
                     console.log(session._id)
+                    console.log(socketId)
+                    console.log(bufferedRequest.socketId)
                     io.to(socketId).emit('matching', session);
                     io.to(bufferedRequest.socketId).emit('matching', session);
                     requestBuffer.slice(i, i); // Remove matched request from buffer

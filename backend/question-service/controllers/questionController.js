@@ -29,7 +29,10 @@ const getSingleQuestion = async (req, res) => {
 const getQuestionsByComplexity = async(req, res) => {
   const { complexity } = req.params
 
-  const question = await Question.findOne({ complexity: complexity})
+  const count = await Question.countDocuments({ complexity: complexity})
+  var random = Math.floor(Math.random() * count)
+  const question = await Question.findOne({ complexity: complexity}).skip(random)
+
   if (!question) {
     return res.status(400).json({error: `No questions found with ${complexity} complexity`})
   }
