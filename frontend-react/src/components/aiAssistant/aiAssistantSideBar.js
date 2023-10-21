@@ -52,7 +52,7 @@ const AiAssistantSideBar = ({ onClose }) => {
                             rows="5"
                             placeholder="Enter your code..."
                             value={explainCodeMsg}
-                            onChange={(e) => setExplainCodeMsg(e.target.value)}
+                            onChange={(e) => setExplainCodeMsg(e.target.value.trim())}
                             required
                         />
                     </Col>
