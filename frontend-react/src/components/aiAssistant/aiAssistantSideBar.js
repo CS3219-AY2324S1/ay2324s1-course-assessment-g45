@@ -12,6 +12,7 @@ const AiAssistantSideBar = ({ onClose }) => {
 
     const handleAsk = async (e) => {
         e.preventDefault()
+        setexplainCodeAns('')
         setIsLoading(true);
         const query = {
             message: explainCodeMsg
