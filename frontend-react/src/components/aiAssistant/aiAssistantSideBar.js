@@ -58,7 +58,7 @@ const AiAssistantSideBar = ({ onClose }) => {
                     </Col>
                     {explainCodeError && (
                         <Col md={12} xs={12}>
-                            <div className="error">{explainCodeError}</div>
+                            <div className="error mt-2">{explainCodeError}</div>
                         </Col>
                     )}
                     <Col md={12} xs={12} id="ask-button">
