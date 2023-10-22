@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 // GET all questions
 const getAllQuestions = async (req, res) => {
   const questions = await Question.find({}).sort({ createdAt: -1 });
-  console.log(req.user);
   res.status(200).json(questions);
 };
 
