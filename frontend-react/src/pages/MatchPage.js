@@ -5,7 +5,7 @@ import NoMatchFoundPopUp from '../components/match/NoMatchFoundPopUp';
 import Config from '../Config';
 import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 const baseUrl = Config.Common.MatchingApiBaseUrl;
@@ -19,6 +19,7 @@ const MatchPage = () => {
     const { user, dispatch } = useUserContext()
     const navigate = useNavigate()
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
+    const [ complexity, setComplexity ] = useState('')
 
     const handleShowEasyBanner = () => {
         if (bannerState.showBanner === false) {
@@ -39,10 +40,12 @@ const MatchPage = () => {
     }
 
     const handleSubmit = async (complexity) => {
+      console.log('submitting match request')
       if (!user) return // user should always be logged in
       if (bannerState.showBanner === false) {
         bannerDispatch({ type: `WAITING_${complexity.toUpperCase()}_MATCH`})
       }
+      setComplexity(complexity)
       const response = await post({
         complexity,
         time: Date.now(),
@@ -94,7 +97,10 @@ const MatchPage = () => {
                 </div>
             </div>
             {(bannerState.showModal) &&
-                <NoMatchFoundPopUp />
+                <NoMatchFoundPopUp 
+                  handleSubmit={handleSubmit}
+                  complexity={complexity}
+                />
             }
         </div>
     )
