@@ -4,6 +4,7 @@ import { useUserContext } from "../hooks/useUserContext"
 import { useMatchContext } from '../hooks/useMatchContext';
 import NoMatchFoundPopUp from '../components/match/NoMatchFoundPopUp';
 import AiAssistantSideBar from '../components/aiAssistant/aiAssistantSideBar';
+import aiAssistantLogo from '../assets/images/aiAssistant.png';
 
 const MatchPage = () => {
     const { user, dispatch } = useUserContext()
@@ -63,8 +64,8 @@ const MatchPage = () => {
             }
 
             <div className={`sideBarButton ${sidebarOpen ? 'with-sidebar' : ''}`}>
-                <button onClick={handleSidebarToggle}>
-                    Open AI Assistant
+                <button className="floating-button" onClick={handleSidebarToggle}>
+                    <img src={aiAssistantLogo} alt="Customer Service" />
                 </button>
             </div>
             {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
