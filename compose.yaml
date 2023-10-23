@@ -22,14 +22,28 @@ services:
     build: ./backend/question-service
     env_file:
       - ./backend/question-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     ports:
       - "3002:3002"
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   collab:
     build: ./backend/collab-service
     env_file:
       - ./backend/collab-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     ports:
       - "3003:3003"
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   matching:
     build: ./backend/matching-service
     env_file:

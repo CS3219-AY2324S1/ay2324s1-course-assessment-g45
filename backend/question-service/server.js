@@ -36,7 +36,8 @@ mongoose
     console.log(err);
   });
 
-amqp.connect(`amqp://localhost`, (err, connection) => {
+const rabbitmq_url = process.env.RABBITMQ_URL ?? 'amqp://localhost:5673'
+amqp.connect(rabbitmq_url, (err, connection) => {
   if (err) {
     throw err
   }
