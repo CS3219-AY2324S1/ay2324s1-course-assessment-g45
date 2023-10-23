@@ -12,6 +12,7 @@ const baseUrl = Config.Common.MatchingApiBaseUrl;
 var socketId = '';
 const socket = io.connect(baseUrl); // connect to backend
 socket.on('connect', () => {
+  console.log("Matching page frontend socketid: "+ socket.id)
   socketId = socket.id;
 });
 
@@ -55,11 +56,12 @@ const MatchPage = () => {
       });
       const json = response.json();
       if (!response.ok) {
-        console.log(json);
+        console.log(json);  
       }
     }
 
     const handleMatch = (msg) => {
+      console.log("Handle match!!")
       console.log(msg)
       bannerDispatch({ type: 'HIDE_BANNER'})
       navigate(`/codeEditor/${msg._id}`)
