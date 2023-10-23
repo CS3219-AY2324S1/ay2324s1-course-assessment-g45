@@ -125,6 +125,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                       }}
                     >
                       {category}
+                      <i class="fas fa-times ps-2"></i>
                     </Button>
                   )}
                   <input type='text' value={newCategory} onChange={(event) => setNewCategory(event.target.value)} />
