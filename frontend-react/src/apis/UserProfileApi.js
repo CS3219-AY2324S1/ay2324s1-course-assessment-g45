@@ -52,4 +52,13 @@ async function getAllUsers(token) {
   })
 }
 
-export { post, loginUser, updateUser, deleteUser, getAllUsers };
+async function getUserById(token, id) {
+  return fetch(`${baseUrl}/api/userProfiles/` + id, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
+export { post, loginUser, updateUser, deleteUser, getAllUsers, getUserById };
