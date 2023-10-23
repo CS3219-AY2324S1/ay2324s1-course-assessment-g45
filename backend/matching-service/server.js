@@ -32,6 +32,13 @@ app.use((req, res, next) => {
 
 app.use('/api/matching', matchingRoutes);
 
+io.on("connection", (socket) => {
+  console.log(`User connected: ${socket.id}`)
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`)
+  })
+})
+
 rabbitMQHandler((connection) => {
   connection.createChannel((error, channel) => {
     if (error) {
@@ -63,7 +70,7 @@ rabbitMQHandler((connection) => {
     channel.consume(
       matchingQueue,
       (msg) => {
-        console.log(' [x] Received %s', msg.content.toString());
+        console.log(' [x] Received %s from frontend', msg.content.toString());
         const request = JSON.parse(msg.content.toString());
         let isMatched = false;
         const socketId = request.socketId;
@@ -71,9 +78,11 @@ rabbitMQHandler((connection) => {
         const complexity = request.complexity;
         for (let i = 0; i < requestBuffer.length; i++) {
           const bufferedRequest = requestBuffer[i];
+          console.log('Looking through all present requests in the queue')
           console.log(request, bufferedRequest)
           if (
             bufferedRequest.complexity == complexity &&
+            uid !== null && bufferedRequest.uid !== null &&
             bufferedRequest.uid != uid
           ) {
             console.log('Match found!')
@@ -100,7 +109,7 @@ rabbitMQHandler((connection) => {
               // read from queue to get the requested question
               channel.consume(queue.queue, (msg) => {
                 if (msg.properties.correlationId == 'matching_service') {
-                  console.log(`Got message: ${msg.content.toString()}`)
+                  console.log(`Received question: ${msg.content.toString()} from question queue`)
                   const questionId = msg.content.toString()
                   const sessionInfo = { 
                     questionId: questionId, 
@@ -112,6 +121,7 @@ rabbitMQHandler((connection) => {
                   channel.ack(msg) // accept
 
                   // send info to collab service to create a session in database
+                  console.log('Send session details to session queue to create a session')
                   channel.sendToQueue(sessionQueue, 
                     Buffer.from(JSON.stringify(sessionInfo)),
                     {

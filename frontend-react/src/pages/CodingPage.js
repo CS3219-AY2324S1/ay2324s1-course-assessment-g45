@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import MonacoCodeEditor from '../components/MonacoCodeEditor'
 import ReactQuill from 'react-quill'
+import Alert from 'react-bootstrap/Alert';
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
 import { getSession } from '../apis/CollabSessionApi'
@@ -15,16 +16,18 @@ const CodingPage = () => {
 
   const { user } = useUserContext()
 
-  useEffect(() => {
-    const getQuestion = async (id) => {
-      const response = await getQuestionById(user.token, { id })
-      const json = await response.json()
-      console.log(json)
-      if (response.ok) {
-        setQuestion(json)
-        console.log(question)
-      }
+
+  const getQuestion = async (id) => {
+    const response = await getQuestionById(user.token, { id })
+    const json = await response.json()
+    console.log(json)
+    if (response.ok) {
+      setQuestion(json)
+      console.log(question)
     }
+  }
+
+  useEffect(() => {
     const fetchSession = async () => {
       const session = await getSession({sessionId})
       const json = await session.json()
@@ -37,7 +40,7 @@ const CodingPage = () => {
     <div>
       { 
         !isValidUser && 
-        <div> Page not found </div>
+        <div> This page is not available </div>
       }
 
       {
