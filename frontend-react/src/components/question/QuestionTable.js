@@ -40,7 +40,7 @@ const QuestionTable = () => {
   const [startingPageNumber, setStartingPageNumber] = useState(1);
   const MAX_PAGE_NUMS = 4;
   const questionsPerPage = 8;
-  const totalPages = questions ? Math.ceil(questions.length / questionsPerPage) : 0;
+  const totalPages = questions ? Math.ceil(filteredQuestions.length / questionsPerPage) : 0;
 
   const indexOfLastQn = currentPage * questionsPerPage;
   const indexOfFirstQn = indexOfLastQn - questionsPerPage;
