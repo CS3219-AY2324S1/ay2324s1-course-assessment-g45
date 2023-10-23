@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
 import { getSession } from '../apis/CollabSessionApi'
 import { getQuestionById } from '../apis/QuestionApi'
+import ChatBox from '../components/chat/ChatBox'
+import Container from 'react-bootstrap/Container'
 
 const CodingPage = () => {
   const { sessionId } = useParams()
@@ -41,14 +43,19 @@ const CodingPage = () => {
       {
         isValidUser &&
         <div className='row'>
-          <div className='col-6 vh-100 overflow-auto'>
-            {
-              question &&
-              <ReactQuill 
-                value={question.description} 
-                readOnly={true} 
-                theme='bubble'/>
-            }
+          <div className='col-6 vh-100 overflow-auto col'>
+            <div className='row'>
+              {
+                question &&
+                <ReactQuill 
+                  value={question.description} 
+                  readOnly={true} 
+                  theme='bubble'/>
+              }
+            </div>
+            <div className='row'>
+              <ChatBox/>
+            </div>
           </div>
           <div className='col-6'>
             <MonacoCodeEditor/>

@@ -10,9 +10,6 @@ const Home = () => {
   const navigate = useNavigate()
   return (
     <div>
-      {/* <MonacoCodeEditor/> */}
-      {/* <CodeEditor/> */}
-      <Matching/>
       <QuestionTable/>
     </div>
   )

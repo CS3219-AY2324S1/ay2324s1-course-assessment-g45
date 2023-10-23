@@ -16,7 +16,9 @@ const Config = {
     MatchingApiBaseUrl:
         'http://localhost:3004',
     CollabSessionApiBaseUrl:
-        'http://localhost:3003'
+        'http://localhost:3003',
+    ChatApiBaseUrl: 
+        'http://localhost:3005',
   },
 };
 
