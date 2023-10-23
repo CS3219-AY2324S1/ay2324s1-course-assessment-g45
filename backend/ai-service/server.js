@@ -5,7 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const chatgptRoutes = require('./routes/chatgpt');
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3006;
 
 //express app
 const app = express();

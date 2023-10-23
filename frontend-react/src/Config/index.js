@@ -19,8 +19,8 @@ const Config = {
       'http://localhost:3003',
     ChatGPTApiBaseUrl:
       environment === Environment.production
-        ? 'http://localhost:3005'
-        : 'http://localhost:3005'
+        ? 'http://localhost:3006'
+        : 'http://localhost:3006'
   },
 };
 
