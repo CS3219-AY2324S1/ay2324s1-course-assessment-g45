@@ -42,7 +42,7 @@ const createUser = async (req, res) => {
     const token = createToken(user._id)
 
     // res.status(200).json(user)
-    res.status(200).json({ username, email, token })
+    res.status(200).json({ id: user._id, username, email, token })
 
   } catch (error) {
     if (error.code == 11000) {

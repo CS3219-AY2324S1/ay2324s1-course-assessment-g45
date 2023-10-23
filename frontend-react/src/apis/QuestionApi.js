@@ -1,4 +1,3 @@
-
 import Config from '../Config';
 
 const baseUrl = Config.Common.QuestionApiBaseUrl;
@@ -8,8 +7,18 @@ async function getAllQuestions(token) {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
-    },
+    }
   });
+}
+
+async function getQuestionById(token, { id }) {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+  })
 }
 
 async function post(token, { ...params }) {
@@ -23,7 +32,6 @@ async function post(token, { ...params }) {
   });
 }
 
-
 async function deleteQuestion(token, { id }) {
   return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'DELETE',
@@ -32,7 +40,6 @@ async function deleteQuestion(token, { id }) {
     },
   });
 }
-
 
 async function patch(token, id, { ...params }) {
   return fetch(`${baseUrl}/api/questions/${id}`, {
@@ -45,4 +52,10 @@ async function patch(token, id, { ...params }) {
   });
 }
 
-export { getAllQuestions, post, deleteQuestion, patch };
+export { 
+  getAllQuestions, 
+  getQuestionById,
+  post, 
+  deleteQuestion, 
+  patch 
+};

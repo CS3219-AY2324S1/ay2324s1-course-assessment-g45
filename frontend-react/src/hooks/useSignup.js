@@ -33,8 +33,6 @@ export const useSignup = () => {
         setIsLoading(false)
         navigate("/match")
     }
-
-    return response
   }
 
   return {signup, isLoading, error, setError}

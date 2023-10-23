@@ -4,10 +4,11 @@ import { useMatchContext } from '../../hooks/useMatchContext';
 function WaitingBanner() {
     const [counter, setCounter] = useState(0);
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
-    const waitingTime = 120; /* wait 2 minutes before the not match found banner pops up, can adjust lower to test */
+    const waitingTime = 30; /* wait 2 minutes before the not match found banner pops up, can adjust lower to test */
 
     useEffect(() => {
-        const timer = setInterval(() => {
+      setCounter(0)
+      const timer = setInterval(() => {
             setCounter((prevCounter) => prevCounter + 1);
         }, 1000);
 

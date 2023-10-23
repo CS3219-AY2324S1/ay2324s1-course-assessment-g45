@@ -9,6 +9,7 @@ import QuestionPopUp from './QuestionPopUp';
 import QuestionForm from './QuestionForm';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import ConfirmationPopup from '../ConfirmationPopup';
 import { useUserContext } from '../../hooks/useUserContext';
 
 // Question Id Question Title Question Description Question Category Question Complexity
@@ -16,13 +17,14 @@ import { useUserContext } from '../../hooks/useUserContext';
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
   const [showAddModal, setShowAddModal] = useState(false);
-  const handleCloseAddModal = () => setShowAddModal(false);
+  // const handleCloseAddModal = () => setShowAddModal(false);
   const handleShowAddModal = () => setShowAddModal(true);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const handleCloseEditModal = () => setShowEditModal(false);
-  const handleShowEditModal = () => setShowEditModal(true);
+  // const [showEditModal, setShowEditModal] = useState(false);
+  // const handleCloseEditModal = () => setShowEditModal(false);
+  // const handleShowEditModal = () => setShowEditModal(true);
   const [editQn, setEditQn] = useState(null)
+  const [ deleteQn, setDeleteQn ] = useState(null)
 
   const [selectedQn, setSelectedQn] = useState(null)
   const { user } = useUserContext();
@@ -110,6 +112,7 @@ const QuestionTable = () => {
 
     if (response.ok) {
       dispatch({ type: 'DELETE_QUESTION', payload: json })
+      setDeleteQn(null)
     } else {
       setError(json.error)
       console.log(error)
@@ -136,6 +139,7 @@ const QuestionTable = () => {
         />
       }
 
+      {/* show edit popup */}
       {
         editQn &&
         <QuestionForm
@@ -145,6 +149,18 @@ const QuestionTable = () => {
         />
       }
 
+      {/* show delete confirmation popup  */}
+      {
+        deleteQn &&
+        <ConfirmationPopup
+          title={'Delete Question'}
+          message={'Are you sure to proceed? This action cannot be undone.'}
+          handleClose={() => setDeleteQn(null)}
+          handleSubmit={() => handleDeleteQuestion(deleteQn._id)}
+        />
+      }
+
+      {/* description popup */}
       {
         selectedQn &&
         <QuestionPopUp

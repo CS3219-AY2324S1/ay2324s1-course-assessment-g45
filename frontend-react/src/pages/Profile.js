@@ -249,6 +249,10 @@ const Profile = () => {
     //   }
 
     <div className='profile-container'>
+      {/* <div>
+        <div> Debug </div>
+        <div> user id:  {user.id} </div>
+      </div> */}
       <Row className="mb-8  align-items-center justify-content-center">
         <Col xl={2} lg={4} md={12} xs={12}>
               <div className="mb-4 mb-lg-0">

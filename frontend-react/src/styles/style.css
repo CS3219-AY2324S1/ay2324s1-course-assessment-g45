@@ -11,6 +11,10 @@
   --speed: 500ms;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* shared */
 .material-symbols-outlined {
   font-variation-settings:
@@ -209,6 +213,15 @@ input {
   margin-right: 10px;
 }
 
+.code-editor .ql-editor {
+  height: 400px;
+  background-color: white;
+}
+
+.code-editor .ql-toolbar .ql-snow {
+  position: sticky;
+  bottom: 0;
+}
 /* nav bar*/
 nav {
   display: flex;

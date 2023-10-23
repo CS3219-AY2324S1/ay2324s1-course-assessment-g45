@@ -17,6 +17,7 @@ export const useLogin = () => {
     const response = await loginUser({username, password})
     const json = await response.json()
 
+    console.log(json)
     if (!response.ok) {
         setIsLoading(false)
         setError(json.error)
@@ -34,8 +35,6 @@ export const useLogin = () => {
           navigate("/match")
         }
     }
-
-    return response
   }
 
   return {login, isLoading, error}

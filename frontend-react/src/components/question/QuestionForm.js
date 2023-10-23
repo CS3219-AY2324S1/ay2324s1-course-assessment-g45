@@ -1,17 +1,15 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import Badge from 'react-bootstrap/Badge'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
-import { getAllQuestions, deleteQuestion, patch, post} from '../../apis/QuestionApi';
-import { useUserContext } from '../../hooks/useUserContext';
+import { patch, post } from '../../apis/QuestionApi';
 import * as formik from 'formik';
 import * as yup from 'yup';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
+// import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { useUserContext } from '../../hooks/useUserContext';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
