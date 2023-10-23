@@ -112,69 +112,6 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.title}</Form.Control.Feedback>
                 </Form.Group>
-                {/* <Form.Group
-                  className="mb-3"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control as="textarea" rows={3}
-                    name="description"
-                    onChange={handleChange}
-                    value={values.description}
-                    isInvalid={!!errors.description}
-                    className="mb-0" />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.description}</Form.Control.Feedback>
-                </Form.Group> */}
-
-                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label>Categories</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="categories"
-                    onChange={handleChange}
-                    value={values.categories}
-                    isInvalid={!!errors.categories}
-                    className="mb-0" />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.categories}</Form.Control.Feedback>
-                </Form.Group> */}
-
-                {/* <label> Categories: </label>
-
-                <Row className='align-items-center'>
-                  <Col>
-                    <Form.Control 
-                      type='text'
-                      name='category'
-                      value={inputCat}
-                      onChange={(e) => setInputCat(e.target.value)}
-                    />
-                  </Col>
-                  <Col>
-                    <button 
-                      type='button' 
-                      onClick={() => {
-                        setCategories([...categories, inputCat]);
-                        setInputCat('')
-                      }}> add </button>
-                  </Col>
-                </Row>
-
-                <h5>
-                { categories.map((c,i) => {
-                  return (
-                    <div
-                      className='d-inline p-2 bg-primary text-white rounded'
-                      key={i} 
-                      onClick={() => setCategories(categories.filter(item => item !== c))}> 
-                      {c} 
-                    </div>)
-                })}
-                </h5> */}
-
-
-
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
                   <Form.Label>Categories</Form.Label>
@@ -213,20 +150,6 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     {errors.categories}</Form.Control.Feedback>
                 </Form.Group>
 
-                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label>Complexity</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="complexity"
-                    onChange={handleChange}
-                    value={values.complexity}
-                    isInvalid={!!errors.complexity}
-                    className="mb-0"/>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.complexity}</Form.Control.Feedback>
-
-                </Form.Group> */}
-
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
                   <Form.Label>Complexity</Form.Label>
                   <Form.Select
@@ -245,11 +168,6 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                     {errors.complexity}
                   </Form.Control.Feedback>
                 </Form.Group>
-
-                {/* <div>
-                  error title: { errors.title} <br/>
-                  error description: { errors.description} <br/>
-                </div> */}
 
                 <Form.Group controlId="exampleForm.ControlTextarea1">
                   <Form.Label> Description </Form.Label>
