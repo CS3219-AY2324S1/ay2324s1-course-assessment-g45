@@ -6,8 +6,7 @@ import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
 import { getSession } from '../apis/CollabSessionApi'
 import { getQuestionById } from '../apis/QuestionApi'
-import ChatBox from '../components/chat/ChatBox'
-import Container from 'react-bootstrap/Container'
+import ChatBox from '../components/coding_session/ChatBox'
 
 const CodingPage = () => {
   const { sessionId } = useParams()

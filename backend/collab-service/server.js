@@ -60,26 +60,6 @@ const defaultValue = ""
 io.on("connection", (socket) => {
    console.log("user connected", socket.id)
 
-  //   // broadcast to everyone
-  //   // socket.broadcast.emit("receive_message", data)
-
-  //   // broatcast to only people in the room
-  //   socket.to(data.roomNumber).emit("receive_message", data)
-  // })
-
-  // socket.on("join_room", (data) => {
-  //   console.log(data)
-
-  //   // join room with the room number in data
-  //   socket.join(data.roomNumber)
-  // })
-  // socket.on('get-session', (id) => {
-  //   const data = "data given!"
-  //   console.log("Get session")
-  //   socket.join(id) // join the session with the given id
-  //   socket.emit('load-session', data)
-  // })
-
   // socket.on("get-session", async documentId => {
   //   const document = await findOrCreateDocument(documentId)
   //   socket.join(documentId)
@@ -95,18 +75,43 @@ io.on("connection", (socket) => {
   //   })
   // })
 
+
+  // collab session
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
     socket.join(sessionId)
     socket.emit("load-session", session.data)
     
     console.log("socket join")
+
+    // code changes
     socket.on("send_changes", delta => {
       socket.broadcast.to(sessionId).emit("received_changes", delta) //broadcast.to(sessionId)
     })
-
     socket.on("save-document", async data => {
+      // console.log('saving document', data)
       await Session.findByIdAndUpdate(sessionId, { data })
+    })
+
+    socket.on("disconnect", () => {
+      console.log("User Disconnected", socket.id);
+    });
+    
+  })
+
+  // chat messages
+  socket.on("join-chat", async (sessionId) => {
+    console.log('join chat')
+    socket.join(sessionId)
+
+    socket.on("send-chat", (msg) => {
+      console.log("received", msg)
+      socket.broadcast.to(sessionId).emit("receive-chat", msg)
+    })
+
+    // save chat when user disconnect?
+    socket.on("disconnect", () => {
+      console.log(`User ${socket.id} disconnected`)
     })
   })
 })
