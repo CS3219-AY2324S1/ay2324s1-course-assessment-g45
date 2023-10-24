@@ -117,6 +117,8 @@ rabbitMQHandler((connection) => {
                     uid2: bufferedRequest.uid,
                     data: ''
                   }
+                  console.log("Socket id for u1: " + socketId)
+                  console.log("Socket id for u2: " + bufferedRequest.socketId)
                   console.log(sessionInfo)
                   channel.ack(msg) // accept
 
@@ -137,11 +139,11 @@ rabbitMQHandler((connection) => {
                     const session = JSON.parse(msg.content)
                     console.log(session)
                     console.log(session._id)
-                    console.log(socketId)
-                    console.log(bufferedRequest.socketId)
+                    console.log("Socket id for u1: " + socketId)
+                    console.log("Socket id for u2: " + bufferedRequest.socketId)
                     io.to(socketId).emit('matching', session);
                     io.to(bufferedRequest.socketId).emit('matching', session);
-                    requestBuffer.slice(i, i); // Remove matched request from buffer
+                    requestBuffer.splice(i, 1); // Remove matched request from buffer
                   })
                 }
               })

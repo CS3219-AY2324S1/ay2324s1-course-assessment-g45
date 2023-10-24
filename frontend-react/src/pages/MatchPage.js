@@ -11,7 +11,8 @@ const baseUrl = Config.Common.MatchingApiBaseUrl;
 var socketId = '';
 const socket = io.connect(baseUrl); // connect to backend
 socket.on('connect', () => {
-    socketId = socket.id;
+  console.log("Matching page frontend socketid: "+ socket.id)
+  socketId = socket.id;
 });
 
 const MatchPage = () => {
@@ -39,29 +40,30 @@ const MatchPage = () => {
     }
 
     const handleSubmit = async (complexity) => {
-        console.log('submitting match request')
-        if (!user) return // user should always be logged in
-        if (bannerState.showBanner === false) {
-            bannerDispatch({ type: `WAITING_${complexity.toUpperCase()}_MATCH` })
-        }
-        setComplexity(complexity)
-        const response = await post({
-            complexity,
-            time: Date.now(),
-            socketId,
-            uid: user.id,
-            username: user.username,
-        });
-        const json = response.json();
-        if (!response.ok) {
-            console.log(json);
-        }
+      console.log('submitting match request')
+      if (!user) return // user should always be logged in
+      if (bannerState.showBanner === false) {
+        bannerDispatch({ type: `WAITING_${complexity.toUpperCase()}_MATCH`})
+      }
+      setComplexity(complexity)
+      const response = await post({
+        complexity,
+        time: Date.now(),
+        socketId,
+        uid: user.id,
+        username: user.username,
+      });
+      const json = response.json();
+      if (!response.ok) {
+        console.log(json);  
+      }
     }
 
     const handleMatch = (msg) => {
-        console.log(msg)
-        bannerDispatch({ type: 'HIDE_BANNER' })
-        navigate(`/codeEditor/${msg._id}`)
+      console.log("Handle match!!")
+      console.log(msg)
+      bannerDispatch({ type: 'HIDE_BANNER'})
+      navigate(`/codeEditor/${msg._id}`)
     }
 
     useEffect(() => {
