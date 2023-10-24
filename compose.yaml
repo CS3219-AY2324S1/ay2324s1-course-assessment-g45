@@ -18,6 +18,12 @@ services:
       - ./backend/account-service/.env
     ports:
       - "3001:3001"
+  ai:
+    build: ./backend/ai-service
+    env_file:
+      - ./backend/ai-service/.env
+    ports:
+      - "3006:3006"
   question:
     build: ./backend/question-service
     env_file:
