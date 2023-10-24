@@ -3,13 +3,6 @@ import io from 'socket.io-client';
 import Config from '../Config';
 import Button from 'react-bootstrap/Button';
 
-const baseUrl = Config.Common.QuestionApiBaseUrl;
-var socketId = '';
-const socket = io.connect(baseUrl); // connect to backend
-socket.on('connect', () => {
-  socketId = socket.id;
-});
-
 const FilterBar = ({ label, values, setValue, className }) => {
   const [selectedValue, setSelectedValue] = useState("")
   const handleSelectChange = (event) => {
