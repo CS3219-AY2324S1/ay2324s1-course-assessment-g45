@@ -68,9 +68,7 @@ const CodingPage = () => {
             <Accordion 
               style={{ width: '30vw' }}
             >
-              <Accordion.Item
-                style={{ display: 'flex', flexDirection: 'column-reverse'}}
-              >
+              <Accordion.Item>
                 <Accordion.Header>
                   Live Chat
                 </Accordion.Header>

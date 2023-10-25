@@ -945,10 +945,6 @@ h3 span {
   }
 }
 
-.message-container::-webkit-scrollbar {
-  display: none;
-}
-
 .message {
   padding: 10px;
   display: flex;

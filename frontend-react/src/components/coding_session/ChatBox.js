@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../../hooks/useUserContext'
 import { io } from 'socket.io-client'
@@ -6,15 +6,16 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import '../../styles/style.css'
-import ScrollToBottom from 'react-scroll-to-bottom'
 
-const ChatBox = ({ setShowChat }) => {
+const ChatBox = () => {
   const { user } = useUserContext()
   const { sessionId } = useParams()
   const [ socket, setSocket ] = useState()
 
   const [ currentMsg, setCurrentMsg ] = useState("")
   const [ messageList, setMessageList ] = useState([])
+
+  const bottomRef = useRef(null)
 
   // connect to socket
   useEffect(() => {
@@ -34,8 +35,8 @@ const ChatBox = ({ setShowChat }) => {
   
   const sendMsg = async () => {
     if (currentMsg === "") return
-    let currentTime = new Date(Date.now())
-    currentTime = currentTime.getHours() + ":" + currentTime.getMinutes()
+    let currentTime = new Date(Date.now()).toTimeString().slice(0,5)
+    // currentTime = currentTime.getHours() + ":" + currentTime.getMinutes()
     console.log(currentTime)
     const msgData = { 
       sessionId,
@@ -58,13 +59,16 @@ const ChatBox = ({ setShowChat }) => {
     })
   }, [socket])
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({behavior: 'smooth'})
+  }, [ messageList])
+
   return (
     <div className='d-flex flex-column h-100'>
-      <div className='chat-header p-2'>
-        <h6> Username </h6>
-      </div>
+      {/* <div className='chat-header p-2 bg-info'>
+        <h6> { otherUser }</h6>
+      </div> */}
       <div className='chat-body flex-grow-1 overflow-y-scroll'>
-        <ScrollToBottom className='message-container'>
           { messageList.map((msg) => {
             return (
               <div
@@ -84,11 +88,10 @@ const ChatBox = ({ setShowChat }) => {
               </div>
             )
           })}
-        </ScrollToBottom>
-
+          <div ref={bottomRef}/>
       </div>
       <div className='chat-footer'>
-        <InputGroup>
+        <InputGroup className='mx-2'>
           <Form.Control
             placeholder='Send a message..'
             value={currentMsg}
