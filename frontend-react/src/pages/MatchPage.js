@@ -21,24 +21,6 @@ const MatchPage = () => {
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
     const [complexity, setComplexity] = useState('')
 
-    const handleShowEasyBanner = () => {
-        if (bannerState.showBanner === false) {
-            bannerDispatch({ type: 'WAITING_EASY_MATCH' });
-        }
-    }
-
-    const handleShowMediumBanner = () => {
-        if (bannerState.showBanner === false) {
-            bannerDispatch({ type: 'WAITING_MEDIUM_MATCH' });
-        }
-    }
-
-    const handleShowHardBanner = () => {
-        if (bannerState.showBanner === false) {
-            bannerDispatch({ type: 'WAITING_HARD_MATCH' });
-        }
-    }
-
     const handleSubmit = async (complexity) => {
       console.log('submitting match request')
       if (!user) return // user should always be logged in
@@ -87,11 +69,11 @@ const MatchPage = () => {
                             </div>
                         </div>
                         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
-                            <button className="custom-match-btn easy-btn" onClick={() => handleSubmit('Easy')}><span>
+                            <button className="custom-match-btn easy-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Easy')}><span>
                                 <i className="fa-regular fa-star fa-bounce"></i> Easy</span></button>
-                            <button className="custom-match-btn medium-btn" onClick={() => handleSubmit('Medium')}><span>
+                            <button className="custom-match-btn medium-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Medium')}><span>
                                 <i className="fa-regular fa-star-half-stroke fa-bounce"></i> Medium</span></button>
-                            <button className="custom-match-btn hard-btn" onClick={() => handleSubmit('Hard')}><span>
+                            <button className="custom-match-btn hard-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Hard')}><span>
                                 <i className="fa-solid fa-star fa-bounce"></i> Hard</span></button>
                         </div>
                     </div>
