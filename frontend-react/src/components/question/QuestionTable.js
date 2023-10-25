@@ -160,13 +160,6 @@ const QuestionTable = () => {
 
   return (
     <div>
-      <FilterBar label={'Filter Complexity'} setValue={setComplexityFilter} values={['Easy', 'Medium', 'Hard']} className='ms-3 mt-3 ' />
-      <FilterBar label={'Filter Category'} setValue={setCategoryFilter} values={categoryList} className='ms-3 mt-3 ' />
-      {user.role == 'admin' &&
-        <Button variant="success" className='ms-3 mt-3 pull-left'
-          onClick={() => setShowAddModal(true)}>Add a question
-        </Button>
-      }
       {
         showAddModal &&
         <QuestionForm
@@ -205,8 +198,9 @@ const QuestionTable = () => {
         />
       }
 
-
       <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-3 mb-3">
+      <FilterBar label={'Filter Complexity'} setValue={setComplexityFilter} values={['Easy', 'Medium', 'Hard']} className='' />
+      <FilterBar label={'Filter Category'} setValue={setCategoryFilter} values={categoryList} className='' />
         <div className="card">
           <div className="card-body">
             <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
