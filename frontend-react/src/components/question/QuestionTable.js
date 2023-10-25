@@ -31,7 +31,7 @@ const QuestionTable = () => {
   // const handleShowEditModal = () => setShowEditModal(true);
   const [editQn, setEditQn] = useState(null)
   const [deleteQn, setDeleteQn] = useState(null)
-
+  const [error, setError] = useState(null)
   const [selectedQn, setSelectedQn] = useState(null)
   const { user } = useUserContext();
 
@@ -128,7 +128,9 @@ const QuestionTable = () => {
     }
   }, [categoryFilter, complexityFilter, questions])
 
-  const [error, setError] = useState(null)
+  const showDeleteConfirmation = (question) => { 
+    setDeleteQn(question)
+  }
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
     if (!user) {
@@ -249,7 +251,7 @@ const QuestionTable = () => {
                             <button type="button" className="btn btn-outline-secondary me-2" onClick={(e) => { e.stopPropagation(); setEditQn(qn) }}>
                               Edit <i className="fa-regular fa-pen-to-square"></i>
                             </button>
-                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteQuestion(qn._id) }}>
+                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); showDeleteConfirmation(qn) }}>
                               Delete <i className="fa-regular fa-trash"></i>
                             </button>
                           </div>
