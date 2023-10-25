@@ -64,7 +64,7 @@ const AiAssistantSideBar = ({ onClose }) => {
                     )}
                     <Col md={12} xs={12} id="ask-button">
                         <Button variant="primary" type="submit" disabled={isLoading}>
-                            Ask ChatGPT
+                            Explain
                         </Button>
                     </Col>
                     <Col md={12} xs={12} id="loading">
