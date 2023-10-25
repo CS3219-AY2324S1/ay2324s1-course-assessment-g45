@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../../hooks/useUserContext'
 import { io } from 'socket.io-client'
+import InputGroup from 'react-bootstrap/InputGroup'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import '../../styles/style.css'
+import ScrollToBottom from 'react-scroll-to-bottom'
 
-const ChatBox = () => {
+const ChatBox = ({ setShowChat }) => {
   const { user } = useUserContext()
   const { sessionId } = useParams()
   const [ socket, setSocket ] = useState()
@@ -54,47 +59,48 @@ const ChatBox = () => {
   }, [socket])
 
   return (
-    <div>
-      <div className='chat-header'>
-        <p> Live Chat </p>
+    <div className='d-flex flex-column h-100'>
+      <div className='chat-header p-2'>
+        <h6> Username </h6>
       </div>
-      <div className='chat-body'>
-        <div>
+      <div className='chat-body flex-grow-1 overflow-y-scroll'>
+        <ScrollToBottom className='message-container'>
           { messageList.map((msg) => {
             return (
               <div
-                className={'message ' + msg.uid === user.id ? "current-user" : "other-user"}
+                className='message'
+                id={ msg.uid === user.id ? "current-user" : "other-user" }
                 key={msg.time}
               >
-              <div>
-                <p> { msg.message } </p>
-              </div>
-              <div>
-                <p> { msg.time } </p>
-                <p> { msg.username } </p>
-              </div>
-
+                <div>
+                  <div className= 'message-content d-inline-block m-2 p-2 rounded text-white'>
+                    <b> {msg.username } </b>
+                    <div> { msg.message } </div>
+                  </div>
+                  <div className='d-flex message-meta'>
+                    <p> { msg.time } </p>
+                  </div>
+                </div>
               </div>
             )
           })}
-        </div>
+        </ScrollToBottom>
 
       </div>
       <div className='chat-footer'>
-        <input
-          type='text'
-          placeholder='hey...'
-          value={currentMsg}
-          onChange={(e) => {
-            setCurrentMsg(e.target.value)
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              sendMsg()
-            }
-          }}          
-        />
-        <button onClick={sendMsg}>&#9658;</button>
+        <InputGroup>
+          <Form.Control
+            placeholder='Send a message..'
+            value={currentMsg}
+            onChange={(e) => setCurrentMsg(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') sendMsg()
+            }}
+          />
+          <Button variant='outlined'>
+            <span class="material-symbols-outlined">send</span>
+          </Button>
+        </InputGroup>
       </div>
     </div>
   )

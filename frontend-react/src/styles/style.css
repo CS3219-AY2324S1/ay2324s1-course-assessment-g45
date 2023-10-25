@@ -944,3 +944,40 @@ h3 span {
     box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500, 0 0 30px #FF0000, 0 0 40px #FF0000, 0 0 50px #FF0000, 0 0 60px #FF0000, 0 0 75px #FF0000;
   }
 }
+
+.message-container::-webkit-scrollbar {
+  display: none;
+}
+
+.message {
+  padding: 10px;
+  display: flex;
+}
+
+#current-user {
+  justify-content: flex-end;
+}
+
+#current-user .message-content {
+  background-color: #58c26b;
+  justify-content: flex-end;
+}
+
+#current-user .message-meta {
+  justify-content: flex-end;
+  margin-left: 3px;
+}
+
+#other-user {
+  justify-content: flex-start;
+}
+
+#other-user .message-content {
+  background-color: #b4acac;
+  justify-content: flex-start;
+}
+
+#other-user .message-meta {
+  justify-content: flex-start;
+  margin-right: 3px;
+}

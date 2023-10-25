@@ -60,22 +60,6 @@ const defaultValue = ""
 io.on("connection", (socket) => {
    console.log("user connected", socket.id)
 
-  // socket.on("get-session", async documentId => {
-  //   const document = await findOrCreateDocument(documentId)
-  //   socket.join(documentId)
-  //   socket.emit("load-session", document.data)
-
-  //   console.log("socket join")
-  //   socket.on("send_changes", delta => {
-  //     socket.broadcast.to(documentId).emit("received_changes", delta) //broadcast.to(documentId)
-  //   })
-
-  //   socket.on("save-document", async data => {
-  //     await Document.findByIdAndUpdate(documentId, { data })
-  //   })
-  // })
-
-
   // collab session
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
