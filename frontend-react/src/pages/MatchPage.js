@@ -35,7 +35,7 @@ const MatchPage = () => {
         uid: user.id,
         username: user.username,
       });
-      const json = response.json();
+      const json = await response.json();
       if (!response.ok) {
         console.log(json);  
       }
