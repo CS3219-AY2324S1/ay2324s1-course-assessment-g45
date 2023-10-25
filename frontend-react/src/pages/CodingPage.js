@@ -69,9 +69,6 @@ const CodingPage = () => {
           </div>
 
           <div className='fixed-bottom w-30'>
-            {/* <Button 
-              onClick={() => setShowChat(true)}
-            > Show Chat </Button> */}
             <Accordion 
               style={{ width: '30vw' }}
             >
@@ -86,13 +83,6 @@ const CodingPage = () => {
 
             </Accordion>
           </div>
-
-          {
-            showChat && 
-            <ChatBox 
-              setShowChat={setShowChat}
-            />
-          }
         </div>
       }
 
