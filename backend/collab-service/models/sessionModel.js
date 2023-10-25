@@ -19,6 +19,10 @@ const sessionSchema = new Schema({
     type: String,
     required: true,
   },
+  chat : {
+    type : Array,
+    defaultValue: [],
+  }
 }, {timestamps: true})
 
 module.exports = mongoose.model('Session', sessionSchema)

@@ -115,7 +115,8 @@ rabbitMQHandler((connection) => {
                     questionId: questionId, 
                     uid1: request.uid,
                     uid2: bufferedRequest.uid,
-                    data: ''
+                    data: '',
+                    chat: new Array(),
                   }
                   console.log(sessionInfo)
                   channel.ack(msg) // accept

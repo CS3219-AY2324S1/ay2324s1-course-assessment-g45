@@ -86,12 +86,22 @@ io.on("connection", (socket) => {
   // chat messages
   socket.on("join-chat", async (sessionId) => {
     console.log('join chat')
+    const session = await findSession(sessionId)
+    // console.log(session)
     socket.join(sessionId)
+    socket.emit("load-chat", session.chat)
 
-    socket.on("send-chat", (msg) => {
+    socket.on("send-chat", async (msg) => {
       console.log("received", msg)
       socket.broadcast.to(sessionId).emit("receive-chat", msg)
+      console.log('saving changes to database')
+      await Session.findByIdAndUpdate(sessionId, { $push : { chat : msg}})
     })
+
+    // socket.on("save-chat", async (data) => {
+    //   console.log('saving chat data')
+    //   await Session.findByIdAndUpdate(sessionId, { $push : { chat : { $each : data }}})
+    // })
 
     // save chat when user disconnect?
     socket.on("disconnect", () => {

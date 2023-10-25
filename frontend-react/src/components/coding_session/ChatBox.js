@@ -6,6 +6,8 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import '../../styles/style.css'
+import { v4 as uuidV4 } from 'uuid'
+
 
 const ChatBox = () => {
   const { user } = useUserContext()
@@ -21,6 +23,8 @@ const ChatBox = () => {
   useEffect(() => {
     const s = io.connect("http://localhost:3003")
     setSocket(s)
+    console.log(bottomRef.current)
+    bottomRef.current?.scrollIntoView({behavior: 'smooth'})
     return () => { // disconnect when done
       s.disconnect()
     }
@@ -30,13 +34,17 @@ const ChatBox = () => {
   useEffect(() => {
     if (user.id && sessionId && socket) {
       socket.emit("join-chat", sessionId)
+      socket.once('load-chat', chat => {
+        console.log(chat)
+        setMessageList(chat)
+      })
+      bottomRef.current?.scrollIntoView({behavior: 'smooth'})
     }
   }, [socket, sessionId])
   
   const sendMsg = async () => {
     if (currentMsg === "") return
     let currentTime = new Date(Date.now()).toTimeString().slice(0,5)
-    // currentTime = currentTime.getHours() + ":" + currentTime.getMinutes()
     console.log(currentTime)
     const msgData = { 
       sessionId,
@@ -59,30 +67,42 @@ const ChatBox = () => {
     })
   }, [socket])
 
+  // scroll to bottom everytime new message is sent
   useEffect(() => {
     bottomRef.current?.scrollIntoView({behavior: 'smooth'})
-  }, [ messageList])
+  }, [messageList])
+
+  // before user leave page, save data
+  // useEffect(() => {
+  //   const onBeforeUnload = async (e) => {
+  //     if (!socket) return 
+  //     e.preventDefault();
+  //     socket.emit('save-chat', { chat : messageList})
+  //     console.log('save chat')
+  //   }
+  //   window.addEventListener("beforeunload", onBeforeUnload)
+  //   return () => {
+  //     window.removeEventListener("beforeunload", onBeforeUnload)
+  //   }
+  // }, [])
 
   return (
     <div className='d-flex flex-column h-100'>
-      {/* <div className='chat-header p-2 bg-info'>
-        <h6> { otherUser }</h6>
-      </div> */}
       <div className='chat-body flex-grow-1 overflow-y-scroll'>
           { messageList.map((msg) => {
             return (
               <div
-                className='message'
+                className='message flex px-2'
                 id={ msg.uid === user.id ? "current-user" : "other-user" }
-                key={msg.time}
+                key={uuidV4()}
               >
-                <div>
+                <div className='m-0'>
                   <div className= 'message-content d-inline-block m-2 p-2 rounded text-white'>
                     <b> {msg.username } </b>
                     <div> { msg.message } </div>
                   </div>
                   <div className='d-flex message-meta'>
-                    <p> { msg.time } </p>
+                    <div> { msg.time } </div>
                   </div>
                 </div>
               </div>
@@ -101,7 +121,7 @@ const ChatBox = () => {
             }}
           />
           <Button variant='outlined'>
-            <span class="material-symbols-outlined">send</span>
+            <span className="material-symbols-outlined">send</span>
           </Button>
         </InputGroup>
       </div>
