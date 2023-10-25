@@ -39,7 +39,7 @@ const CodingPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarToggle = () => {
-    setSidebarOpen(!sidebarOpen);
+      setSidebarOpen(!sidebarOpen);
   };
 
   return (
@@ -56,7 +56,7 @@ const CodingPage = () => {
             {
               question &&
               <ReactQuill
-                value={`<h2>${question.title}</h2><br>${question.description}`}
+              value={`<h2>${question.title}</h2><br>${question.description}`}
                 readOnly={true}
                 theme='bubble' />
             }
