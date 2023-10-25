@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 const QuestionPopUp = ({ question, handleClose }) => {
   return (
     <>
-      <Modal show={true} onHide={handleClose}>
+      <Modal show={true} onHide={handleClose} dialogClassName="modal-lg">
         <Modal.Header closeButton>
           <Modal.Title> {question.title}</Modal.Title>
         </Modal.Header>

@@ -76,7 +76,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   return (
     <>
-      <Modal show={true} onHide={handleClose}>
+      <Modal show={true} onHide={handleClose} dialogClassName="modal-lg" >
         <Modal.Header closeButton>
           <Modal.Title>{formTitle}</Modal.Title>
         </Modal.Header>
@@ -100,7 +100,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                 {/* <div> { categories } </div> */}
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Title</Form.Label>
+                  <Form.Label><b>Title</b></Form.Label>
                   <Form.Control
                     type="text"
                     name="title"
@@ -114,7 +114,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label>Categories</Form.Label>
+                  <Form.Label><b>Categories</b></Form.Label>
                   {categoryList.map((category) =>
                     <Button
                       className='me-2 mb-2 btn-custom'
@@ -152,7 +152,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label>Complexity</Form.Label>
+                  <Form.Label><b>Complexity</b></Form.Label>
                   <Form.Select
                     required
                     name='complexity'
@@ -171,7 +171,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                 </Form.Group>
 
                 <Form.Group controlId="exampleForm.ControlTextarea1">
-                  <Form.Label> Description </Form.Label>
+                  <Form.Label> <b>Description</b> </Form.Label>
                   <div style={{ height: 250, overflowY: 'auto' }}>
                     <ReactQuill
                       name="description"
