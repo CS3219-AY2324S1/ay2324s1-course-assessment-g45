@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 // GET all questions
 const getAllQuestions = async (req, res) => {
   const questions = await Question.find({}).sort({ createdAt: -1 });
-
   res.status(200).json(questions);
 };
 
@@ -42,6 +41,10 @@ const getQuestionsByComplexity = async(req, res) => {
 
 // POST a new question
 const createQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { title, categories, complexity, description } = req.body;
   try {
     const question = await Question.create({
@@ -63,6 +66,10 @@ const createQuestion = async (req, res) => {
 
 // DELETE a question
 const deleteQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -80,6 +87,10 @@ const deleteQuestion = async (req, res) => {
 
 // UPDATE a question
 const updateQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {

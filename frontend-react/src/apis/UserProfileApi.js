@@ -44,7 +44,7 @@ async function deleteUser(token, id) {
 }
 
 async function getAllUsers(token) {
-  return fetch('/api/userProfiles/', {
+  return fetch(`${baseUrl}/api/userProfiles/`, {
     method: 'GET',
     headers: {
     'Authorization': `Bearer ${token}`

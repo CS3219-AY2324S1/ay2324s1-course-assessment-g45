@@ -5,6 +5,7 @@ import Profile from './pages/Profile';
 import LoginPage from './pages/LoginPage';
 import MaintainerPage from './pages/maintainerPage';
 import MatchPage from './pages/MatchPage';
+import NotFound from './pages/NotFound';
 import NavBar from './components/NavBar';
 import CodingPage from './pages/CodingPage';
 import { useUserContext } from './hooks/useUserContext';
@@ -24,6 +25,7 @@ function App() {
           <Route path='/maintainer' element={user ? <MaintainerPage/> : <Navigate to= "/login" />}/>
           <Route path='/codeEditor/:sessionId' element={user ? <CodingPage/> : <Navigate to= "/login" />}/>
           <Route path='/match' element={user ? <MatchPage/> : <Navigate to= "/login" />}/>
+          <Route path='*' element={<NotFound />} /> 
         </Routes>
         </div>
       </BrowserRouter>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,11 +11,17 @@ import { useQuestionsContext } from '../../hooks/useQuestionContext';
 import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
 import ConfirmationPopup from '../ConfirmationPopup';
 import { useUserContext } from '../../hooks/useUserContext';
+import FilterBar from '../FilterBar';
 
 // Question Id Question Title Question Description Question Category Question Complexity
 
 const QuestionTable = () => {
   const { questions, dispatch } = useQuestionsContext()
+
+  const [filteredQuestions, setFilteredQuestions] = useState([])
+  const [categoryFilter, setCategoryFilter] = useState("")
+  const [complexityFilter, setComplexityFilter] = useState("")
+
   const [showAddModal, setShowAddModal] = useState(false);
   // const handleCloseAddModal = () => setShowAddModal(false);
   const handleShowAddModal = () => setShowAddModal(true);
@@ -24,26 +30,21 @@ const QuestionTable = () => {
   // const handleCloseEditModal = () => setShowEditModal(false);
   // const handleShowEditModal = () => setShowEditModal(true);
   const [editQn, setEditQn] = useState(null)
-  const [ deleteQn, setDeleteQn ] = useState(null)
-
+  const [deleteQn, setDeleteQn] = useState(null)
+  const [error, setError] = useState(null)
   const [selectedQn, setSelectedQn] = useState(null)
   const { user } = useUserContext();
-
-
-
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [startingPageNumber, setStartingPageNumber] = useState(1);
   const MAX_PAGE_NUMS = 4;
   const questionsPerPage = 8;
-  const totalPages = questions ? Math.ceil(questions.length / questionsPerPage) : 0;
+  const totalPages = questions ? Math.ceil(filteredQuestions.length / questionsPerPage) : 0;
 
   const indexOfLastQn = currentPage * questionsPerPage;
   const indexOfFirstQn = indexOfLastQn - questionsPerPage;
-  const currentQuestions = questions ? questions.slice(indexOfFirstQn, indexOfLastQn) : [];
-
-
+  const currentQuestions = filteredQuestions ? filteredQuestions.slice(indexOfFirstQn, indexOfLastQn) : [];
 
   const handleLeftClick = () => {
     if (currentPage > 1) {
@@ -78,7 +79,16 @@ const QuestionTable = () => {
   }
   const showLeftArrow = startingPageNumber > 1;
   const showRightArrow = startingPageNumber + MAX_PAGE_NUMS - 1 < totalPages;
-
+  const categoryList = useMemo(() => {
+    if (!questions) {
+      return []
+    }
+    const categories = new Set()
+    questions.forEach((question) => {
+      question.categories.forEach((category) => categories.add(category))
+    })
+    return Array.from(categories)
+  }, [questions])
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -98,7 +108,29 @@ const QuestionTable = () => {
     fetchQuestions()
   }, [])
 
-  const [error, setError] = useState(null)
+  useEffect(() => {
+    if (questions) {
+      setFilteredQuestions(questions.filter((question) => {
+        if (complexityFilter !== "" && categoryFilter !== "") {
+          return question.complexity === complexityFilter && question.categories.includes(categoryFilter)
+        }
+
+        if (complexityFilter !== "") {
+          return question.complexity === complexityFilter
+        }
+
+        if (categoryFilter !== "") {
+          return question.categories.includes(categoryFilter)
+        }
+
+        return true
+      }))
+    }
+  }, [categoryFilter, complexityFilter, questions])
+
+  const showDeleteConfirmation = (question) => { 
+    setDeleteQn(question)
+  }
 
   const handleDeleteQuestion = async (deleteQuestionId) => {
     if (!user) {
@@ -127,7 +159,6 @@ const QuestionTable = () => {
       default: return 'badge bg-info';
     }
   }
-
 
   return (
     <div>
@@ -169,8 +200,9 @@ const QuestionTable = () => {
         />
       }
 
-
       <div className="col-lg-8 offset-lg-2 grid-margin stretch-card mt-3 mb-3">
+      <FilterBar label={'Filter Complexity'} setValue={setComplexityFilter} values={['Easy', 'Medium', 'Hard']} className='' />
+      <FilterBar label={'Filter Category'} setValue={setCategoryFilter} values={categoryList} className='' />
         <div className="card">
           <div className="card-body">
             <div className="d-flex justify-content-between align-items-center mb-5 mt-2">
@@ -219,7 +251,7 @@ const QuestionTable = () => {
                             <button type="button" className="btn btn-outline-secondary me-2" onClick={(e) => { e.stopPropagation(); setEditQn(qn) }}>
                               Edit <i className="fa-regular fa-pen-to-square"></i>
                             </button>
-                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteQuestion(qn._id) }}>
+                            <button type="button" className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); showDeleteConfirmation(qn) }}>
                               Delete <i className="fa-regular fa-trash"></i>
                             </button>
                           </div>
