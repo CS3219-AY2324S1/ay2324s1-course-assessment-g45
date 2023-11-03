@@ -5,7 +5,11 @@ import { UserContextProvider } from './contexts/userContext';
 import { QuestionsContextProvider } from './contexts/QuestionContext';
 import { MaintainerContextProvider } from './contexts/MaintainerContext';
 import { MatchContextProvider } from './contexts/MatchContext';
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 
+//theme
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+        
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -13,7 +17,9 @@ root.render(
       <MatchContextProvider>
         <QuestionsContextProvider>
           <MaintainerContextProvider>
-            <App />
+            <PrimeReactProvider>
+              <App />
+            </PrimeReactProvider>
           </MaintainerContextProvider>
         </QuestionsContextProvider>
       </MatchContextProvider>

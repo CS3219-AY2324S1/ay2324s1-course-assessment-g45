@@ -2,6 +2,7 @@ import { UserContext } from "../contexts/userContext";
 import { useState } from "react";
 import { useUserContext } from "./useUserContext";
 import { useNavigate } from 'react-router-dom'
+import { post } from "../apis/UserProfileApi";
 
 export const useSignup = () => {
   const [error, setError] = useState(null)
@@ -13,13 +14,7 @@ export const useSignup = () => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/api/userProfiles/', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({username, password, email})
-    })
-
-
+    const response = await post({username, password, email})
     const json = await response.json()
     if (!response.ok) {
         setIsLoading(false)
@@ -31,10 +26,8 @@ export const useSignup = () => {
 
         dispatch({type: 'SET_USER', payload:json})
         setIsLoading(false)
-        navigate("/")
+        navigate("/match")
     }
-
-    return response
   }
 
   return {signup, isLoading, error, setError}

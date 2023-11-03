@@ -33,6 +33,7 @@ const MaintainerPage = () => {
       }
       const response = await getAllUsers(user.token)
       const json = await response.json()
+      console.log(response)
 
       if (response.ok) {
         userListDispatch({ type: 'GET_ALL_USERS', payload: json })
@@ -48,11 +49,16 @@ const MaintainerPage = () => {
       return
     }
     const updatedUser = {
+      username: selectedUser.username,
+      email: selectedUser.email,
+      password : selectedUser.password,
       role: newRole
     }
+    console.log(updatedUser)
     const response = await updateUser(user.token, selectedUser._id, updatedUser)
     const json = await response.json()
     if (response.ok) {
+      // userListDispatch({ type : 'UPDATE_ROLE'})
       setError('')
       setRefetchUsers(prevState => !prevState);
     }

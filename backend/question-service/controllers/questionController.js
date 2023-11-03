@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 // GET all questions
 const getAllQuestions = async (req, res) => {
   const questions = await Question.find({}).sort({ createdAt: -1 });
-
   res.status(200).json(questions);
 };
 
@@ -25,8 +24,27 @@ const getSingleQuestion = async (req, res) => {
   res.status(200).json(question);
 };
 
+// GET list of question by complexity
+const getQuestionsByComplexity = async(req, res) => {
+  const { complexity } = req.params
+
+  const count = await Question.countDocuments({ complexity: complexity})
+  var random = Math.floor(Math.random() * count)
+  const question = await Question.findOne({ complexity: complexity}).skip(random)
+
+  if (!question) {
+    return res.status(400).json({error: `No questions found with ${complexity} complexity`})
+  }
+
+  res.status(200).json(question)
+}
+
 // POST a new question
 const createQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { title, categories, complexity, description } = req.body;
   try {
     const question = await Question.create({
@@ -48,6 +66,10 @@ const createQuestion = async (req, res) => {
 
 // DELETE a question
 const deleteQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -65,6 +87,10 @@ const deleteQuestion = async (req, res) => {
 
 // UPDATE a question
 const updateQuestion = async (req, res) => {
+  if (req.user.role === 'user') { 
+    return res.status(403).json({ error: "Forbidden Request." })
+  }
+
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -90,6 +116,7 @@ const updateQuestion = async (req, res) => {
 module.exports = {
   getAllQuestions,
   getSingleQuestion,
+  getQuestionsByComplexity,
   createQuestion,
   deleteQuestion,
   updateQuestion,
