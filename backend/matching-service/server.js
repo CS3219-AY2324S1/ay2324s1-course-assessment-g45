@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const uuid = require('uuid')
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -111,7 +111,10 @@ rabbitMQHandler((connection) => {
                 if (msg.properties.correlationId == 'matching_service') {
                   console.log(`Received question: ${msg.content.toString()} from question queue`)
                   const questionId = msg.content.toString()
-                  const sessionInfo = { 
+                  // create a session id
+                  const sessionId = new mongoose.Types.ObjectId();
+                  const sessionInfo = {
+                    _id: sessionId,
                     questionId: questionId,
                     user1: {
                       uid: request.uid,
@@ -127,44 +130,15 @@ rabbitMQHandler((connection) => {
                   console.log(sessionInfo)
                   console.log("Socket id for u1: " + socketId)
                   console.log("Socket id for u2: " + bufferedRequest.socketId)
-                  console.log(sessionInfo)
-                  channel.ack(msg) // accept
+                  channel.ack(msg) // accept message
 
+                  // send session Info to frontend
                   io.to(socketId).emit('matching', sessionInfo);
                   io.to(bufferedRequest.socketId).emit('matching', sessionInfo);
                   requestBuffer.splice(i, 1); // Remove matched request from buffer
-
-                  // // send info to collab service to create a session in database
-                  // console.log('Send session details to session queue to create a session')
-                  // channel.sendToQueue(sessionQueue, 
-                  //   Buffer.from(JSON.stringify(sessionInfo)),
-                  //   {
-                  //     replyTo: replyQueue
-                  //   }
-                  // )
-
-                  // // received a created session from collab service through reply queue, 
-                  // // send reply to user when session is created
-                  // channel.consume(replyQueue, (msg) => {
-                  //   console.log(`Got message: ${JSON.parse(msg.content)}`)
-                  //   channel.ack(msg)
-                  //   const session = JSON.parse(msg.content)
-                  //   console.log(session)
-                  //   console.log(session._id)
-                  //   console.log("Socket id for u1: " + socketId)
-                  //   console.log("Socket id for u2: " + bufferedRequest.socketId)
-                  //   io.to(socketId).emit('matching', session);
-                  //   io.to(bufferedRequest.socketId).emit('matching', session);
-                  //   requestBuffer.splice(i, 1); // Remove matched request from buffer
-                  // })
                 }
               })
             })
-
-
-            // io.to(socketId).emit('matching', matchPair);
-            // io.to(bufferedRequest.socketId).emit('matching', matchPair);
-            // requestBuffer.slice(i, i); // Remove matched request from buffer
             return;
           }
         }

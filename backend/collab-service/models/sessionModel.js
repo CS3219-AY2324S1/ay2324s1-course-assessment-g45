@@ -34,14 +34,6 @@ const sessionSchema = new Schema({
     type: userSchema,
     required: true,
   },
-  // uid1: {
-  //   type: String, 
-  //   required: true,
-  // },
-  // uid2 : {
-  //   type: String,
-  //   required: true,
-  // },
   chat : {
     type : Array,
     defaultValue: [],

@@ -10,13 +10,14 @@ const getAllSessions = async (req, res) => {
 // GET session
 const getSingleSession = async (req, res) => {
   const { id } = req.params
-  const session = await Session.findById(id)
-  if (!session) {
-    return res.status(404).json({error: 'No session found'})
+  try {
+    const session = await Session.findById(id)
+    res.status(200).json(session)
+  } catch (error) {
+    return res.status(404).json({error: "No session found"})
   }
-
-  res.status(200).json(session)
 }
+
 
 // POST a session
 const createSession = async (req, res) => {
