@@ -61,11 +61,21 @@ io.on("connection", (socket) => {
   console.log("user connected", socket.id)
 
   // get session id for 2nd user
-  socket.on("get-session-id", () => {
+  socket.on("join-session", async (sessionId) => {
+    const session = await findSession(sessionId)
+    socket.join(sessionId)
+    console.log('user joins')
 
+    socket.on('leave-session', async (data) => {
+      console.log('user leave')
+      console.log(data)
+      const updatedSession = await Session.findByIdAndUpdate(sessionId, { data }, { new : true})
+      console.log(updatedSession)
+      socket.broadcast.to(sessionId).emit('notify', `${data.username} just left the session!`)
+    })
   }) 
 
-  // collab session
+  // coding session
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
     socket.join(sessionId)

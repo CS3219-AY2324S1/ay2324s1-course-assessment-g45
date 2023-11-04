@@ -13,6 +13,11 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import ConfirmationPopup from '../components/ConfirmationPopup';
 import { useNavigate } from 'react-router-dom';
+import { io } from 'socket.io-client'
+import Config from '../Config'
+import Alert from 'react-bootstrap/Alert'
+
+const baseUrl = Config.Common.CollabSessionApiBaseUrl;
 
 const CodingPage = () => {
   const { sessionId } = useParams()
@@ -22,6 +27,8 @@ const CodingPage = () => {
   const [ session, setSession ] = useState()
   const [ leaveSessionPopup, setLeaveSessionPopup ] = useState(false)
   const navigate = useNavigate()
+  const [ socket, setSocket ] = useState()
+  const [ alert, setAlert ] = useState()
 
   const getQuestion = async (id) => {
     const response = await getQuestionById(user.token, { id })
@@ -41,10 +48,47 @@ const CodingPage = () => {
       if (session.ok) {
         getQuestion(json.questionId)
         setSession(json)
+
+        // invalid user
+        if (user.id !== json.user1.uid && user.id !== json.user2.uid) {
+          setIsValidUser(false)
+          return;
+        }
       }
     }
     fetchSession()
   }, [])
+
+  // connect to socket
+  useEffect(() => {
+    const s = io.connect(baseUrl)
+    setSocket(s)
+    return () => {
+      s.disconnect()
+    }
+  }, [])
+
+  // join session
+  useEffect(() => {
+    console.log('here???')
+    if (user.id && sessionId && socket && session) {
+      console.log(session)
+      if ((user.id === session.user1.uid && session.user1.isActive) || (user.id === session.user2.uid && session.user2.isActive)) {
+        console.log('HERE!')
+        socket.emit("join-session", sessionId)    
+      }
+    }
+  }, [socket, sessionId, session])
+
+  // receive notification
+  useEffect(() => {
+    if (!socket) return
+    socket.on("notify", (data) => {
+      // display alerts
+      console.log(data)
+      setAlert(data)
+    })
+  }, [socket])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -52,36 +96,54 @@ const CodingPage = () => {
       setSidebarOpen(!sidebarOpen);
   };
 
-  const handleLeaveSession = async () => {
-    if (!session) return
-    console.log(session)
-    console.log(user.id)
-
-    // set as inactive
+  const handleLeaveSession = () => {
+    if (!socket || !session) return
     if (user.id === session.user1.uid) {
       const updatedUser = {...session.user1, isActive : false }
-      const response = await updateSession(sessionId, { user1:updatedUser })
-      const json = await response.json()
-      console.log(json)
-      if (response.ok) {
-        navigate('/')
-      }
+      socket.emit('leave-session', updatedUser)
+      navigate('/')
     }
-
     if (user.id === session.user2.uid) {
       const updatedUser = {...session.user2, isActive : false }
-      const response = await updateSession(sessionId, { user2: updatedUser })
-      const json = await response.json()
-      console.log(json)
-      if (response.ok) {
-        navigate('/')
-      }
+      socket.emit('leave-session', updatedUser)
+      navigate('/')
     }
     else {
       console.log('invalid user')
     }
-
   }
+
+  // const handleLeaveSession = async () => {
+  //   if (!session) return
+  //   console.log(session)
+  //   console.log(user.id)
+
+  //   // set as inactive
+  //   if (user.id === session.user1.uid) {
+  //     const updatedUser = {...session.user1, isActive : false }
+      
+  //     const response = await updateSession(sessionId, { user1:updatedUser })
+  //     const json = await response.json()
+  //     console.log(json)
+  //     if (response.ok) {
+  //       navigate('/')
+  //     }
+  //   }
+
+  //   if (user.id === session.user2.uid) {
+  //     const updatedUser = {...session.user2, isActive : false }
+  //     const response = await updateSession(sessionId, { user2: updatedUser })
+  //     const json = await response.json()
+  //     console.log(json)
+  //     if (response.ok) {
+  //       navigate('/')
+  //     }
+  //   }
+  //   else {
+  //     console.log('invalid user')
+  //   }
+
+  // }
 
   return (
     <div>
@@ -122,6 +184,11 @@ const CodingPage = () => {
 
             </Accordion>
           </div>
+
+          {
+            alert &&
+            <h5> {alert} </h5>
+          }
           
           {/* side bar buttons */}
           <div className='floating-btns d-flex justify-content-center'>
