@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import MonacoCodeEditor from '../components/coding_session/MonacoCodeEditor'
 import ReactQuill from 'react-quill'
-import Alert from 'react-bootstrap/Alert';
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
-import { getSession } from '../apis/CollabSessionApi'
+import { getSession, updateSession } from '../apis/CollabSessionApi'
 import { getQuestionById } from '../apis/QuestionApi'
 import ChatBox from '../components/coding_session/ChatBox'
-import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import AiAssistantSideBar from '../components/aiAssistant/aiAssistantSideBar';
 import aiAssistantLogo from '../assets/images/aiAssistant.png';
 import Tooltip from 'react-bootstrap/Tooltip'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import ConfirmationPopup from '../components/ConfirmationPopup';
+import { useNavigate } from 'react-router-dom';
 
 const CodingPage = () => {
   const { sessionId } = useParams()
   const [ question, setQuestion ] = useState(null)
   const [ isValidUser, setIsValidUser ] = useState(true)
   const { user } = useUserContext()
+  const [ session, setSession ] = useState()
   const [ leaveSessionPopup, setLeaveSessionPopup ] = useState(false)
-
+  const navigate = useNavigate()
 
   const getQuestion = async (id) => {
     const response = await getQuestionById(user.token, { id })
@@ -37,7 +37,11 @@ const CodingPage = () => {
     const fetchSession = async () => {
       const session = await getSession({ sessionId })
       const json = await session.json()
-      getQuestion(json.questionId)
+      console.log(json)
+      if (session.ok) {
+        getQuestion(json.questionId)
+        setSession(json)
+      }
     }
     fetchSession()
   }, [])
@@ -48,8 +52,34 @@ const CodingPage = () => {
       setSidebarOpen(!sidebarOpen);
   };
 
-  const handleLeaveSession = () => {
-    // save session info
+  const handleLeaveSession = async () => {
+    if (!session) return
+    console.log(session)
+    console.log(user.id)
+
+    // set as inactive
+    if (user.id === session.user1.uid) {
+      const updatedUser = {...session.user1, isActive : false }
+      const response = await updateSession(sessionId, { user1:updatedUser })
+      const json = await response.json()
+      console.log(json)
+      if (response.ok) {
+        navigate('/')
+      }
+    }
+
+    if (user.id === session.user2.uid) {
+      const updatedUser = {...session.user2, isActive : false }
+      const response = await updateSession(sessionId, { user2: updatedUser })
+      const json = await response.json()
+      console.log(json)
+      if (response.ok) {
+        navigate('/')
+      }
+    }
+    else {
+      console.log('invalid user')
+    }
 
   }
 
@@ -126,7 +156,6 @@ const CodingPage = () => {
           }
         </div>
       }
-
 
     </div>
 

@@ -18,8 +18,19 @@ async function createSession({...params}) {
   })
 }
 
+async function updateSession(id, {...params}) {
+  return fetch(`${baseUrl}/api/collabSession/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-type': 'application/json',
+    }
+  })
+}
+
 export {
   getSession,
   createSession,
+  updateSession,
 }
 
