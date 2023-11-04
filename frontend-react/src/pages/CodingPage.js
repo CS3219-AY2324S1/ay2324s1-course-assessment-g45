@@ -11,13 +11,16 @@ import Button from 'react-bootstrap/Button';
 import Accordion from 'react-bootstrap/Accordion';
 import AiAssistantSideBar from '../components/aiAssistant/aiAssistantSideBar';
 import aiAssistantLogo from '../assets/images/aiAssistant.png';
+import Tooltip from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 const CodingPage = () => {
   const { sessionId } = useParams()
   const [ question, setQuestion ] = useState(null)
   const [ isValidUser, setIsValidUser ] = useState(true)
-  const [ showChat, setShowChat ] = useState(false)
   const { user } = useUserContext()
+  const [ leaveSessionPopup, setLeaveSessionPopup ] = useState(false)
 
 
   const getQuestion = async (id) => {
@@ -45,6 +48,11 @@ const CodingPage = () => {
       setSidebarOpen(!sidebarOpen);
   };
 
+  const handleLeaveSession = () => {
+    // save session info
+
+  }
+
   return (
     <div>
       {
@@ -59,7 +67,7 @@ const CodingPage = () => {
             {
               question &&
               <ReactQuill
-              value={`<h2>${question.title}</h2><br>${question.description}`}
+                value={`<h2>${question.title}</h2><br>${question.description}`}
                 readOnly={true}
                 theme='bubble' />
             }
@@ -68,7 +76,8 @@ const CodingPage = () => {
             <MonacoCodeEditor />
           </div>
 
-          <div className='fixed-bottom w-30'>
+          {/* chat box */}
+          <div className='fixed-bottom' style={{ width: '30vw'}}>
             <Accordion 
               style={{ width: '30vw' }}
             >
@@ -83,15 +92,42 @@ const CodingPage = () => {
 
             </Accordion>
           </div>
+          
+          {/* side bar buttons */}
+          <div className='floating-btns d-flex justify-content-center'>
+            <OverlayTrigger 
+              placement='top' 
+              overlay={<Tooltip> Leave Session </Tooltip>}
+            >
+              <button className='leave-session-btn' onClick={() => setLeaveSessionPopup(true)}> 
+                <span class="material-symbols-outlined">logout</span>              
+              </button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              placement='top'
+              overlay={<Tooltip> AI Assistant </Tooltip>}
+            >
+              <button className='ai-button' onClick={handleSidebarToggle}>
+                <img src={aiAssistantLogo} alt="Customer Service" className='ai-image'/>
+              </button>
+            </OverlayTrigger>
+          </div>
+          {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
+
+          {
+            leaveSessionPopup &&
+            <ConfirmationPopup
+              title='Leave Session'
+              message={'Confirm leave session?'}
+              handleClose={() => setLeaveSessionPopup(false)}
+              handleSubmit={handleLeaveSession}
+            />
+          }
         </div>
       }
 
-      <div className={`sideBarButton ${sidebarOpen ? 'with-sidebar' : ''}`}>
-        <button className="floating-button" onClick={handleSidebarToggle}>
-          <img src={aiAssistantLogo} alt="Customer Service" />
-        </button>
-      </div>
-      {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
+
     </div>
 
   )
