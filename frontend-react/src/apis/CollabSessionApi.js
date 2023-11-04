@@ -8,7 +8,18 @@ async function getSession({sessionId}) {
   })
 }
 
+async function createSession({...params}) {
+  return fetch(`${baseUrl}/api/collabSession/`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-type': 'application/json',
+    }
+  })
+}
+
 export {
-  getSession
+  getSession,
+  createSession,
 }
 

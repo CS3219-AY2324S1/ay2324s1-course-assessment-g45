@@ -6,6 +6,7 @@ import NoMatchFoundPopUp from '../components/match/NoMatchFoundPopUp';
 import Config from '../Config';
 import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
+import { createSession } from "../apis/CollabSessionApi";
 
 const baseUrl = Config.Common.MatchingApiBaseUrl;
 var socketId = '';
@@ -41,11 +42,18 @@ const MatchPage = () => {
       }
     }
 
-    const handleMatch = (msg) => {
+    const handleMatch = async (msg) => {
       console.log("Handle match!!")
       console.log(msg)
-      bannerDispatch({ type: 'HIDE_BANNER'})
-      navigate(`/codeEditor/${msg._id}`)
+      // bannerDispatch({ type: 'HIDE_BANNER'})
+      // navigate(`/codeEditor/${msg._id}`)
+      const response = await createSession(msg)
+      const json = await response.json()
+      console.log(json)
+      if (response.ok) {
+        bannerDispatch({ type: 'HIDE_BANNER'})
+        navigate(`/codeEditor/${json._id}`)
+      }
     }
 
     useEffect(() => {

@@ -112,40 +112,51 @@ rabbitMQHandler((connection) => {
                   console.log(`Received question: ${msg.content.toString()} from question queue`)
                   const questionId = msg.content.toString()
                   const sessionInfo = { 
-                    questionId: questionId, 
-                    uid1: request.uid,
-                    uid2: bufferedRequest.uid,
+                    questionId: questionId,
+                    user1: {
+                      uid: request.uid,
+                      username: request.username,
+                    },
+                    user2: {
+                      uid: bufferedRequest.uid,
+                      username: bufferedRequest.username,
+                    },
                     data: '',
                     chat: new Array(),
                   }
+                  console.log(sessionInfo)
                   console.log("Socket id for u1: " + socketId)
                   console.log("Socket id for u2: " + bufferedRequest.socketId)
                   console.log(sessionInfo)
                   channel.ack(msg) // accept
 
-                  // send info to collab service to create a session in database
-                  console.log('Send session details to session queue to create a session')
-                  channel.sendToQueue(sessionQueue, 
-                    Buffer.from(JSON.stringify(sessionInfo)),
-                    {
-                      replyTo: replyQueue
-                    }
-                  )
+                  io.to(socketId).emit('matching', sessionInfo);
+                  io.to(bufferedRequest.socketId).emit('matching', sessionInfo);
+                  requestBuffer.splice(i, 1); // Remove matched request from buffer
 
-                  // received a created session from collab service through reply queue, 
-                  // send reply to user when session is created
-                  channel.consume(replyQueue, (msg) => {
-                    console.log(`Got message: ${JSON.parse(msg.content)}`)
-                    channel.ack(msg)
-                    const session = JSON.parse(msg.content)
-                    console.log(session)
-                    console.log(session._id)
-                    console.log("Socket id for u1: " + socketId)
-                    console.log("Socket id for u2: " + bufferedRequest.socketId)
-                    io.to(socketId).emit('matching', session);
-                    io.to(bufferedRequest.socketId).emit('matching', session);
-                    requestBuffer.splice(i, 1); // Remove matched request from buffer
-                  })
+                  // // send info to collab service to create a session in database
+                  // console.log('Send session details to session queue to create a session')
+                  // channel.sendToQueue(sessionQueue, 
+                  //   Buffer.from(JSON.stringify(sessionInfo)),
+                  //   {
+                  //     replyTo: replyQueue
+                  //   }
+                  // )
+
+                  // // received a created session from collab service through reply queue, 
+                  // // send reply to user when session is created
+                  // channel.consume(replyQueue, (msg) => {
+                  //   console.log(`Got message: ${JSON.parse(msg.content)}`)
+                  //   channel.ack(msg)
+                  //   const session = JSON.parse(msg.content)
+                  //   console.log(session)
+                  //   console.log(session._id)
+                  //   console.log("Socket id for u1: " + socketId)
+                  //   console.log("Socket id for u2: " + bufferedRequest.socketId)
+                  //   io.to(socketId).emit('matching', session);
+                  //   io.to(bufferedRequest.socketId).emit('matching', session);
+                  //   requestBuffer.splice(i, 1); // Remove matched request from buffer
+                  // })
                 }
               })
             })

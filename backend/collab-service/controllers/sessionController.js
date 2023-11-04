@@ -24,7 +24,7 @@ const createSession = async (req, res) => {
   const { questionId, uid1, uid2 } = req.body
 
   try {
-    const session = await Session.create({ questionId, uid1, uid2 })
+    const session = await Session.create(req.body)
     console.log(session)
     res.status(200).json(session)
   } catch (error) {
