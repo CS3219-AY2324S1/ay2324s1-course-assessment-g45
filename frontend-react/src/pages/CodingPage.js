@@ -13,11 +13,6 @@ import Accordion from 'react-bootstrap/Accordion';
 import AiAssistantSideBar from '../components/aiAssistant/aiAssistantSideBar';
 import aiAssistantLogo from '../assets/images/aiAssistant.png';
 
-// code editor imports
-//import monacoThemes from "monaco-themes/themes/themelist";
-import LanguagesDropdown from '../components/coding_session/LanguagesDropDown';
-import { languageOptions } from '../constants/languageOptions';
-
 const CodingPage = () => {
   const { sessionId } = useParams()
   const [question, setQuestion] = useState(null)
@@ -26,9 +21,6 @@ const CodingPage = () => {
   const { user } = useUserContext()
 
   // code editor states
-  const [code, setCode] = useState("test message");
-  //const [theme, setTheme] = useState("cobalt");
-  const [language, setLanguage] = useState(languageOptions[0]);
 
 
   const getQuestion = async (id) => {
@@ -58,23 +50,23 @@ const CodingPage = () => {
 
 
   // code editor landing page
-  const onChange = (action, data) => {
-    switch (action) {
-      case "code": {
-        setCode(data);
-        break;
-      }
-      default: {
-        console.warn("case not handled!", action, data);
-      }
-    }
-  };
+  // const onChange = (action, data) => {
+  //   switch (action) {
+  //     case "code": {
+  //       setCode(data);
+  //       break;
+  //     }
+  //     default: {
+  //       console.warn("case not handled!", action, data);
+  //     }
+  //   }
+  // };
 
-  const onSelectChange = (sl) => {
-    setLanguage(sl);
+  // const onSelectChange = (sl) => {
+  //   setLanguage(sl);
     
-    console.log("set language: " + language.value)
-  };
+  //   console.log("set language: " + language.value)
+  // };
 
 
 
@@ -103,15 +95,7 @@ const CodingPage = () => {
             }
           </div>  
           <div className='col-6'>
-            <div className="px-4 py-2">
-              <LanguagesDropdown onSelectChange={onSelectChange} />
-            </div>
-            <CodeEditor
-              // code={code}
-              language={language?.value}
-              // theme={theme.value}
-              onChange={onChange}
-            />
+            <CodeEditor/>
             {/* <MonacoCodeEditor/> */}
           </div>
 
