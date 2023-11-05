@@ -3,7 +3,7 @@ import MonacoCodeEditor from '../components/coding_session/MonacoCodeEditor'
 import ReactQuill from 'react-quill'
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
-import { getSession, updateSession } from '../apis/CollabSessionApi'
+import { getSession } from '../apis/CollabSessionApi'
 import { getQuestionById } from '../apis/QuestionApi'
 import ChatBox from '../components/coding_session/ChatBox'
 import Accordion from 'react-bootstrap/Accordion';
@@ -70,11 +70,9 @@ const CodingPage = () => {
 
   // join session
   useEffect(() => {
-    console.log('here???')
     if (user.id && sessionId && socket && session) {
       console.log(session)
       if ((user.id === session.user1.uid && session.user1.isActive) || (user.id === session.user2.uid && session.user2.isActive)) {
-        console.log('HERE!')
         socket.emit("join-session", sessionId)    
       }
     }
@@ -83,11 +81,16 @@ const CodingPage = () => {
   // receive notification
   useEffect(() => {
     if (!socket) return
-    socket.on("notify", (data) => {
-      // display alerts
+    const handler = (data) => {
+      // display alert
       console.log(data)
       setAlert(data)
-    })
+      const timeout = setTimeout(() => setAlert(null), 5000)    
+    }
+    socket.on("notify", handler)
+    return () => {
+      socket.off("notify")
+    }
   }, [socket])
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -187,7 +190,9 @@ const CodingPage = () => {
 
           {
             alert &&
-            <h5> {alert} </h5>
+            <div className='d-flex justify-content-center'>
+              <Alert variant='info'> { alert } </Alert>
+            </div>
           }
           
           {/* side bar buttons */}
