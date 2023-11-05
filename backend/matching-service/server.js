@@ -32,12 +32,12 @@ app.use((req, res, next) => {
 
 app.use('/api/matching', matchingRoutes);
 
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`)
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`)
-  })
-})
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
 
 rabbitMQHandler((connection) => {
   connection.createChannel((error, channel) => {
@@ -45,27 +45,48 @@ rabbitMQHandler((connection) => {
       throw error;
     }
     const matchingQueue = 'matching';
-    const questionQueue = 'question'
+    const cancelMatchQueue = 'cancelMatch';
+    const questionQueue = 'question';
     const sessionQueue = 'collabSession';
-    const replyQueue = 'reply_queue'
+    const replyQueue = 'reply_queue';
 
     channel.assertQueue(matchingQueue, {
       durable: false,
     });
 
+    channel.assertQueue(cancelMatchQueue, {
+      durable: false,
+    });
+
     channel.assertQueue(questionQueue, {
-      durable: false
-    })
+      durable: false,
+    });
 
     // not sure about this durable thing
     channel.assertQueue(sessionQueue, {
-      durable: true
-    })
+      durable: true,
+    });
     channel.assertQueue(replyQueue, {
-      durable: false
-    })
+      durable: false,
+    });
 
     let requestBuffer = [];
+
+    channel.consume(
+      cancelMatchQueue,
+      (msg) => {
+        console.log(' [x] Received %s from frontend', msg.content.toString());
+        const request = JSON.parse(msg.content.toString());
+        const uid = request.uid;
+        const complexity = request.complexity;
+
+        const newBuffer = requestBuffer.filter((request) => {
+          return request.complexity != complexity || request.uid != uid;
+        });
+        requestBuffer = newBuffer;
+      },
+      { noAck: true }
+    );
 
     channel.consume(
       matchingQueue,
@@ -78,78 +99,92 @@ rabbitMQHandler((connection) => {
         const complexity = request.complexity;
         for (let i = 0; i < requestBuffer.length; i++) {
           const bufferedRequest = requestBuffer[i];
-          console.log('Looking through all present requests in the queue')
-          console.log(request, bufferedRequest)
+          console.log('Looking through all present requests in the queue');
+          console.log(request, bufferedRequest);
           if (
             bufferedRequest.complexity == complexity &&
-            uid !== null && bufferedRequest.uid !== null &&
+            uid !== null &&
+            bufferedRequest.uid !== null &&
             bufferedRequest.uid != uid
           ) {
-            console.log('Match found!')
+            console.log('Match found!');
             isMatched = true;
             const matchPair = [bufferedRequest, request];
 
-            channel.assertQueue('', {
-              exclusive: true,
-            }, (err, queue) => {
-              if (err) {
-                throw err
-              }
-
-              // send to request for question
-              channel.sendToQueue('question', 
-                Buffer.from(JSON.stringify({ complexity : complexity})),
-                { 
-                  correlationId : 'matching_service' , 
-                  replyTo: queue.queue, 
+            channel.assertQueue(
+              '',
+              {
+                exclusive: true,
+              },
+              (err, queue) => {
+                if (err) {
+                  throw err;
                 }
-              )
-              console.log('sent question request to queue!')
 
-              // read from queue to get the requested question
-              channel.consume(queue.queue, (msg) => {
-                if (msg.properties.correlationId == 'matching_service') {
-                  console.log(`Received question: ${msg.content.toString()} from question queue`)
-                  const questionId = msg.content.toString()
-                  const sessionInfo = { 
-                    questionId: questionId, 
-                    uid1: request.uid,
-                    uid2: bufferedRequest.uid,
-                    data: '',
-                    chat: new Array(),
+                // send to request for question
+                channel.sendToQueue(
+                  'question',
+                  Buffer.from(JSON.stringify({ complexity: complexity })),
+                  {
+                    correlationId: 'matching_service',
+                    replyTo: queue.queue,
                   }
-                  console.log("Socket id for u1: " + socketId)
-                  console.log("Socket id for u2: " + bufferedRequest.socketId)
-                  console.log(sessionInfo)
-                  channel.ack(msg) // accept
+                );
+                console.log('sent question request to queue!');
 
-                  // send info to collab service to create a session in database
-                  console.log('Send session details to session queue to create a session')
-                  channel.sendToQueue(sessionQueue, 
-                    Buffer.from(JSON.stringify(sessionInfo)),
-                    {
-                      replyTo: replyQueue
-                    }
-                  )
+                // read from queue to get the requested question
+                channel.consume(queue.queue, (msg) => {
+                  if (msg.properties.correlationId == 'matching_service') {
+                    console.log(
+                      `Received question: ${msg.content.toString()} from question queue`
+                    );
+                    const questionId = msg.content.toString();
+                    const sessionInfo = {
+                      questionId: questionId,
+                      uid1: request.uid,
+                      uid2: bufferedRequest.uid,
+                      data: '',
+                      chat: new Array(),
+                    };
+                    console.log('Socket id for u1: ' + socketId);
+                    console.log(
+                      'Socket id for u2: ' + bufferedRequest.socketId
+                    );
+                    console.log(sessionInfo);
+                    channel.ack(msg); // accept
 
-                  // received a created session from collab service through reply queue, 
-                  // send reply to user when session is created
-                  channel.consume(replyQueue, (msg) => {
-                    console.log(`Got message: ${JSON.parse(msg.content)}`)
-                    channel.ack(msg)
-                    const session = JSON.parse(msg.content)
-                    console.log(session)
-                    console.log(session._id)
-                    console.log("Socket id for u1: " + socketId)
-                    console.log("Socket id for u2: " + bufferedRequest.socketId)
-                    io.to(socketId).emit('matching', session);
-                    io.to(bufferedRequest.socketId).emit('matching', session);
-                    requestBuffer.splice(i, 1); // Remove matched request from buffer
-                  })
-                }
-              })
-            })
+                    // send info to collab service to create a session in database
+                    console.log(
+                      'Send session details to session queue to create a session'
+                    );
+                    channel.sendToQueue(
+                      sessionQueue,
+                      Buffer.from(JSON.stringify(sessionInfo)),
+                      {
+                        replyTo: replyQueue,
+                      }
+                    );
 
+                    // received a created session from collab service through reply queue,
+                    // send reply to user when session is created
+                    channel.consume(replyQueue, (msg) => {
+                      console.log(`Got message: ${JSON.parse(msg.content)}`);
+                      channel.ack(msg);
+                      const session = JSON.parse(msg.content);
+                      console.log(session);
+                      console.log(session._id);
+                      console.log('Socket id for u1: ' + socketId);
+                      console.log(
+                        'Socket id for u2: ' + bufferedRequest.socketId
+                      );
+                      io.to(socketId).emit('matching', session);
+                      io.to(bufferedRequest.socketId).emit('matching', session);
+                      requestBuffer.splice(i, 1); // Remove matched request from buffer
+                    });
+                  }
+                });
+              }
+            );
 
             // io.to(socketId).emit('matching', matchPair);
             // io.to(bufferedRequest.socketId).emit('matching', matchPair);
