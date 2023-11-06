@@ -20,7 +20,11 @@ const Config = {
     ChatGPTApiBaseUrl:
       environment === Environment.production
         ? 'http://localhost:3006'
-        : 'http://localhost:3006'
+        : 'http://localhost:3006',
+    CodeExecApiBaseUrl:
+      environment === Environment.production
+        ? 'judge0-ce.p.rapidapi.com'
+        : 'judge0-ce.p.rapidapi.com'
   },
 };
 

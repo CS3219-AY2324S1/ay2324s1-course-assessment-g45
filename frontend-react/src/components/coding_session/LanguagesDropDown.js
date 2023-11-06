@@ -6,7 +6,6 @@ import Select from "react-select";
 import { languageOptions } from "../../constants/languageOptions";
 
 const LanguagesDropdown = ({ selectedLanguage, onSelectChange }) => {
-  console.log("language dropdown print: " + selectedLanguage.value)
   return (
     <Select
       placeholder={languageOptions[0]}

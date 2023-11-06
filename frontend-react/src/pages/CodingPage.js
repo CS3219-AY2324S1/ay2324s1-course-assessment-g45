@@ -48,33 +48,6 @@ const CodingPage = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-
-  // code editor landing page
-  // const onChange = (action, data) => {
-  //   switch (action) {
-  //     case "code": {
-  //       setCode(data);
-  //       break;
-  //     }
-  //     default: {
-  //       console.warn("case not handled!", action, data);
-  //     }
-  //   }
-  // };
-
-  // const onSelectChange = (sl) => {
-  //   setLanguage(sl);
-    
-  //   console.log("set language: " + language.value)
-  // };
-
-
-
-
-
-
-
-
   return (
     <div>
       {

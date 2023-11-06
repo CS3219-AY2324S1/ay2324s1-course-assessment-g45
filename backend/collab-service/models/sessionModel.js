@@ -7,6 +7,24 @@ const sessionSchema = new Schema({
     type: String,
     defaultValue: '',
   },
+  language: {
+    id: {
+      type: Number,
+      defaultValue: 63,
+    },
+    name: {
+      type: String,
+      defaultValue: 'JavaScript (Node.js 12.14.0)',
+    },
+    label: {
+      type: String,
+      defaultValue: 'JavaScript (Node.js 12.14.0)',
+    },
+    value: {
+      type: String,
+      defaultValue: 'javaScript',
+    },
+  },
   questionId: {
     type: String,
     required: true,

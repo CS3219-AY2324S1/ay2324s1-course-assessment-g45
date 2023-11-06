@@ -64,7 +64,11 @@ io.on("connection", (socket) => {
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
     socket.join(sessionId)
-    socket.emit("load-session", session.data)
+    const sessionData = {
+      data : session.data,
+      language : session.language
+    }
+    socket.emit("load-session", sessionData)
     
     console.log("socket join")
 
@@ -79,9 +83,8 @@ io.on("connection", (socket) => {
       socket.broadcast.to(sessionId).emit("received_changes", delta) //broadcast.to(sessionId)
     })
 
-    socket.on("save-document", async data => {
-      // console.log('saving document', data)
-      await Session.findByIdAndUpdate(sessionId, { data })
+    socket.on("save-document", async saveData => {
+      await Session.findByIdAndUpdate(sessionId, saveData)
     })
 
     socket.on("disconnect", () => {
