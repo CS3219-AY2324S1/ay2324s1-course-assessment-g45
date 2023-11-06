@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
-import { updateUser } from '../apis/UserProfileApi'
+import { updateUser, deleteUser} from '../apis/UserProfileApi'
 import { Link, useNavigate } from 'react-router-dom'
 import { Col, Row, Form, Card, Button } from 'react-bootstrap';
-
+import { useLogout } from "../hooks/useLogout"
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 const Profile = () => {
   const { user, dispatch } = useUserContext()
@@ -19,6 +20,8 @@ const Profile = () => {
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
+  const [deleteCurrentUser, setDeleteUser] = useState(false)
+  const { logout } = useLogout()
   const navigate = useNavigate()
 
   const checkPassword = (pw) => {
@@ -163,19 +166,24 @@ const Profile = () => {
   }
 
 
-  const handleDelete = async() => {
-    // const response = await fetch('/api/userProfiles/' + user._id , {
-    //   method: 'DELETE'
-    // })
+  const handleDelete = async(userId) => {
+   
+    const response = await deleteUser(user.token, userId)
 
-    // const json = await response.json()
-    // if (response.ok) {
-    //   dispatch({ type : 'LOGOUT', payload : json })
-    //   navigate('/')
-    // }
-    // if (!response.ok) {
-    //   setError(json.error)
-    // }
+    const json = await response.json()
+    if (response.ok) {
+      dispatch({ type : 'LOGOUT', payload : json })
+      logout()
+    }
+    if (!response.ok) {
+      setError(json.error)
+    }
+  }
+
+
+  const showDeleteConfirmation = (userId) => { 
+    setDeleteUser(true)
+    console.log("showDeleteConfirmation")
   }
 
   return (
@@ -248,11 +256,18 @@ const Profile = () => {
     //     </div>
     //   }
 
+    
+
     <div className='profile-container'>
-      {/* <div>
-        <div> Debug </div>
-        <div> user id:  {user.id} </div>
-      </div> */}
+      {
+        deleteCurrentUser &&
+        <ConfirmationPopup
+          title={'Delete User'}
+          message={'Are you sure to proceed? This action cannot be undone.'}
+          handleClose={() => setDeleteUser(null)}
+          handleSubmit={() => handleDelete(user.id)}
+        />
+      }
       <Row className="mb-8  align-items-center justify-content-center">
         <Col xl={2} lg={4} md={12} xs={12}>
               <div className="mb-4 mb-lg-0">
@@ -383,7 +398,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <p>WARNING! This will permanently delete your account.</p>
-                  <Link href="#" className="btn btn-danger" onClick={handleDelete}>Delete Account</Link>
+                  <Button className="btn btn-danger" onClick={() => showDeleteConfirmation(user.id)}>Delete Account</Button>
                 </div>
               </Card.Body>
             </Card>
