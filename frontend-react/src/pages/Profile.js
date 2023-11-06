@@ -20,7 +20,7 @@ const Profile = () => {
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
-  const [deleteCurrentUser, setDeleteUser] = useState(false)
+  const [showDeleteConfirmation, setDeleteConfirmation] = useState(false)
   const { logout } = useLogout()
   const navigate = useNavigate()
 
@@ -167,9 +167,7 @@ const Profile = () => {
 
 
   const handleDelete = async(userId) => {
-   
     const response = await deleteUser(user.token, userId)
-
     const json = await response.json()
     if (response.ok) {
       dispatch({ type : 'LOGOUT', payload : json })
@@ -181,9 +179,8 @@ const Profile = () => {
   }
 
 
-  const showDeleteConfirmation = (userId) => { 
-    setDeleteUser(true)
-    console.log("showDeleteConfirmation")
+  const handleDeleteConfirmation = (userId) => { 
+    setDeleteConfirmation(true)
   }
 
   return (
@@ -260,11 +257,11 @@ const Profile = () => {
 
     <div className='profile-container'>
       {
-        deleteCurrentUser &&
+        showDeleteConfirmation &&
         <ConfirmationPopup
           title={'Delete User'}
           message={'Are you sure to proceed? This action cannot be undone.'}
-          handleClose={() => setDeleteUser(null)}
+          handleClose={() => setDeleteConfirmation(null)}
           handleSubmit={() => handleDelete(user.id)}
         />
       }
@@ -398,7 +395,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <p>WARNING! This will permanently delete your account.</p>
-                  <Button className="btn btn-danger" onClick={() => showDeleteConfirmation(user.id)}>Delete Account</Button>
+                  <Button className="btn btn-danger" onClick={() => handleDeleteConfirmation(user.id)}>Delete Account</Button>
                 </div>
               </Card.Body>
             </Card>
