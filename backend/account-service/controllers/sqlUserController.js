@@ -38,9 +38,16 @@ const createUser = async (req, res) => {
       [username, password, email]
     );
 
+    // Retrieve the user information after creation
+    const [userResult] = await connection.query(
+      'SELECT * FROM users WHERE id = ?',
+      [result.insertId]
+    );
+
     connection.release();
 
-    return res.status(200).json(result)
+    // Return the user information in the response
+    return res.status(200).json(userResult[0]);
 
   } catch (error) {
 

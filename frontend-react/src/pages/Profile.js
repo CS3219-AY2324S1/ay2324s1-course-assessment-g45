@@ -129,7 +129,6 @@ const Profile = () => {
   return (
     <div className='profile-container'>
       <h3> Profile </h3>
-      { user.username }
       { (!isEdit && !isChangePassword) &&
         <div className='profile-card'>
           <div className='row mb-3'> 
