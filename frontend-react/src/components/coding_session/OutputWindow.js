@@ -11,21 +11,21 @@ const OutputWindow = ({ outputDetails }) => {
 
     switch (statusId) {
       case 6: // compile error
-        setError(atob(outputDetails?.compile_output))
+        setError(outputDetails?.compile_output)
         break;
       case 3: //
         setShowSuccessMsg(true) 
         if (outputDetails.stdout === null) setOutput(null)
         else {
           console.log(outputDetails.stdout)
-          setOutput(atob(outputDetails.stdout))
+          setOutput(outputDetails.stdout)
         }
         break;
       case 5:
         setError('Time limit Exceeded')
         break;
       default:
-        setError(atob(outputDetails.stderr))
+        setError(outputDetails.stderr)
     }
   };
 

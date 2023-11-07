@@ -5,12 +5,11 @@ import Editor from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import loader from '@monaco-editor/loader';
 
-import axios from 'axios';
 import LanguagesDropdown from './LanguagesDropDown';
 import { languageOptions } from '../../constants/languageOptions';
 import OutputWindow from "./OutputWindow";
-import CustomInput from "./CustomInput";
 import OutputDetails from "./OutputDetails";
+import { compile, checkStatus } from '../../apis/CodeExecutionApi' 
 
 const SAVE_INTERVAL_MS = 2000
 const CodeEditor = () => {
@@ -75,104 +74,57 @@ const CodeEditor = () => {
     }
   }, [socket])
 
-  const handleCompile = () => {
-    console.log("button click")
+  const handleCompile = async () => {
+    console.log("compiling code")
     setProcessing(true);
+    setOutputDetails(null);
     const formData = {
       language_id: language.id,
-      // encode source code in base64
-      source_code: btoa(code),
-      stdin: btoa(customInput),
+      source_code: code,
+      stdin: customInput,
+      fields: '*'
     };
-    const options = {
-      method: 'POST',
-      url: 'https://judge0-ce.p.rapidapi.com/submissions',
-      params: {
-        base64_encoded: 'true',
-        fields: '*'
-      },
-      headers: {
-        'content-type': 'application/json',
-        'Content-Type': 'application/json',
-        'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
-        'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
-      },
-      data: formData,
-    };
+    const response = await compile(formData)
+    console.log(response)
+    const json = await response.json()
+    console.log(response)
+    console.log(json)
 
-    axios
-      .request(options)
-      .then(function (response) {
-        console.log("res.data", response.data);
-        const token = response.data.token;
-        checkStatus(token);
-      })
-      .catch((err) => {
-        let error = err.response ? err.response.data : err;
-        setProcessing(false);
-        console.log("error : " + error);
-      });
+    if (!response.ok) {
+      setProcessing(false)
+      console.log('error', json)
+      return
+    }
+
+    const token = json.token
+    await handlecheckStatus(token)
   };
 
-  const checkStatus = async (token) => {
+  const handlecheckStatus = async (token) => {
     console.log("checkstatus call")
-    const options = {
-      method: "GET",
-      url: "https://judge0-ce.p.rapidapi.com/submissions" + "/" + token,
-      params: { base64_encoded: "true", fields: "*" },
-      headers: {
-        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-        "X-RapidAPI-Key": process.env.REACT_APP_RAPID_API_KEY,
-      },
-    };
-    try {
-      let response = await axios.request(options);
-      let statusId = response.data.status?.id;
-
-      // Processed - we have a result
-      if (statusId === 1 || statusId === 2) {
-        // still processing
-        setTimeout(() => {
-          checkStatus(token)
-        }, 2000)
-        return
-      } else {
-        setProcessing(false)
-        setOutputDetails(response.data)
-        //showSuccessToast(`Compiled Successfully!`)
-        console.log("Compile success")
-        console.log('response.data', response.data)
-        return
-      }
-    } catch (err) {
-      console.log("err", err);
-      setProcessing(false);
-      //showErrorToast();
+    const response = await checkStatus(token)
+    console.log(response)
+    const json = await response.json()
+    console.log(json)
+    if (!response.ok) {
+      console.log('err', response)
+      return
+    }
+    const statusId = json.status.id
+    if (statusId === 1 || statusId === 2) {
+      // still processing
+      setTimeout(async () => {
+        await handlecheckStatus(token)
+      }, 2000)
+      return
+    } else {
+      setProcessing(false)
+      setOutputDetails(json)
+      console.log("Compile success")
+      console.log('response.data', json)
+      return
     }
   };
-
-  // const showSuccessToast = (msg) => {
-  //   toast.success(msg || `Compiled Successfully!`, {
-  //     position: "top-right",
-  //     autoClose: 1000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,
-  //     draggable: true,
-  //     progress: undefined,
-  //   });
-  // };
-  // const showErrorToast = (msg) => {
-  //   toast.error(msg || `Something went wrong! Please try again.`, {
-  //     position: "top-right",
-  //     autoClose: 1000,
-  //     hideProgressBar: false,
-  //     closeOnClick: true,
-  //     pauseOnHover: true,  
-  //     draggable: true,
-  //     progress: undefined,
-  //   });
-  // };
 
 
   // connect to socket
@@ -192,9 +144,12 @@ const CodeEditor = () => {
     // load once
     socket.once('load-session', doc => {
       console.log(doc.data)
+      setLanguage(doc.language)
+      const model = myEditor.getModel()
+      console.log(model)
+      // model.setModelLanguage(doc.language)
       myEditor.setValue(doc.data)
       //setCode(doc.data)
-      setLanguage(doc.language)
     })
     socket.emit('get-session', sessionId)
     console.log(sessionId)
@@ -280,13 +235,6 @@ const CodeEditor = () => {
         </div>
       }
 
-      {/* <div className="">
-        <OutputWindow outputDetails={outputDetails} />
-        {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-        <OutputDetails outputDetails={{ memory: '146mb', time : 0.042 }} />
-
-      </div> */}
-
       <Editor
         height="85vh"
         width={`100%`}
@@ -298,7 +246,6 @@ const CodeEditor = () => {
       />
 
     </div>
-    //<div className='code-editor' ref={wrapperRef}></div>
   )
 }
 
