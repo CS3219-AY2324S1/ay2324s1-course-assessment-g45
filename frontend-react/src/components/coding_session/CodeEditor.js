@@ -253,32 +253,39 @@ const CodeEditor = () => {
 
   return (
     <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
-      <div className="px-4 py-2">
-        <LanguagesDropdown
-          selectedLanguage={language}
-          onSelectChange={onSelectChange} />
-      </div>
+      <div className='d-flex align-items-center'>
+        <div className='py-2 flex-grow-1' >
+          <LanguagesDropdown
+            selectedLanguage={language}
+            onSelectChange={onSelectChange} />
+        </div>
 
-      <div className="right-container flex flex-shrink-0 w-[30%] flex-col">
-        <OutputWindow outputDetails={outputDetails} />
-        <div className="flex flex-col items-end">
-          <CustomInput
-            customInput={customInput}
-            setCustomInput={setCustomInput}
-          />
-          <button
-            onClick={handleCompile}
-          //disabled={!code}
-          // className={classnames(
-          //   "mt-4 border-2 border-black z-10 rounded-md shadow-[5px_5px_0px_0px_rgba(0,0,0)] px-4 py-2 hover:shadow transition duration-200 bg-white flex-shrink-0",
-          //   !code ? "opacity-50" : ""
-          // )}
-          >
-            {processing ? "Processing..." : "Compile and Execute"}
+        <div className='mx-3'>
+          <button onClick={handleCompile}>
+            <span className="material-symbols-outlined">play_arrow</span>
           </button>
         </div>
-        {outputDetails && <OutputDetails outputDetails={outputDetails} />}
       </div>
+
+      {
+        processing &&
+        <i className='text-muted'> Processing... </i>
+      }
+
+      {
+        outputDetails &&
+        <div>
+          <OutputWindow outputDetails={outputDetails}/>
+          <OutputDetails outputDetails={outputDetails}/>
+        </div>
+      }
+
+      {/* <div className="">
+        <OutputWindow outputDetails={outputDetails} />
+        {outputDetails && <OutputDetails outputDetails={outputDetails} />}
+        <OutputDetails outputDetails={{ memory: '146mb', time : 0.042 }} />
+
+      </div> */}
 
       <Editor
         height="85vh"
