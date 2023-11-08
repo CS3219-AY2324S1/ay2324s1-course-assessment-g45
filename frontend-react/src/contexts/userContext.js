@@ -1,12 +1,11 @@
-import { createContext, useReducer } from 'react'
+import { createContext, useReducer, useEffect } from 'react'
 
 export const UserContext = createContext()
 
 export const userReducer = (state, action) => {
   switch (action.type) {
     case "SET_USER":
-      console.log(action.payload)
-      return { user : action.payload }
+      return { user: action.payload }
     case 'LOGOUT':
       return { user: null }
     case 'EDIT_USER':
@@ -16,24 +15,30 @@ export const userReducer = (state, action) => {
   }
 }
 
-export const UserContextProvider = ({children}) => {
-  const [ state, dispatch ] = useReducer(userReducer, {
-    // user: {
-    //   _id:"64f98bd9de4f0ac4adf1feac",
-    //   username:"test3",
-    //   password:"",
-    //   email:"test3@gmail.com",
-    //   createdAt:"2023-09-07T08:37:45.582Z",
-    //   updatedAt:"2023-09-10T03:50:00.081Z",
-    //   __v:0
-    // }
-    user:null
+export const UserContextProvider = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('user'))
+  const [state, dispatch] = useReducer(userReducer, {
+    user: (user ? user : null)
   })
-  console.log('Auth context state: ', state)
+
+  useEffect(() => {
+    if (user) {
+      dispatch({ type: 'SET_USER', payload: user })
+    }
+  }, [])
+
+  // Save the state back to localStorage whenever it changes
+  useEffect(() => {
+    if (state.user) {
+      localStorage.setItem('user', JSON.stringify(state.user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [state.user]);
 
   return (
-    <UserContext.Provider value = {{...state, dispatch}}>
-      { children }
+    <UserContext.Provider value={{ ...state, dispatch }}>
+      {children}
     </UserContext.Provider>
   )
 }
