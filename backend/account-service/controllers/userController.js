@@ -53,7 +53,7 @@ const createUser = async (req, res) => {
     res.status(400).json({ error: errMsg })
   }
 }
- 
+
 // DELETE a user
 const deleteUser = async (req, res) => {
   const { id } = req.params

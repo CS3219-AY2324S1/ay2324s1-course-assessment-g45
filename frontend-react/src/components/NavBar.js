@@ -7,7 +7,6 @@ import WaitingBanner from "./match/WaitingBanner";
 import logo from '../assets/images/logo.svg'
 import profile from '../assets/images/profile.png'
 
-
 const NavBar = () => {
   const { user } = useUserContext()
   const { logout } = useLogout()
