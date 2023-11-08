@@ -12,4 +12,14 @@ async function post({ ...params }) {
   });
 }
 
-export { post };
+async function cancel({ ...params }) {
+  return fetch(`${baseUrl}/api/matching/cancel/`, {
+    method: 'POST',
+    body: JSON.stringify(params),
+    headers: {
+      'Content-type': 'application/json',
+    },
+  });
+}
+
+export { post, cancel };

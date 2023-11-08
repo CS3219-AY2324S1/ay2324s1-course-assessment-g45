@@ -37,7 +37,7 @@ const MatchPage = () => {
         uid: user.id,
         username: user.username,
       });
-      const json = response.json();
+      const json = await response.json();
       if (!response.ok) {
         console.log(json);  
       }
@@ -92,11 +92,11 @@ const MatchPage = () => {
                         </div>
                         <div className="d-flex justify-content-between align-items-center mb-3 mt-3">
                             <button className="custom-match-btn easy-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Easy')}><span>
-                                <i className="fa-regular fa-star fa-bounce"></i> Easy</span></button>
+                                <i className="fa-regular fa-star"></i> Easy</span></button>
                             <button className="custom-match-btn medium-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Medium')}><span>
-                                <i className="fa-regular fa-star-half-stroke fa-bounce"></i> Medium</span></button>
+                                <i className="fa-regular fa-star-half-stroke"></i> Medium</span></button>
                             <button className="custom-match-btn hard-btn"  disabled={bannerState.disableButtons} onClick={() => handleSubmit('Hard')}><span>
-                                <i className="fa-solid fa-star fa-bounce"></i> Hard</span></button>
+                                <i className="fa-solid fa-star"></i> Hard</span></button>
                         </div>
                     </div>
                 </div>

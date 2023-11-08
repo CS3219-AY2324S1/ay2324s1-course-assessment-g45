@@ -32,12 +32,12 @@ app.use((req, res, next) => {
 
 app.use('/api/matching', matchingRoutes);
 
-io.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`)
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${socket.id}`)
-  })
-})
+io.on('connection', (socket) => {
+  console.log(`User connected: ${socket.id}`);
+  socket.on('disconnect', () => {
+    console.log(`User disconnected: ${socket.id}`);
+  });
+});
 
 rabbitMQHandler((connection) => {
   connection.createChannel((error, channel) => {
@@ -45,27 +45,48 @@ rabbitMQHandler((connection) => {
       throw error;
     }
     const matchingQueue = 'matching';
-    const questionQueue = 'question'
+    const cancelMatchQueue = 'cancelMatch';
+    const questionQueue = 'question';
     const sessionQueue = 'collabSession';
-    const replyQueue = 'reply_queue'
+    const replyQueue = 'reply_queue';
 
     channel.assertQueue(matchingQueue, {
       durable: false,
     });
 
+    channel.assertQueue(cancelMatchQueue, {
+      durable: false,
+    });
+
     channel.assertQueue(questionQueue, {
-      durable: false
-    })
+      durable: false,
+    });
 
     // not sure about this durable thing
     channel.assertQueue(sessionQueue, {
-      durable: true
-    })
+      durable: true,
+    });
     channel.assertQueue(replyQueue, {
-      durable: false
-    })
+      durable: false,
+    });
 
     let requestBuffer = [];
+
+    channel.consume(
+      cancelMatchQueue,
+      (msg) => {
+        console.log(' [x] Received %s from frontend', msg.content.toString());
+        const request = JSON.parse(msg.content.toString());
+        const uid = request.uid;
+        const complexity = request.complexity;
+
+        const newBuffer = requestBuffer.filter((request) => {
+          return request.complexity != complexity || request.uid != uid;
+        });
+        requestBuffer = newBuffer;
+      },
+      { noAck: true }
+    );
 
     channel.consume(
       matchingQueue,
@@ -78,33 +99,38 @@ rabbitMQHandler((connection) => {
         const complexity = request.complexity;
         for (let i = 0; i < requestBuffer.length; i++) {
           const bufferedRequest = requestBuffer[i];
-          console.log('Looking through all present requests in the queue')
-          console.log(request, bufferedRequest)
+          console.log('Looking through all present requests in the queue');
+          console.log(request, bufferedRequest);
           if (
             bufferedRequest.complexity == complexity &&
-            uid !== null && bufferedRequest.uid !== null &&
+            uid !== null &&
+            bufferedRequest.uid !== null &&
             bufferedRequest.uid != uid
           ) {
-            console.log('Match found!')
+            console.log('Match found!');
             isMatched = true;
             const matchPair = [bufferedRequest, request];
 
-            channel.assertQueue('', {
-              exclusive: true,
-            }, (err, queue) => {
-              if (err) {
-                throw err
-              }
+            channel.assertQueue(
+              '',
+              {
+                exclusive: true,
+              },
+              (err, queue) => {
+                if (err) {
+                  throw err;
+                }
 
               // send to request for question
-              channel.sendToQueue('question', 
-                Buffer.from(JSON.stringify({ complexity : complexity})),
-                { 
-                  correlationId : 'matching_service' , 
-                  replyTo: queue.queue, 
+              channel.sendToQueue(
+                'question',
+                Buffer.from(JSON.stringify({ complexity: complexity })),
+                {
+                  correlationId: 'matching_service',
+                  replyTo: queue.queue,
                 }
-              )
-              console.log('sent question request to queue!')
+              );
+              console.log('sent question request to queue!');                
 
               // read from queue to get the requested question
               channel.consume(queue.queue, (msg) => {
