@@ -42,3 +42,12 @@
 ### Quick Start
 1. Ensure Docker Desktop is installed and you are signed in.
 2. In the folder containing both backend and frontend, run `docker compose up --build`
+## Assignment 4
+### Quick Start
+1. Make sure the include the `.env` file for assignment 4 in the following folders: `backend/account-service`, `backend/question-service`
+2. Install Docker Desktop if you haven't
+3. Login to Docker
+4. Navigate to the root project folder
+5. Run the command `docker login` in the terminal
+6. Run the command `docker compose up --build` in the terminal
+7. The app is now running locally at http://localhost:3000/
