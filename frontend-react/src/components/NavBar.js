@@ -62,10 +62,10 @@ const NavBar = () => {
         > 
          {/* <li><Link className={location.pathname === "/match" ? "active" : ""}
           to = "/match"> Home </Link></li>   */}
-         <li><Link className={location.pathname === "/" ? "active" : ""}
+         <li><Link className={window.location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
           {user && user.role === "maintainer" &&
-          <li><Link className={location.pathname === "/maintainer" ? "active" : ""}
+          <li><Link className={window.location.pathname === "/maintainer" ? "active" : ""}
           to = "/maintainer"> Dashboard </Link></li>  }
         </ul>
          }
