@@ -24,7 +24,7 @@
 10. The app is now running locally at http://localhost:3000/
 
 ## Assignment 3
-### Running Guide
+### Quick Start
 1. Navigate to the `backend/account-service` folder
 2. Run `npm install`
 3. Make sure the include the `.env` file for assignment 3 in this `backend/account-service` folder
@@ -37,3 +37,8 @@
 10. Run the command `npm install`
 11. Run the command `npm start` to start the front end.
 12. The app is now running locally at http://localhost:3000/
+
+## Assignment 5
+### Quick Start
+1. Ensure Docker Desktop is installed and you are signed in.
+2. In the folder containing both backend and frontend, run `docker compose up --build`
