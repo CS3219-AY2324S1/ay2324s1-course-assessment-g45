@@ -24,7 +24,7 @@
 10. The app is now running locally at http://localhost:3000/
 
 ## Assignment 3
-### Running Guide
+### Quick Start
 1. Navigate to the `backend/account-service` folder
 2. Run `npm install`
 3. Make sure the include the `.env` file for assignment 3 in this `backend/account-service` folder
