@@ -102,8 +102,8 @@ const Profile = () => {
       dispatch({ type : 'EDIT_USER', payload : json})
       setIsEdit(!isEdit)
       console.log(user)
-      setUsername(user.username)
-      setEmail(user.email)
+      setUsername(json.username)
+      setEmail(json.email)
       setError('')
     }
     if (!response.ok) {
