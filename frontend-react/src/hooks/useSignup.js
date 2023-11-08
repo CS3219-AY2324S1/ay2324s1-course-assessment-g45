@@ -31,7 +31,7 @@ export const useSignup = () => {
 
         dispatch({type: 'SET_USER', payload:json})
         setIsLoading(false)
-        navigate("/match")
+        navigate("/")
     }
 
     return response

@@ -51,7 +51,7 @@ const NavBar = () => {
  
      
       <div className="navdiv" > 
-      <Link to = "/match">
+      <Link to = "/">
       <img className = "logoImage" src={logo}>
             </img>      
       </Link>
@@ -60,8 +60,8 @@ const NavBar = () => {
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
-         <li><Link className={location.pathname === "/match" ? "active" : ""}
-          to = "/match"> Home </Link></li>  
+         {/* <li><Link className={location.pathname === "/match" ? "active" : ""}
+          to = "/match"> Home </Link></li>   */}
          <li><Link className={location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
           {user && user.role === "maintainer" &&
