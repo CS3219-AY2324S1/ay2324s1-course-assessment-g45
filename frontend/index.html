@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PeerPrep</title>
+
+  <!-- Load a font called Roboto from Google Fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <main>
+    <h1>Welcome to PeerPrep</h1>
+    <div id="container">
+      <table class="questions-table">
+        <tr>
+          <!-- Question Id Question Title Question Description Question Category Question Complexity -->
+          <th> Title (Click to expand question) </th>
+          <th> Category </th>
+          <th> Complexity </th>
+          <th> Actions </th>
+        </tr>
+      </table>
+      <button class="add-question-button" onclick="openAddQuestionForm()">Add a new question</button>
+    </div>
+  </main>
+  <script src="src/index.js"></script>
+  <script src="src/components/AddQuestionForm.js"></script>
+</body>
+
+</html>
