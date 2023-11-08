@@ -36,4 +36,4 @@
 9. Navigate to the `frontend-react` folder
 10. Run the command `npm install`
 11. Run the command `npm start` to start the front end.
-12. Open your browser and go to the address http://localhost:3000/
+12. The app is now running locally at http://localhost:3000/
