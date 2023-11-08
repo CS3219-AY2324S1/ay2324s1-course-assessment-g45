@@ -100,7 +100,7 @@ userProfileSchema.statics.updateUserPassword = async function(id, reqBody) {
 
     const match = await bcrypt.compare(currentPassword, user.password)
     if (!match) {
-        throw Error("Wrong password or username.")
+        throw Error("Wrong current password.")
     }
 
     const salt = await bcrypt.genSalt(10)

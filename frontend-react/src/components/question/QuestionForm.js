@@ -6,8 +6,12 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
-import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { getAllQuestions, deleteQuestion, patch, post} from '../../apis/QuestionApi';
 import { useUserContext } from '../../hooks/useUserContext';
+import * as formik from 'formik';
+import * as yup from 'yup';
+import ReactQuill from 'react-quill';
+import 'quill/dist/quill.snow.css';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
@@ -45,7 +49,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   }
 
   const handleAddQuestion = async () => {
-    const question = { title, description, categories, complexity }
+    const question = formRef.current.values
     const response = await post(user.token, question)
     const json = await response.json()
     console.log(json)
@@ -59,7 +63,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   }
 
   const handleEditQuestion = async () => {
-    const question = { title, description, categories, complexity }
+    const question = formRef.current.values
     const response = await patch(user.token, editedQn._id, question)
     const json = await response.json()
     if (!response.ok) {

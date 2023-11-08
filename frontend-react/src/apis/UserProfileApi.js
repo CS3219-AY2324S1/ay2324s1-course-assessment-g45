@@ -12,8 +12,8 @@ async function post({ ...params }) {
   });
 }
 
-async function loginUser({...params}) {
-  return fetch('/api/userProfiles/login', {
+async function loginUser({ ...params }) {
+  return fetch(`${baseUrl}/api/userProfiles/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,25 +22,26 @@ async function loginUser({...params}) {
   });
 }
 
-async function updateUser(token, id, {...params}) {
-  return fetch('/api/UserProfiles/' + id, {
+
+async function updateUser(token, id, { ...params }) {
+  return fetch(`${baseUrl}/api/UserProfiles/` + id, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     },
   });
 }
 
 async function deleteUser(token, id) {
-  return fetch('/api/userProfiles/' + id , {
+  return fetch(`${baseUrl}/api/userProfiles/` + id, {
     method: 'DELETE',
     headers: {
-    'Authorization': `Bearer ${token}`
-    }
-  })
+      'Authorization': `Bearer ${token}`
+      }
+  });
 }
 
 async function getAllUsers(token) {

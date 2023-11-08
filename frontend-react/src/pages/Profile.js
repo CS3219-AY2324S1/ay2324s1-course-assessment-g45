@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
 import { updateUser } from '../apis/UserProfileApi'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { Col, Row, Form, Card, Button } from 'react-bootstrap';
+
 
 const Profile = () => {
   const { user, dispatch } = useUserContext()
 
-  const [ username, setUsername ] = useState(user.username)
-  const [ email, setEmail ] = useState(user.email)
+  const [ username, setUsername ] = useState('')
+  const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ newPassword, setNewPassword ] = useState('')
   const [ confirmNewPasword, setConfirmNewPassword ] = useState('')
   const [ passwordError, setPasswordError ] = useState('')
+  const [ usernameError, setUsernameError ] = useState('')
+  const [ emailError, setEmailError] = useState('')
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
@@ -43,28 +47,23 @@ const Profile = () => {
     setPasswordError('')
   }
 
-  const handleChangePw = async () => {
-    if (password === '') {
-      setPasswordError('Please key in your password')
+  const handleChangePw = async (e) => {
+    e.preventDefault();
+    console.log(newPassword)
+    console.log(confirmNewPasword)
+
+    if (newPassword !== confirmNewPasword) {
+      setPasswordError('The new password and confirm new password do not match.')
       return
     }
 
-    // if (password !== user.password) {
-    //   setPasswordError('Wrong current password, please try again')
-    //   return
-    // }
-    if (newPassword === '' || confirmNewPasword === '') {
-      setPasswordError('Please key in your new password')
-      return
-    }
     const updatedUser = {
       username: username,
       email: email,
       currentPassword: password,
       newPassword : newPassword
     }
-    console.log(user)
-    console.log(updatedUser)
+ 
     const response = await updateUser(user.token, user.id, updatedUser)
     const json = await response.json()
     if (response.ok) {
@@ -72,11 +71,11 @@ const Profile = () => {
       setPassword('')
       setNewPassword('')
       setConfirmNewPassword('')
-      setIsChangePassword(false)
+      // setIsChangePassword(false)
       setPasswordError('')
     }
     if (!response.ok) {
-      setError(json.error)
+      setPasswordError(json.error)
     }
   }
 
@@ -88,11 +87,10 @@ const Profile = () => {
   }
 
   const handleEditSubmit = async () => {
-    console.log(user.id);
-    if (username === '' || email === '') {
-      setError('User name or email cannot be empty')
-      return
-    }
+    // if (username === '' || email === '') {
+    //   setError('User name or email cannot be empty')
+    //   return
+    // }
     const updatedUser = {
       username: username,
       email: email,
@@ -104,101 +102,228 @@ const Profile = () => {
     if (response.ok) {
       dispatch({ type : 'EDIT_USER', payload : json})
       setIsEdit(!isEdit)
-      console.log(user)
       setUsername(user.username)
       setEmail(user.email)
       setError('')
     }
     if (!response.ok) {
       setError(json.error)
+
     }
   }
 
-  const handleDelete = async() => {
-    const response = await fetch('/api/userProfiles/' + user.id , {
-      method: 'DELETE'
-    })
+  const handleUsernameEdit = async (e) => {
+    e.preventDefault();
 
+    if (username === user.username ) {
+      setUsernameError('The username is the same as the current one.')
+      return
+    }
+
+    const updatedUser = {
+      username: username,
+    }
+
+    const response = await updateUser(user.token, user.id, updatedUser)
     const json = await response.json()
+    console.log(json)
     if (response.ok) {
-      dispatch({ type : 'LOGOUT', payload : json })
-      navigate('/')
+      dispatch({ type : 'EDIT_USER', payload : json})
+      setUsername('')
+      setUsernameError('')
     }
     if (!response.ok) {
-      setError(json.error)
+      setUsernameError(json.error)
     }
+  }
+
+  const handleEmailEdit = async (e) => {
+    e.preventDefault();
+
+    if (email === user.email ) {
+      setEmailError('The email is the same as the current one.')
+      return
+    }
+
+    const updatedUser = {
+      email: email,
+    }
+
+    const response = await updateUser(user.token, user.id, updatedUser)
+    const json = await response.json()
+    console.log(json)
+    if (response.ok) {
+      dispatch({ type : 'EDIT_USER', payload : json})
+      setEmail('')
+      setEmailError('')
+    }
+    if (!response.ok) {
+      setEmailError(json.error)
+    }
+  }
+
+
+  const handleDelete = async() => {
+    // const response = await fetch('/api/userProfiles/' + user._id , {
+    //   method: 'DELETE'
+    // })
+
+    // const json = await response.json()
+    // if (response.ok) {
+    //   dispatch({ type : 'LOGOUT', payload : json })
+    //   navigate('/')
+    // }
+    // if (!response.ok) {
+    //   setError(json.error)
+    // }
   }
 
   return (
+
     <div className='profile-container'>
-      <h3> Profile </h3>
-      { (!isEdit && !isChangePassword) &&
-        <div className='profile-card'>
-          <div className='row mb-3'> 
-            <b className='col-4'>Username:</b>
-            <div className='col'>{ user.username }</div> 
-          </div>
-          <div className='row mb-3'> 
-            <b className='col-4'>Email: </b> 
-            <div className='col'> { user.email } </div>
-          </div>
+      <Row className="mb-8  align-items-center justify-content-center">
+        <Col xl={2} lg={4} md={12} xs={12}>
+              <div className="mb-4 mb-lg-0">
+                <h4 className="mb-1">General Setting</h4>
+              </div>
+            </Col>
+            <Col xl={6} lg={8} md={12} xs={12}>
+              {/* card */}
+              <Card id="edit">
+                {/* card body */}
+                <Card.Body>
+                <div className="mb-6 profileHeader">
+                    <h4 className="mb-1">Username</h4>
+                    <div>
+                        <h4 className="mb-1">{user.username}</h4>
+                    </div>
+                  </div>
+                  <Form autoComplete="off" onSubmit={handleUsernameEdit} className="profileForm">
+                    {/* New email */}
+                    <Row className="mb-3">
+                   
+                      <Form.Label className="col-sm-4" htmlFor="newEmailAddress">New Username</Form.Label>
+                      <Col md={8} xs={12}>
+                        <Form.Control type="text" placeholder="Enter your new username" id="newUsername" 
+                             value={username} onChange={(e) => setUsername(e.target.value)}  required/>
+                      </Col>
+                      <Col  md={{ offset: 4, span: 8 }} xs={12}> 
+                        {usernameError && <div className='error'> {usernameError}</div>}
+                      </Col>
+                      <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-3">
+                        <Button variant="primary" type="submit">
+                          Save Changes
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
 
-          <button className='secondary-btn' onClick={() => setIsEdit(true)}> Edit profile </button>
-          <button className='secondary-btn' onClick={handleDelete}> Delete profile </button>
-          <button className='secondary-btn mt-3' onClick={() => setIsChangePassword(true)}> Change password </button>
-        </div>
-      }
-        
-      {
-        isEdit &&
-        <div className='profile-card'>
-          <div className='error'> {error}</div>
-          <label><b>Username:</b></label>
-          <input type='text' value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <label><b> Email:</b></label>
-          <input type='text' value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button className='secondary-btn' onClick={cancelEdit}> Cancel </button>
-          <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
-        </div>
-      }
+                  <div className="mb-6 profileHeader">
+                    <h4 className="mb-1">Email</h4>
+                    <div>
+                        <h4 className="mb-1">{user.email}</h4>
+                    </div>
+                  </div>
+                  <Form autoComplete="off" onSubmit={handleEmailEdit} className="profileForm">
+                    {/* New email */}
+                    <Row className="mb-3">
+                      <Form.Label className="col-sm-4" htmlFor="newEmailAddress">New email</Form.Label>
+                      <Col md={8} xs={12}>
+                        <Form.Control type="email" placeholder="Enter your new email address" id="newEmailAddress" 
+                          value={email}  onChange={(e) => setEmail(e.target.value)} required />
+                      </Col>
+                      <Col  md={{ offset: 4, span: 8 }} xs={12}> 
+                        { emailError && <div className='error'> {emailError}</div>}
+                      </Col>
+                      <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-3">
+                        <Button variant="primary" type="submit">
+                          Save Changes
+                        </Button>
+                      </Col>
+                    </Row>
+                  </Form>
+                  <div className="mb-6 mt-6">
+                    <h4 className="mb-1">Change your password</h4>
+                  </div>
+                  <Form autoComplete="off" onSubmit={handleChangePw} className="profileForm">
+                    {/* Current password */}
+                    <Row className="mb-3">
+                      <Form.Label className="col-sm-4" htmlFor="currentPassword">Current password</Form.Label>
+                      <Col md={8} xs={12}>
+                        <Form.Control type="password" placeholder="Enter Current password" id="currentPassword"  autoComplete="current-password" 
+                         value={password} onChange={(e) => checkPassword(e.target.value)} required />
+                      </Col>
+                    </Row>
 
-      {
-        isChangePassword &&
-        <div className='profile-card'>
-          {/* TODO: check for correct password */}
-          { passwordError && <div className='error'> {passwordError} </div>}
-          <label> Password </label>
-          <input 
-            type='password'
-            value={password}
-            onChange={(e) => checkPassword(e.target.value)}
-          />
+                    {/* New password */}
+                    <Row className="mb-3">
+                      <Form.Label className="col-sm-4" htmlFor="newPassword">New password</Form.Label>
+                      <Col md={8} xs={12}>
+                        <Form.Control type="password" placeholder="Enter New password" id="newPassword"  autoComplete="new-password" 
+                                 value={newPassword}   onChange={(e) => setNewPassword(e.target.value)} required />
+                      </Col>
+                    </Row>
 
-          <label> New Password: </label>
-          <input 
-            type='password' 
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
+                    {/* Confirm new password */}
+                    <Row className="align-items-center">
+                      <Form.Label className="col-sm-4" htmlFor="confirmNewpassword">Confirm new password</Form.Label>
+                      <Col md={8} xs={12}>
+                        <Form.Control type="password" placeholder="Confirm new password" id="confirmNewpassword" autoComplete="new-password" 
+                                value={confirmNewPasword} onChange={(e) => setConfirmNewPassword(e.target.value)} required />
+                      </Col>
+                      {/* list */}
+                      <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                       { passwordError && <div className='error'> {passwordError} </div>}
+                      </Col>
+                      <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                        <h6 className="mb-1">Password requirements:</h6>
+                        <p>Ensure that these requirements are met:</p>
+                        <ul>
+                          <li> Minimum 8 characters long</li>
+                          <li>At least one lowercase character and one uppercase character</li>
+                          <li>At least one number and symbol
+                          </li>
+                        </ul>
+                        <Button variant="primary" type="submit">
+                          Save Changes
+                        </Button>
+                      </Col>
+                    </Row>
+                    
+                  </Form>
 
-          <label> Confirm New Password: </label>
-          <input 
-            type='password' 
-            value={confirmNewPasword}
-            onChange={(e) => checkConfirmNewPassword(e.target.value)}
-          />
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
 
-          <button className='secondary-btn' onClick={cancelChangePw}> Cancel </button>
-          <button className='secondary-btn' onClick={handleChangePw}> Save changes </button>
-
-        </div>
-      }
-
+          <Row className="mb-8 mt-5 align-items-center justify-content-center">
+          <Col xl={2} lg={4} md={12} xs={12}>
+            <div className="mb-4 mb-lg-0">
+              <h4 className="mb-1">Delete Account</h4>
+            </div>
+          </Col>
+          <Col xl={6} lg={8} md={12} xs={12}>
+            <Card className="mb-6">
+              <Card.Body>
+                <div className="mb-6">
+                  <h4 className="mb-1">Danger Zone </h4>
+                </div>
+                <div>
+                  <p>WARNING! This will permanently delete your account.</p>
+                  <Link href="#" className="btn btn-danger" onClick={handleDelete}>Delete Account</Link>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+          
     </div>
+
+    
+
+
+
   )
 }
 

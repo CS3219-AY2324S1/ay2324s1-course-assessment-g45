@@ -1,5 +1,10 @@
+
+import Config from '../Config';
+
+const baseUrl = Config.Common.QuestionApiBaseUrl;
+
 async function getAllQuestions(token) {
-  return fetch('/api/questions/', {
+  return fetch(`${baseUrl}/api/questions/`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -8,7 +13,7 @@ async function getAllQuestions(token) {
 }
 
 async function post(token, { ...params }) {
-  return fetch('/api/questions/', {
+  return fetch(`${baseUrl}/api/questions/`, {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
@@ -18,8 +23,9 @@ async function post(token, { ...params }) {
   });
 }
 
-async function deleteQuestion(token, {id}) {
-  return fetch(`/api/questions/${id}`, {
+
+async function deleteQuestion(token, { id }) {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -27,8 +33,9 @@ async function deleteQuestion(token, {id}) {
   });
 }
 
-async function patch(token, id, {...params}) {
-  return fetch(`/api/questions/${id}`, {
+
+async function patch(token, id, { ...params }) {
+  return fetch(`${baseUrl}/api/questions/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(params),
     headers: {
