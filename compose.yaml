@@ -1,0 +1,17 @@
+services:
+  user:
+    build: ./backend/account-service
+    env_file:
+      - ./backend/account-service/.env
+    ports:
+      - "3001:3001"
+  question:
+    build: ./backend/question-service
+    env_file:
+      - ./backend/question-service/.env
+    ports:
+      - "3002:3002"
+  frontend:
+    build: ./frontend-react
+    ports:
+      - "3000:3000"
