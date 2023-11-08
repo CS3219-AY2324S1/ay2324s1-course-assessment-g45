@@ -65,8 +65,6 @@ services:
         condition: service_healthy
   frontend:
     build: ./frontend-react
-    env_file:
-      - ./frontend-react/.env
     environment:
       - WATCHPACK_POLLING=true
     volumes:
