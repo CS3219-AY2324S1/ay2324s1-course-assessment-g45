@@ -42,6 +42,7 @@ const CodingPage = () => {
 
   useEffect(() => {
     const fetchSession = async () => {
+      console.log(sessionId)
       const session = await getSession({ sessionId })
       const json = await session.json()
       console.log(json)
@@ -56,8 +57,10 @@ const CodingPage = () => {
         }
       }
     }
-    fetchSession()
-  }, [])
+    if (sessionId) {
+      fetchSession()
+    }
+  }, [sessionId])
 
   // connect to socket
   useEffect(() => {

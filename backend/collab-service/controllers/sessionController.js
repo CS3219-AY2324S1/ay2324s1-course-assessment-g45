@@ -10,6 +10,11 @@ const getAllSessions = async (req, res) => {
 // GET session
 const getSingleSession = async (req, res) => {
   const { id } = req.params
+  console.log(id)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: 'No such user.' })
+  }
+  
   try {
     const session = await Session.findById(id)
     res.status(200).json(session)
