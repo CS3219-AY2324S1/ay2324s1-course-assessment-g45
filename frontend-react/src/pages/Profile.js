@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useUserContext } from '../hooks/useUserContext'
-import { updateUser } from '../apis/UserProfileApi'
+import { updateUser, deleteUser} from '../apis/UserProfileApi'
 import { Link, useNavigate } from 'react-router-dom'
 import { Col, Row, Form, Card, Button } from 'react-bootstrap';
-
+import { useLogout } from "../hooks/useLogout"
+import ConfirmationPopup from '../components/ConfirmationPopup';
 
 const Profile = () => {
   const { user, dispatch } = useUserContext()
@@ -19,6 +20,8 @@ const Profile = () => {
   const [ error, setError ] = useState('')
   const [ isEdit, setIsEdit ] = useState(false)
   const [ isChangePassword, setIsChangePassword] = useState(false)
+  const [showDeleteConfirmation, setDeleteConfirmation] = useState(false)
+  const { logout } = useLogout()
   const navigate = useNavigate()
 
   const checkPassword = (pw) => {
@@ -163,96 +166,37 @@ const Profile = () => {
   }
 
 
-  const handleDelete = async() => {
-    // const response = await fetch('/api/userProfiles/' + user._id , {
-    //   method: 'DELETE'
-    // })
+  const handleDelete = async(userId) => {
+    const response = await deleteUser(user.token, userId)
+    const json = await response.json()
+    if (response.ok) {
+      dispatch({ type : 'LOGOUT', payload : json })
+      logout()
+    }
+    if (!response.ok) {
+      setError(json.error)
+    }
+  }
 
-    // const json = await response.json()
-    // if (response.ok) {
-    //   dispatch({ type : 'LOGOUT', payload : json })
-    //   navigate('/')
-    // }
-    // if (!response.ok) {
-    //   setError(json.error)
-    // }
+
+  const handleDeleteConfirmation = (userId) => { 
+    setDeleteConfirmation(true)
   }
 
   return (
-    // <div className='profile-container'>
-    //   <h3> Profile </h3>
-    //   { user.username }
-    //   { (!isEdit && !isChangePassword) &&
-    //     <div className='profile-card'>
-    //       <div className='row mb-3'> 
-    //         <b className='col-4'>Username:</b>
-    //         <div className='col'>{ user.username }</div> 
-    //       </div>
-    //       <div className='row mb-3'> 
-    //         <b className='col-4'>Email: </b> 
-    //         <div className='col'> { user.email } </div>
-    //       </div>
 
-    //       <button className='secondary-btn' onClick={() => setIsEdit(true)}> Edit profile </button>
-    //       <button className='secondary-btn' onClick={handleDelete}> Delete profile </button>
-    //       <button className='secondary-btn mt-3' onClick={() => setIsChangePassword(true)}> Change password </button>
-    //     </div>
-    //   }
-        
-    //   {
-    //     isEdit &&
-    //     <div className='profile-card'>
-    //       <div className='error'> {error}</div>
-    //       <label><b>Username:</b></label>
-    //       <input type='text' value={username}
-    //         onChange={(e) => setUsername(e.target.value)}
-    //       />
-    //       <label><b> Email:</b></label>
-    //       <input type='text' value={email}
-    //         onChange={(e) => setEmail(e.target.value)}
-    //       />
-    //       <button className='secondary-btn' onClick={cancelEdit}> Cancel </button>
-    //       <button className='secondary-btn' onClick={handleEditSubmit}> Save changes </button>
-    //     </div>
-    //   }
-
-    //   {
-    //     isChangePassword &&
-    //     <div className='profile-card'>
-    //       {/* TODO: check for correct password */}
-    //       { passwordError && <div className='error'> {passwordError} </div>}
-    //       <label> Password </label>
-    //       <input 
-    //         type='password'
-    //         value={password}
-    //         onChange={(e) => checkPassword(e.target.value)}
-    //       />
-
-    //       <label> New Password: </label>
-    //       <input 
-    //         type='password' 
-    //         value={newPassword}
-    //         onChange={(e) => setNewPassword(e.target.value)}
-    //       />
-
-    //       <label> Confirm New Password: </label>
-    //       <input 
-    //         type='password' 
-    //         value={confirmNewPasword}
-    //         onChange={(e) => checkConfirmNewPassword(e.target.value)}
-    //       />
-
-    //       <button className='secondary-btn' onClick={cancelChangePw}> Cancel </button>
-    //       <button className='secondary-btn' onClick={handleChangePw}> Save changes </button>
-
-    //     </div>
-    //   }
+    
 
     <div className='profile-container'>
-      {/* <div>
-        <div> Debug </div>
-        <div> user id:  {user.id} </div>
-      </div> */}
+      {
+        showDeleteConfirmation &&
+        <ConfirmationPopup
+          title={'Delete User'}
+          message={'Are you sure to proceed? This action cannot be undone.'}
+          handleClose={() => setDeleteConfirmation(null)}
+          handleSubmit={() => handleDelete(user.id)}
+        />
+      }
       <Row className="mb-8  align-items-center justify-content-center">
         <Col xl={2} lg={4} md={12} xs={12}>
               <div className="mb-4 mb-lg-0">
@@ -383,7 +327,7 @@ const Profile = () => {
                 </div>
                 <div>
                   <p>WARNING! This will permanently delete your account.</p>
-                  <Link href="#" className="btn btn-danger" onClick={handleDelete}>Delete Account</Link>
+                  <Button className="btn btn-danger" onClick={() => handleDeleteConfirmation(user.id)}>Delete Account</Button>
                 </div>
               </Card.Body>
             </Card>

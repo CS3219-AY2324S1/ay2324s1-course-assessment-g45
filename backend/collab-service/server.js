@@ -58,9 +58,24 @@ app.get('/', (req, res) => {
 const defaultValue = ""
 
 io.on("connection", (socket) => {
-   console.log("user connected", socket.id)
+  console.log("user connected", socket.id)
 
-  // collab session
+  // get session id for 2nd user
+  socket.on("join-session", async (sessionId) => {
+    const session = await findSession(sessionId)
+    socket.join(sessionId)
+    console.log('user joins')
+
+    socket.on('leave-session', async (data) => {
+      console.log('user leave')
+      console.log(data)
+      const updatedSession = await Session.findByIdAndUpdate(sessionId, { data }, { new : true})
+      console.log(updatedSession)
+      socket.broadcast.to(sessionId).emit('notify', `${data.username} just left the session!`)
+    })
+  }) 
+
+  // coding session
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
     socket.join(sessionId)
@@ -87,7 +102,6 @@ io.on("connection", (socket) => {
   socket.on("join-chat", async (sessionId) => {
     console.log('join chat')
     const session = await findSession(sessionId)
-    // console.log(session)
     socket.join(sessionId)
     socket.emit("load-chat", session.chat)
 
@@ -98,12 +112,6 @@ io.on("connection", (socket) => {
       await Session.findByIdAndUpdate(sessionId, { $push : { chat : msg}})
     })
 
-    // socket.on("save-chat", async (data) => {
-    //   console.log('saving chat data')
-    //   await Session.findByIdAndUpdate(sessionId, { $push : { chat : { $each : data }}})
-    // })
-
-    // save chat when user disconnect?
     socket.on("disconnect", () => {
       console.log(`User ${socket.id} disconnected`)
     })
