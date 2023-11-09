@@ -10,7 +10,6 @@ const FilterBar = ({ label, values, setValue, className }) => {
     setValue(event.target.value);
   };
 
-  console.log('Selected', selectedValue)
   return (
     <div className={className + ' d-flex flex-row gap-3 align-items-center'}>
       <label htmlFor={label} className='col-sm-2'><h3>{label}</h3></label>

@@ -9,7 +9,7 @@ services:
       - rabbitmq-network
     healthcheck:
         test: rabbitmq-diagnostics -q ping
-        interval: 60s
+        interval: 30s
         timeout: 10s
         retries: 5
   user:
@@ -30,6 +30,7 @@ services:
       - ./backend/question-service/.env
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    restart: always
     ports:
       - "3002:3002"
     networks:
@@ -43,6 +44,7 @@ services:
       - ./backend/collab-service/.env
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    restart: always
     ports:
       - "3003:3003"
     networks:
@@ -56,6 +58,7 @@ services:
       - ./backend/matching-service/.env
     environment:
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    restart: always
     ports:
       - "3004:3004"
     networks:

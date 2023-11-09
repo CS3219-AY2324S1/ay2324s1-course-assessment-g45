@@ -7,20 +7,24 @@ const Config = {
   Common: {
     QuestionApiBaseUrl:
       environment === Environment.production
-        ? 'http://localhost:3002'
+        ? process.env.QUESTION_SERVICE_URL
         : 'http://localhost:3002',
     UserApiBaseUrl:
       environment === Environment.production
-        ? 'http://localhost:3001'
+        ? process.env.USER_SERVICE_URL
         : 'http://localhost:3001',
     CollabSessionApiBaseUrl:
-      'http://localhost:3003',
+      environment === Environment.production
+        ? process.env.COLLAB_SERVICE_URL
+        : 'http://localhost:3003',
     MatchingApiBaseUrl:
-      'http://localhost:3004',
+      environment === Environment.production
+        ? process.env.MATCHING_SERVICE_URL
+        : 'http://localhost:3004',
     ChatGPTApiBaseUrl:
       environment === Environment.production
-        ? 'http://localhost:3006'
-        : 'http://localhost:3006'
+        ? process.env.AI_SERVICE_URL
+        : 'http://localhost:3006',
   },
 };
 
