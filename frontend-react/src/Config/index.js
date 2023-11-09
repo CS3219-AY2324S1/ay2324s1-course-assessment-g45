@@ -25,17 +25,6 @@ const Config = {
       environment === Environment.production
         ? process.env.AI_SERVICE_URL
         : 'http://localhost:3006',
-
-    // QuestionApiBaseUrl:
-    //   'https://question-g5qibfavfa-uc.a.run.app',
-    // UserApiBaseUrl:
-    //   'https://user-g5qibfavfa-uc.a.run.app',
-    // CollabSessionApiBaseUrl:
-    //   'https://collab-g5qibfavfa-uc.a.run.app',
-    // MatchingApiBaseUrl:
-    //   'https://matching-g5qibfavfa-uc.a.run.app',
-    // ChatGPTApiBaseUrl:
-    //   'https://ai-g5qibfavfa-uc.a.run.app'
   },
 };
 
