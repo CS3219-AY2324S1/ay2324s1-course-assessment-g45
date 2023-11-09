@@ -1,17 +1,78 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - rabbitmq-network
+    healthcheck:
+        test: rabbitmq-diagnostics -q ping
+        interval: 60s
+        timeout: 10s
+        retries: 5
   user:
     build: ./backend/account-service
     env_file:
       - ./backend/account-service/.env
     ports:
       - "3001:3001"
+  ai:
+    build: ./backend/ai-service
+    env_file:
+      - ./backend/ai-service/.env
+    ports:
+      - "3006:3006"
   question:
     build: ./backend/question-service
     env_file:
       - ./backend/question-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
     ports:
       - "3002:3002"
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  collab:
+    build: ./backend/collab-service
+    env_file:
+      - ./backend/collab-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    ports:
+      - "3003:3003"
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  matching:
+    build: ./backend/matching-service
+    env_file:
+      - ./backend/matching-service/.env
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+    ports:
+      - "3004:3004"
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   frontend:
     build: ./frontend-react
+    environment:
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend-react/src:/usr/src/app/src
+      # - ./frontend-react/node_modules:/usr/src/app/node_modules
     ports:
       - "3000:3000"
+
+networks:
+  rabbitmq-network:
+    driver: bridge

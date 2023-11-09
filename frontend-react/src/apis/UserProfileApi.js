@@ -12,7 +12,7 @@ async function post({ ...params }) {
   });
 }
 
-async function loginUser({ ...params }) {
+async function loginUser({...params}) {
   return fetch(`${baseUrl}/api/userProfiles/login`, {
     method: 'POST',
     headers: {
@@ -21,7 +21,6 @@ async function loginUser({ ...params }) {
     body: JSON.stringify(params),
   });
 }
-
 
 async function updateUser(token, id, { ...params }) {
   return fetch(`${baseUrl}/api/UserProfiles/` + id, {
@@ -45,7 +44,7 @@ async function deleteUser(token, id) {
 }
 
 async function getAllUsers(token) {
-  return fetch('/api/userProfiles/', {
+  return fetch(`${baseUrl}/api/userProfiles/`, {
     method: 'GET',
     headers: {
     'Authorization': `Bearer ${token}`
@@ -53,4 +52,13 @@ async function getAllUsers(token) {
   })
 }
 
-export { post, loginUser, updateUser, deleteUser, getAllUsers };
+async function getUserById(token, id) {
+  return fetch(`${baseUrl}/api/userProfiles/` + id, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
+export { post, loginUser, updateUser, deleteUser, getAllUsers, getUserById };

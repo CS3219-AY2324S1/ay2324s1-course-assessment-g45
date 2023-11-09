@@ -60,8 +60,8 @@ const NavBar = () => {
         <ul id = "navbar" 
          className = {isClicked ? "#navbar active" : "#navbar"}
         > 
-         {/* <li><Link className={location.pathname === "/match" ? "active" : ""}
-          to = "/match"> Home </Link></li>   */}
+         <li><Link className={window.location.pathname === "/match" ? "active" : ""}
+          to = "/match"> Home </Link></li>  
          <li><Link className={window.location.pathname === "/" ? "active" : ""}
           to = "/"> Questions </Link></li>  
           {user && user.role === "maintainer" &&

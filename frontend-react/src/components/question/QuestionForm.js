@@ -1,17 +1,15 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
-import Badge from 'react-bootstrap/Badge'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import { useState, useRef, useEffect } from 'react';
 import { useQuestionsContext } from '../../hooks/useQuestionContext';
-import { getAllQuestions, deleteQuestion, patch, post} from '../../apis/QuestionApi';
-import { useUserContext } from '../../hooks/useUserContext';
+import { patch, post } from '../../apis/QuestionApi';
 import * as formik from 'formik';
 import * as yup from 'yup';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
+// import { getAllQuestions, deleteQuestion, patch, post } from '../../apis/QuestionApi';
+import { useUserContext } from '../../hooks/useUserContext';
 
 const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
   const { Formik } = formik
@@ -19,22 +17,23 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   const schema = yup.object().shape({
     title: yup.string().required('Required'),
-    categories: yup.string().required('Required'),
+    categories: yup.array().of(yup.string()).min(1, 'Required'),
     complexity: yup.string().required('Required'),
     description: yup.string().required('Required').notOneOf(['<p><br></p>'], 'Required')
   });
   const { questions, dispatch } = useQuestionsContext()
   const [error, setError] = useState(null)
-  const {user} = useUserContext();
+  const { user } = useUserContext();
 
-  const [ categories, setCategories ] = useState(editedQn ? editedQn.categories : [])
-  const [ inputCat, setInputCat ] = useState('')
+  const [categoryList, setCategoryList] = useState(editedQn ? editedQn.categories : [])
+  const [newCategory, setNewCategory] = useState('')
 
-  const removeCategory = (arr, cat) => {
-    const index = arr.indexOf(cat)
-    if (index > - 1) {
-      arr.splice(index, 1)
-    }
+  const addCategory = (category) => {
+    setCategoryList((prevCategories) => [...prevCategories, category])
+  }
+
+  const removeCategory = (category) => {
+    setCategoryList((prevCategories) => prevCategories.filter((item) => item !== category))
   }
 
   const handleSubmitFunct = () => {
@@ -77,7 +76,7 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
 
   return (
     <>
-      <Modal show={true} onHide={handleClose}>
+      <Modal show={true} onHide={handleClose} dialogClassName="modal-lg" >
         <Modal.Header closeButton>
           <Modal.Title>{formTitle}</Modal.Title>
         </Modal.Header>
@@ -88,20 +87,20 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
             onSubmit={handleSubmitFunct}
             initialValues={{
               title: editedQn ? editedQn.title : '',
-              categories: editedQn ? editedQn.categories.toString() : '',
+              categories: editedQn ? editedQn.categories : [],
               complexity: editedQn ? editedQn.complexity : '',
               description: editedQn ? editedQn.description : ''
             }}
             validateOnChange={false}
             innerRef={formRef}
           >
-            {({ handleSubmit, handleChange, errors, values }) =>
+            {({ handleSubmit, handleChange, errors, values, setFieldValue }) =>
               <Form noValidate onSubmit={handleSubmit}>
-                
+
                 {/* <div> { categories } </div> */}
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                  <Form.Label>Title</Form.Label>
+                  <Form.Label><b>Title</b></Form.Label>
                   <Form.Control
                     type="text"
                     name="title"
@@ -113,99 +112,47 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   <Form.Control.Feedback type="invalid">
                     {errors.title}</Form.Control.Feedback>
                 </Form.Group>
-                {/* <Form.Group
-                  className="mb-3"
-                  controlId="exampleForm.ControlTextarea1"
-                >
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control as="textarea" rows={3}
-                    name="description"
-                    onChange={handleChange}
-                    value={values.description}
-                    isInvalid={!!errors.description}
-                    className="mb-0" />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.description}</Form.Control.Feedback>
-                </Form.Group> */}
-
-                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label>Categories</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="categories"
-                    onChange={handleChange}
-                    value={values.categories}
-                    isInvalid={!!errors.categories}
-                    className="mb-0" />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.categories}</Form.Control.Feedback>
-                </Form.Group> */}
-
-                {/* <label> Categories: </label>
-
-                <Row className='align-items-center'>
-                  <Col>
-                    <Form.Control 
-                      type='text'
-                      name='category'
-                      value={inputCat}
-                      onChange={(e) => setInputCat(e.target.value)}
-                    />
-                  </Col>
-                  <Col>
-                    <button 
-                      type='button' 
-                      onClick={() => {
-                        setCategories([...categories, inputCat]);
-                        setInputCat('')
-                      }}> add </button>
-                  </Col>
-                </Row>
-
-                <h5>
-                { categories.map((c,i) => {
-                  return (
-                    <div
-                      className='d-inline p-2 bg-primary text-white rounded'
-                      key={i} 
-                      onClick={() => setCategories(categories.filter(item => item !== c))}> 
-                      {c} 
-                    </div>)
-                })}
-                </h5> */}
-
-
-
 
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
-                  <Form.Label>Categories</Form.Label>
+                  <Form.Label><b>Categories</b></Form.Label>
+                  {categoryList.map((category) =>
+                    <Button
+                      className='me-2 mb-2 btn-custom'
+                      onClick={() => {
+                        const tempArr = [...categoryList]
+                        removeCategory(category);
+                        setFieldValue('categories', tempArr.filter((item) => item !== category))
+                      }}
+                    >
+                      {category}
+                      <i class="fas fa-times ps-2"></i>
+                    </Button>
+                  )}
+                  <input type='text' value={newCategory} onChange={(event) => setNewCategory(event.target.value)} />
+                  <Button
+                    variant='success'
+                    onClick={() => {
+                      if (newCategory.length > 0 && !categoryList.includes(newCategory)) {
+                        addCategory(newCategory);
+                        setFieldValue('categories', [...categoryList, newCategory])
+                        setNewCategory('');
+                      }
+                    }}
+                  >
+                    Add Category
+                  </Button>
+
                   <Form.Control
-                    type="text"
+                    type="hidden"
                     name="categories"
-                    onChange={handleChange}
-                    value={values.categories}
                     isInvalid={!!errors.categories}
                     className="mb-0" />
                   <Form.Control.Feedback type="invalid">
                     {errors.categories}</Form.Control.Feedback>
                 </Form.Group>
 
-                {/* <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label>Complexity</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="complexity"
-                    onChange={handleChange}
-                    value={values.complexity}
-                    isInvalid={!!errors.complexity}
-                    className="mb-0"/>
-                  <Form.Control.Feedback type="invalid">
-                    {errors.complexity}</Form.Control.Feedback>
-
-                </Form.Group> */}
-
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
-                  <Form.Label>Complexity</Form.Label>
+                  <Form.Label><b>Complexity</b></Form.Label>
                   <Form.Select
                     required
                     name='complexity'
@@ -223,21 +170,16 @@ const QuestionForm = ({ editedQn, handleClose, formTitle }) => {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                {/* <div>
-                  error title: { errors.title} <br/>
-                  error description: { errors.description} <br/>
-                </div> */}
-
                 <Form.Group controlId="exampleForm.ControlTextarea1">
-                  <Form.Label> Description </Form.Label>
-                  <div style={{ height : 250, overflowY: 'auto'}}>
-                      <ReactQuill 
+                  <Form.Label> <b>Description</b> </Form.Label>
+                  <div style={{ height: 250, overflowY: 'auto' }}>
+                    <ReactQuill
                       name="description"
                       theme='snow' value={values.description}
-                      onChange={(e)=> values.description = e}
+                      onChange={(e) => values.description = e}
                       isInvalid={!!errors.description}
                       style={{ height: 200 }}
-                      />
+                    />
                   </div>
                   <div className='error'> {errors.description} </div>
                   <Form.Control.Feedback type="invalid">

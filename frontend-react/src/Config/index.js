@@ -13,6 +13,14 @@ const Config = {
       environment === Environment.production
         ? 'http://localhost:3001'
         : 'http://localhost:3001',
+    CollabSessionApiBaseUrl:
+      'http://localhost:3003',
+    MatchingApiBaseUrl:
+      'http://localhost:3004',
+    ChatGPTApiBaseUrl:
+      environment === Environment.production
+        ? 'http://localhost:3006'
+        : 'http://localhost:3006'
   },
 };
 

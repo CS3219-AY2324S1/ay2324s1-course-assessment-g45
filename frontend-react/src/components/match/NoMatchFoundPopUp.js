@@ -3,15 +3,16 @@ import { Modal, Button } from 'react-bootstrap';
 import { useMatchContext } from '../../hooks/useMatchContext';
 
 
-const NoMatchFoundPopUp = () => {
+const NoMatchFoundPopUp = ({ handleSubmit, complexity }) => {
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
 
     const handleClose = () => {
         bannerDispatch({ type: 'HIDE_MODAL' });
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         bannerDispatch({ type: bannerState.previousBanner });
+        await handleSubmit(complexity)
     };
 
     return (
