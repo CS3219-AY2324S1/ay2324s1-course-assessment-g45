@@ -157,21 +157,51 @@ const CodingPage = () => {
             {/* <MonacoCodeEditor/> */}
           </div>
 
-          <div className='fixed-bottom w-30'>
-            <Accordion
-              style={{ width: '30vw' }}
-            >
-              <Accordion.Item>
-                <Accordion.Header>
-                  Live Chat
-                </Accordion.Header>
-                <Accordion.Body className='p-0' style={{ height: '50vh' }}>
-                  <ChatBox />
-                </Accordion.Body>
-              </Accordion.Item>
 
-            </Accordion>
+
+          { isActive &&
+          <div>
+            {/* live chat */}
+            <div className='fixed-bottom w-30'>
+              <Accordion
+                style={{ width: '30vw' }}
+              >
+                <Accordion.Item>
+                  <Accordion.Header>
+                    Live Chat
+                  </Accordion.Header>
+                  <Accordion.Body className='p-0' style={{ height: '50vh' }}>
+                    <ChatBox />
+                  </Accordion.Body>
+                </Accordion.Item>
+
+              </Accordion>
+            </div>
+
+            {/* side bar buttons */}
+            <div className='floating-btns d-flex justify-content-center'>
+              <OverlayTrigger 
+                placement='top' 
+                overlay={<Tooltip> Leave Session </Tooltip>}
+              >
+                <button className='leave-session-btn' onClick={() => setLeaveSessionPopup(true)}> 
+                  <span class="material-symbols-outlined">logout</span>              
+                </button>
+              </OverlayTrigger>
+
+              <OverlayTrigger
+                placement='top'
+                overlay={<Tooltip> AI Assistant </Tooltip>}
+              >
+                <button className='ai-button' onClick={handleSidebarToggle}>
+                  <img src={aiAssistantLogo} alt="Customer Service" className='ai-image'/>
+                </button>
+              </OverlayTrigger>
+            </div>
+            {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
           </div>
+          }
+
 
           {
             alert &&
@@ -179,31 +209,6 @@ const CodingPage = () => {
               <Alert variant='info'> { alert } </Alert>
             </div>
           }
-          
-          {/* side bar buttons */}
-          <div className='floating-btns d-flex justify-content-center'>
-            {
-              isActive &&
-              <OverlayTrigger 
-              placement='top' 
-              overlay={<Tooltip> Leave Session </Tooltip>}
-            >
-              <button className='leave-session-btn' onClick={() => setLeaveSessionPopup(true)}> 
-                <span class="material-symbols-outlined">logout</span>              
-              </button>
-            </OverlayTrigger>
-            }
-
-            <OverlayTrigger
-              placement='top'
-              overlay={<Tooltip> AI Assistant </Tooltip>}
-            >
-              <button className='ai-button' onClick={handleSidebarToggle}>
-                <img src={aiAssistantLogo} alt="Customer Service" className='ai-image'/>
-              </button>
-            </OverlayTrigger>
-          </div>
-          {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
 
           {
             leaveSessionPopup &&

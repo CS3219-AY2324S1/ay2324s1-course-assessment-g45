@@ -12,7 +12,7 @@ import OutputDetails from "./OutputDetails";
 import { compile, checkStatus } from '../../apis/CodeExecutionApi' 
 
 const SAVE_INTERVAL_MS = 2000
-const CodeEditor = () => {
+const CodeEditor = ({isActive}) => {
 
   const [code, setCode] = useState("");
   //const [theme, setTheme] = useState("cobalt");
@@ -243,6 +243,7 @@ const CodeEditor = () => {
         theme={"vs-dark"}
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
+        options={{ readOnly : isActive}}
       />
 
     </div>
