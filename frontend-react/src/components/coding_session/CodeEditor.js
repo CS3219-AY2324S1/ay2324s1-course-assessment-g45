@@ -4,12 +4,16 @@ import "quill/dist/quill.snow.css"
 import Editor from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
 import loader from '@monaco-editor/loader';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import Button from 'react-bootstrap/Button'
 
 import LanguagesDropdown from './LanguagesDropDown';
 import { languageOptions } from '../../constants/languageOptions';
 import OutputWindow from "./OutputWindow";
 import OutputDetails from "./OutputDetails";
-import { compile, checkStatus } from '../../apis/CodeExecutionApi' 
+import { compile, checkStatus } from '../../apis/CodeExecutionApi'
+import SampleCodePopup from './SampleCodePopup'
 
 const SAVE_INTERVAL_MS = 2000
 const CodeEditor = ({isActive}) => {
@@ -22,6 +26,7 @@ const CodeEditor = ({isActive}) => {
   const { sessionId } = useParams()
   const [myEditor, setEditor] = useState()
   const editorRef = useRef(null);
+  const [ showCodeSample, setShowCodeSample ] = useState(false)
 
 
   const [customInput, setCustomInput] = useState("");
@@ -205,20 +210,37 @@ const CodeEditor = ({isActive}) => {
       clearInterval(interval)
     }
   }, [socket, myEditor, language])
+  
 
   return (
     <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
       <div className='d-flex align-items-center'>
-        <div className='py-2 flex-grow-1' >
+        <div className='py-2 mx-2 flex-grow-1' >
           <LanguagesDropdown
             selectedLanguage={language}
             onSelectChange={onSelectChange} />
         </div>
 
+        <div>
+          <OverlayTrigger 
+            placement='bottom' 
+            overlay={<Tooltip> View template code for the language selected </Tooltip>}
+          >
+            <Button className='btn-secondary' onClick={() => setShowCodeSample(true)}> 
+              Code sample           
+            </Button>
+          </OverlayTrigger>
+        </div>
+
         <div className='mx-3'>
-          <button onClick={handleCompile}>
-            <span className="material-symbols-outlined">play_arrow</span>
-          </button>
+          <OverlayTrigger
+            placement='bottom'
+            overlay={<Tooltip> Execute </Tooltip>}
+          >
+            <button onClick={handleCompile} className='execute-btn'>
+              <span className="material-symbols-outlined text-muted">play_arrow</span>
+            </button>
+          </OverlayTrigger>
         </div>
       </div>
 
@@ -235,11 +257,9 @@ const CodeEditor = ({isActive}) => {
         </div>
       }
 
-      <div> {language.label} </div>
-
-      {
-        language.template ? <p> {language.template}</p> : <div> nothing </div>
-      }
+      {/* {
+        language.template ? <p style={{ whiteSpace: 'pre-line'}} className='code'> {language.template}</p> : <div> nothing </div>
+      } */}
 
       <Editor
         height="85vh"
@@ -250,6 +270,12 @@ const CodeEditor = ({isActive}) => {
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
         options={{ readOnly : !isActive}}
+      />
+
+      <SampleCodePopup
+        showCodeSample={showCodeSample}
+        setShowCodeSample={setShowCodeSample}
+        template={language.template}
       />
 
     </div>

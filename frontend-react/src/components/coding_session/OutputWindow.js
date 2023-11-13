@@ -59,7 +59,7 @@ const OutputWindow = ({ outputDetails }) => {
       }
       <div className="overflow-y-auto"> 
         <b> Output: </b>
-        { output }
+        <div style={{ whiteSpace: 'pre-line'}}> { output } </div>
       </div>
     </>
   );

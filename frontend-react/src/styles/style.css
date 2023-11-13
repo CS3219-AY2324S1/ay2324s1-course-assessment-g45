@@ -1044,7 +1044,7 @@ h3 span {
   width: 10%;
 }
 
-.ai-button, .leave-session-btn {
+.ai-button, .leave-session-btn, .execute-btn {
   border: none;
   background-color:var(--primary); /* you can change this color */
   border-radius: 20%;
@@ -1057,6 +1057,12 @@ h3 span {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
+}
+
+.execute-btn {
+  background-color: rgb(203, 215, 227);
+  width: 40px;
+  height: 40px;
 }
 
 .leave-session-btn {
