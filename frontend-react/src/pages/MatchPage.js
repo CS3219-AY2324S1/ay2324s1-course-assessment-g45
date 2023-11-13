@@ -6,6 +6,7 @@ import NoMatchFoundPopUp from '../components/match/NoMatchFoundPopUp';
 import Config from '../Config';
 import io from 'socket.io-client';
 import { post } from '../apis/MatchingApi';
+import { getSession, createSession } from "../apis/CollabSessionApi";
 
 const baseUrl = Config.Common.MatchingApiBaseUrl;
 var socketId = '';
@@ -20,6 +21,7 @@ const MatchPage = () => {
     const navigate = useNavigate()
     const { state: bannerState, dispatch: bannerDispatch } = useMatchContext();
     const [complexity, setComplexity] = useState('')
+    const [ error, setError ] = useState()
 
     const handleSubmit = async (complexity) => {
       console.log('submitting match request')
@@ -41,11 +43,31 @@ const MatchPage = () => {
       }
     }
 
-    const handleMatch = (msg) => {
+    const handleMatch = async (msg) => {
       console.log("Handle match!!")
       console.log(msg)
-      bannerDispatch({ type: 'HIDE_BANNER'})
-      navigate(`/codeEditor/${msg._id}`)
+
+      const response = await getSession(msg._id)
+      const json = await response.json()
+      console.log(json)
+      // if session already created, route to codeEditor
+      if (response.ok) {
+        bannerDispatch({ type: 'HIDE_BANNER'})
+        navigate(`/codeEditor/${json._id}`)
+      }
+
+      // if session not found, create session then route to editor
+      if (!response.ok) {
+        const session = await createSession(msg)
+        const json = await session.json()
+        console.log(json)
+        if (!session.ok) {
+          setError(json.error)
+        }
+        // route to codeEditor
+        bannerDispatch({ type: 'HIDE_BANNER'})
+        navigate(`/codeEditor/${msg._id}`)
+      }
     }
 
     useEffect(() => {
