@@ -3,6 +3,7 @@ const {
   getAllSessions,
   getSingleSession,
   createSession,
+  updateSession,
 } = require('../controllers/sessionController')
 
 const router = express.Router()
@@ -15,5 +16,8 @@ router.get('/:id', getSingleSession)
 
 // POST new session
 router.post('/', createSession)
+
+// UPDATE session
+router.patch('/:id', updateSession)
 
 module.exports = router
