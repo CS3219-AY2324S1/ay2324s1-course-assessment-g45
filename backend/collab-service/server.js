@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
     socket.on('leave-session', async (data) => {
       console.log('user leave')
       console.log(data)
-      const updatedSession = await Session.findByIdAndUpdate(sessionId, { data }, { new : true})
+      const updatedSession = await Session.findByIdAndUpdate(sessionId, { ...data }, { new : true})
       console.log(updatedSession)
       socket.broadcast.to(sessionId).emit('notify', `${data.username} just left the session!`)
     })
