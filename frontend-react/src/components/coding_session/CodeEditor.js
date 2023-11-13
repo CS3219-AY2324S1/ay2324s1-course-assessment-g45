@@ -235,6 +235,12 @@ const CodeEditor = ({isActive}) => {
         </div>
       }
 
+      <div> {language.label} </div>
+
+      {
+        language.template ? <p> {language.template}</p> : <div> nothing </div>
+      }
+
       <Editor
         height="85vh"
         width={`100%`}
@@ -243,7 +249,7 @@ const CodeEditor = ({isActive}) => {
         theme={"vs-dark"}
         defaultValue="// some comment"
         onMount={handleEditorDidMount}
-        options={{ readOnly : isActive}}
+        options={{ readOnly : !isActive}}
       />
 
     </div>

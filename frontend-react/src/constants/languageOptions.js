@@ -4,36 +4,7 @@ export const languageOptions = [
     name: "JavaScript (Node.js 12.14.0)",
     label: "JavaScript (Node.js 12.14.0)",
     value: "javascript",
-  },
-  {
-    id: 45,
-    name: "Assembly (NASM 2.14.02)",
-    label: "Assembly (NASM 2.14.02)",
-    value: "assembly",
-  },
-  {
-    id: 46,
-    name: "Bash (5.0.0)",
-    label: "Bash (5.0.0)",
-    value: "bash",
-  },
-  {
-    id: 47,
-    name: "Basic (FBC 1.07.1)",
-    label: "Basic (FBC 1.07.1)",
-    value: "basic",
-  },
-  {
-    id: 75,
-    name: "C (Clang 7.0.1)",
-    label: "C (Clang 7.0.1)",
-    value: "c",
-  },
-  {
-    id: 76,
-    name: "C++ (Clang 7.0.1)",
-    label: "C++ (Clang 7.0.1)",
-    value: "cpp",
+    template: "console.log(\"Hello World!\");"
   },
   {
     id: 48,
@@ -48,70 +19,10 @@ export const languageOptions = [
     value: "cpp",
   },
   {
-    id: 49,
-    name: "C (GCC 8.3.0)",
-    label: "C (GCC 8.3.0)",
-    value: "c",
-  },
-  {
-    id: 53,
-    name: "C++ (GCC 8.3.0)",
-    label: "C++ (GCC 8.3.0)",
-    value: "cpp",
-  },
-  {
-    id: 50,
-    name: "C (GCC 9.2.0)",
-    label: "C (GCC 9.2.0)",
-    value: "c",
-  },
-  {
-    id: 54,
-    name: "C++ (GCC 9.2.0)",
-    label: "C++ (GCC 9.2.0)",
-    value: "cpp",
-  },
-  {
-    id: 86,
-    name: "Clojure (1.10.1)",
-    label: "Clojure (1.10.1)",
-    value: "clojure",
-  },
-  {
     id: 51,
     name: "C# (Mono 6.6.0.161)",
     label: "C# (Mono 6.6.0.161)",
     value: "csharp",
-  },
-  {
-    id: 77,
-    name: "COBOL (GnuCOBOL 2.2)",
-    label: "COBOL (GnuCOBOL 2.2)",
-    value: "cobol",
-  },
-  {
-    id: 55,
-    name: "Common Lisp (SBCL 2.0.0)",
-    label: "Common Lisp (SBCL 2.0.0)",
-    value: "lisp",
-  },
-  {
-    id: 56,
-    name: "D (DMD 2.089.1)",
-    label: "D (DMD 2.089.1)",
-    value: "d",
-  },
-  {
-    id: 57,
-    name: "Elixir (1.9.4)",
-    label: "Elixir (1.9.4)",
-    value: "elixir",
-  },
-  {
-    id: 58,
-    name: "Erlang (OTP 22.2)",
-    label: "Erlang (OTP 22.2)",
-    value: "erlang",
   },
   {
     id: 44,
@@ -126,78 +37,23 @@ export const languageOptions = [
     value: "fsharp",
   },
   {
-    id: 59,
-    name: "Fortran (GFortran 9.2.0)",
-    label: "Fortran (GFortran 9.2.0)",
-    value: "fortran",
-  },
-  {
     id: 60,
     name: "Go (1.13.5)",
     label: "Go (1.13.5)",
     value: "go",
   },
   {
-    id: 88,
-    name: "Groovy (3.0.3)",
-    label: "Groovy (3.0.3)",
-    value: "groovy",
-  },
-  {
-    id: 61,
-    name: "Haskell (GHC 8.8.1)",
-    label: "Haskell (GHC 8.8.1)",
-    value: "haskell",
-  },
-  {
     id: 62,
     name: "Java (OpenJDK 13.0.1)",
     label: "Java (OpenJDK 13.0.1)",
     value: "java",
-  },
-
-  {
-    id: 78,
-    name: "Kotlin (1.3.70)",
-    label: "Kotlin (1.3.70)",
-    value: "kotlin",
-  },
-  {
-    id: 64,
-    name: "Lua (5.3.5)",
-    label: "Lua (5.3.5)",
-    value: "lua",
-  },
-
-  {
-    id: 79,
-    name: "Objective-C (Clang 7.0.1)",
-    label: "Objective-C (Clang 7.0.1)",
-    value: "objectivec",
-  },
-  {
-    id: 65,
-    name: "OCaml (4.09.0)",
-    label: "OCaml (4.09.0)",
-    value: "ocaml",
-  },
-  {
-    id: 66,
-    name: "Octave (5.1.0)",
-    label: "Octave (5.1.0)",
-    value: "octave",
+    template: "class Main {\npublic static void main(String[] args) {\n\n}\n}"
   },
   {
     id: 67,
     name: "Pascal (FPC 3.0.4)",
     label: "Pascal (FPC 3.0.4)",
     value: "pascal",
-  },
-  {
-    id: 85,
-    name: "Perl (5.28.1)",
-    label: "Perl (5.28.1)",
-    value: "perl",
   },
   {
     id: 68,
@@ -210,18 +66,6 @@ export const languageOptions = [
     label: "Plain Text",
     name: "Plain Text",
     value: "text",
-  },
-  {
-    id: 69,
-    name: "Prolog (GNU Prolog 1.4.5)",
-    label: "Prolog (GNU Prolog 1.4.5)",
-    value: "prolog",
-  },
-  {
-    id: 70,
-    name: "Python (2.7.17)",
-    label: "Python (2.7.17)",
-    value: "python",
   },
   {
     id: 71,
@@ -240,18 +84,6 @@ export const languageOptions = [
     name: "Ruby (2.7.0)",
     label: "Ruby (2.7.0)",
     value: "ruby",
-  },
-  {
-    id: 73,
-    name: "Rust (1.40.0)",
-    label: "Rust (1.40.0)",
-    value: "rust",
-  },
-  {
-    id: 81,
-    name: "Scala (2.13.2)",
-    label: "Scala (2.13.2)",
-    value: "scala",
   },
   {
     id: 82,

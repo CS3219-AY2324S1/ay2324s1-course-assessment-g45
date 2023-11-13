@@ -162,10 +162,8 @@ const CodingPage = () => {
           { isActive &&
           <div>
             {/* live chat */}
-            <div className='fixed-bottom w-30'>
-              <Accordion
-                style={{ width: '30vw' }}
-              >
+            <div className='fixed-bottom w-25'>
+              <Accordion>
                 <Accordion.Item>
                   <Accordion.Header>
                     Live Chat
