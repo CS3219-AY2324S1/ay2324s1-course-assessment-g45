@@ -1,9 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react'
 import io from 'socket.io-client'
-import "quill/dist/quill.snow.css"
 import Editor from '@monaco-editor/react'
 import { useParams } from 'react-router-dom'
-import loader from '@monaco-editor/loader';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import Button from 'react-bootstrap/Button'
@@ -160,7 +158,7 @@ const CodeEditor = ({isActive}) => {
     console.log(sessionId)
   }, [socket, myEditor, sessionId])
 
-  // when text change, emit changes (delta) to socket
+  // when text change, emit changes (delta) to socket so other user can receive
   useEffect(() => {
     if (socket == null || myEditor == null) return
     const handler = (delta) => {
@@ -176,7 +174,7 @@ const CodeEditor = ({isActive}) => {
     myEditor.onDidChangeModelContent((a) => handler(a.changes[0]))
   }, [socket, myEditor])
 
-  // when receive changes, update quill
+  // when receive changes from other user, update editor
   useEffect(() => {
     if (socket == null || myEditor == null) return
 

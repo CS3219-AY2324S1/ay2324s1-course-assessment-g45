@@ -29,7 +29,7 @@ const SampleCodePopup = ({showCodeSample, setShowCodeSample, template }) => {
         { 
           template 
           ? <div>
-              <div dangerouslySetInnerHTML={{__html : `${template}`}}/>
+              <samp dangerouslySetInnerHTML={{__html : `${template}`}}/>
             </div>
           : 'No sample available.'}
       </Modal.Body>

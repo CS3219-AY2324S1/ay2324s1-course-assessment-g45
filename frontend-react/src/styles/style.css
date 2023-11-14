@@ -40,7 +40,6 @@ input {
   width: 100%;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box;
 }
 
 .primary-btn {
