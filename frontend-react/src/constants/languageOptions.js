@@ -4,49 +4,90 @@ export const languageOptions = [
     name: "JavaScript (Node.js 12.14.0)",
     label: "JavaScript (Node.js 12.14.0)",
     value: "javascript",
-    template: "console.log(\"Hello World!\");"
+    template: "<p>console.log(\"Hello World!\");</p>"
   },
   {
     id: 48,
     name: "C (GCC 7.4.0)",
     label: "C (GCC 7.4.0)",
     value: "c",
-    template: "#include <stdio.h>\n int main() { \n// Write C code here \n printf(\"Hello world\"); \n return 0; \n}"
+    template: `<p>#include &lt;stdio.h&gt;</p>
+    <p>int main() &#123;</p>
+    <p>&emsp;// Write C code here</p>
+    <p>&emsp;printf(\"Hello world\");</p>
+    <p>&emsp;return 0;</p>
+    <p>&#125;</p>
+    `
   },
   {
     id: 52,
     name: "C++ (GCC 7.4.0)",
     label: "C++ (GCC 7.4.0)",
     value: "cpp",
-    template: '#include <iostream>\nint main() {\n // Write C++ code here\n std::cout << "Hello world!"; \n return 0;\n }'
+    template: `<p>#include &lt;iostream&gt;</p>
+    <p>int main() &#123;</p>
+    <p>&emsp;// Write C++ code here</p>
+    <p>&emsp;std::cout &lt;&lt; "Hello world!";</p>
+    <p>&emsp;return 0;</p>
+    <p>&#125;</p>
+    `
   },
   {
     id: 51,
     name: "C# (Mono 6.6.0.161)",
     label: "C# (Mono 6.6.0.161)",
     value: "csharp",
-    template: 'using System;\n public class HelloWorld\n{\n public static void Main(string[] args)\n {\n Console.WriteLine ("Hello Mono World");\n }\n }'
+    template: `<p>using System;</p>
+    <p>public class HelloWorld</p>
+    <p>&#123;</p>
+    <p>&emsp;public static void Main(string[] args)</p>
+    <p>&emsp;&#123;</p>
+    <p>&emsp;&emsp;Console.WriteLine ("Hello Mono World");</p>
+    <p>&emsp;&#125;</p>
+    <p>&#125;</p>
+    `
+    // template: 'using System;\n public class HelloWorld\n{\n public static void Main(string[] args)\n {\n Console.WriteLine ("Hello Mono World");\n }\n }'
   },
   {
     id: 60,
     name: "Go (1.13.5)",
     label: "Go (1.13.5)",
     value: "go",
-    template: "package main\n import \"fmt\"\nfunc main() {\n fmt.Println(\"Hello World!\")\n}"
+    template: `
+      <p>package main</p>
+      <p>import "fmt"</p>
+      <br/>
+      <p>function main()&#123;</p>
+      <p>&emsp;fmt.Println("Hello World!")</p>
+      <p>&#125;</p>
+    `
+    // template: "package main\n import \"fmt\"\nfunc main() {\n fmt.Println(\"Hello World!\")\n}"
   },
   {
     id: 62,
     name: "Java (OpenJDK 13.0.1)",
     label: "Java (OpenJDK 13.0.1)",
     value: "java",
-    template: "class Main {\npublic static void main(String[] args) {\n}\n}"
+    template: `
+      <p>class Main &#123;</p>
+      <p>&emsp;public static void main(String[] args) &#123;</p>
+      <br/>
+      <p>&emsp; &#125;</p>
+      <p>&#125;</p>
+    `
+    // template: "class Main {\npublic static void main(String[] args) {\n}\n}"
   },
   {
     id: 67,
     name: "Pascal (FPC 3.0.4)",
     label: "Pascal (FPC 3.0.4)",
     value: "pascal",
-    template: 'program Hello;\nbegin\n writeln (\'Hello World\')\n end.\n'
+    template: `
+      <p>program Hello;</p>
+      <p>begin</p>
+      <p>&emsp;writeln (\'Hello World\')</p>
+      <p>end.</p>
+    `
   },
   {
     id: 68,

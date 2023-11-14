@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client'
 import Config from '../Config'
 import Alert from 'react-bootstrap/Alert'
+import NotFound from './NotFound';
 
 const baseUrl = Config.Common.CollabSessionApiBaseUrl;
 
@@ -137,7 +138,7 @@ const CodingPage = () => {
 
       {
         !isValidUser &&
-        <div> This page is not available </div>
+        <NotFound/>
       }
 
       {
