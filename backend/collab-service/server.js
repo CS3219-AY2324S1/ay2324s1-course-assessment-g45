@@ -71,7 +71,9 @@ io.on("connection", (socket) => {
       console.log(data)
       const updatedSession = await Session.findByIdAndUpdate(sessionId, { ...data }, { new : true})
       console.log(updatedSession)
-      socket.broadcast.to(sessionId).emit('notify', `${data.username} just left the session!`)
+
+      const username = data.user1 ? data.user1.username : (data.user2 ? data.user2.username : 'Other user')
+      socket.broadcast.to(sessionId).emit('notify', `${username} just left the session!`)
     })
   }) 
 
