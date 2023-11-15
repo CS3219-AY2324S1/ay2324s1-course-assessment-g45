@@ -21,7 +21,7 @@ router.get('/', getAllQuestions);
 router.get('/:id', getSingleQuestion);
 
 // GET all questions of given complexity
-router.get('/complexity/:complexity', getQuestionsByComplexity)
+router.get('/complexity/:complexity', getQuestionsByComplexity);
 
 // POST a new question
 router.post('/', createQuestion);
