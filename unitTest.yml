@@ -1,0 +1,25 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Unit Test
+
+on: [push, pull_request]
+
+env:
+  MONGO_URI: mongodb+srv://jeremy7007:huy_le7007@peerprep.wppmr6d.mongodb.net/?retryWrites=true&w=majority
+  JWT_SECRET: ILOVECS3219
+  TEST_USER_ID: 65472e05f05066db51c88961
+  TEST_ADMIN_ID: 6537b8549fa9c4c2a5963dc2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Unit test
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm install
+    - run: npm test
