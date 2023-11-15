@@ -6,7 +6,7 @@ const app = require('../app');
 const Question = require('../models/questionModel');
 
 require('dotenv').config();
-// Test comment
+
 /* Connecting to the database before each test. */
 beforeAll(() => {
   mongoose.connect(process.env.MONGO_URI);
