@@ -23,5 +23,5 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm install
-        working-directory: /backend/question-service
+      working-directory: ./backend/question-service
     - run: npm test
