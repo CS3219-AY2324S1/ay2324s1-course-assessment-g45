@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MonacoCodeEditor from '../components/coding_session/MonacoCodeEditor'
+import CodeEditor from '../components/coding_session/CodeEditor';
 import ReactQuill from 'react-quill'
 import { useParams } from 'react-router-dom'
 import { useUserContext } from '../hooks/useUserContext'
@@ -16,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client'
 import Config from '../Config'
 import Alert from 'react-bootstrap/Alert'
+import NotFound from './NotFound';
 
 const baseUrl = Config.Common.CollabSessionApiBaseUrl;
 
@@ -29,6 +31,7 @@ const CodingPage = () => {
   const navigate = useNavigate()
   const [ socket, setSocket ] = useState()
   const [ alert, setAlert ] = useState()
+  const [ isActive, setIsActive ] = useState(false)
 
   const getQuestion = async (id) => {
     const response = await getQuestionById(user.token, { id })
@@ -55,6 +58,13 @@ const CodingPage = () => {
           setIsValidUser(false)
           return;
         }
+
+        if (user.id == json.user1.uid) {
+          setIsActive(json.user1.isActive)
+        }
+        if (user.id == json.user2.uid) {
+          setIsActive(json.user2.isActive)
+        }
       }
     }
     if (sessionId) {
@@ -75,7 +85,7 @@ const CodingPage = () => {
   useEffect(() => {
     if (user.id && sessionId && socket && session) {
       console.log(session)
-      if ((user.id === session.user1.uid && session.user1.isActive) || (user.id === session.user2.uid && session.user2.isActive)) {
+      if (isActive) {
         socket.emit("join-session", sessionId)    
       }
     }
@@ -99,18 +109,18 @@ const CodingPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSidebarToggle = () => {
-      setSidebarOpen(!sidebarOpen);
+    setSidebarOpen(!sidebarOpen);
   };
 
   const handleLeaveSession = () => {
     if (!socket || !session) return
     if (user.id === session.user1.uid) {
-      const updatedUser = {...session.user1, isActive : false }
+      const updatedUser = { user1 : {...session.user1, isActive : false } }
       socket.emit('leave-session', updatedUser)
       navigate('/')
     }
     if (user.id === session.user2.uid) {
-      const updatedUser = {...session.user2, isActive : false }
+      const updatedUser = { user2 : {...session.user2, isActive : false } }
       socket.emit('leave-session', updatedUser)
       navigate('/')
     }
@@ -119,43 +129,16 @@ const CodingPage = () => {
     }
   }
 
-  // const handleLeaveSession = async () => {
-  //   if (!session) return
-  //   console.log(session)
-  //   console.log(user.id)
-
-  //   // set as inactive
-  //   if (user.id === session.user1.uid) {
-  //     const updatedUser = {...session.user1, isActive : false }
-      
-  //     const response = await updateSession(sessionId, { user1:updatedUser })
-  //     const json = await response.json()
-  //     console.log(json)
-  //     if (response.ok) {
-  //       navigate('/')
-  //     }
-  //   }
-
-  //   if (user.id === session.user2.uid) {
-  //     const updatedUser = {...session.user2, isActive : false }
-  //     const response = await updateSession(sessionId, { user2: updatedUser })
-  //     const json = await response.json()
-  //     console.log(json)
-  //     if (response.ok) {
-  //       navigate('/')
-  //     }
-  //   }
-  //   else {
-  //     console.log('invalid user')
-  //   }
-
-  // }
-
   return (
     <div>
+      {/* <div>
+        <div> debug </div>
+        <div> Is active? {isActive.toString()}</div>
+      </div> */}
+
       {
         !isValidUser &&
-        <div> This page is not available </div>
+        <NotFound/>
       }
 
       {
@@ -169,27 +152,55 @@ const CodingPage = () => {
                 readOnly={true}
                 theme='bubble' />
             }
-          </div>
+          </div>  
           <div className='col-6'>
-            <MonacoCodeEditor />
+            <CodeEditor isActive={isActive}/>
+            {/* <MonacoCodeEditor/> */}
           </div>
 
-          {/* chat box */}
-          <div className='fixed-bottom' style={{ width: '30vw'}}>
-            <Accordion 
-              style={{ width: '30vw' }}
-            >
-              <Accordion.Item>
-                <Accordion.Header>
-                  Live Chat
-                </Accordion.Header>
-                <Accordion.Body className='p-0' style={{height: '50vh'}}>
-                  <ChatBox/>
-                </Accordion.Body>
-              </Accordion.Item>
 
-            </Accordion>
+
+          { isActive &&
+          <div>
+            {/* live chat */}
+            <div className='fixed-bottom w-25'>
+              <Accordion>
+                <Accordion.Item>
+                  <Accordion.Header>
+                    Live Chat
+                  </Accordion.Header>
+                  <Accordion.Body className='p-0' style={{ height: '50vh' }}>
+                    <ChatBox />
+                  </Accordion.Body>
+                </Accordion.Item>
+
+              </Accordion>
+            </div>
+
+            {/* side bar buttons */}
+            <div className='floating-btns d-flex justify-content-center'>
+              <OverlayTrigger 
+                placement='top' 
+                overlay={<Tooltip> Leave Session </Tooltip>}
+              >
+                <button className='leave-session-btn' onClick={() => setLeaveSessionPopup(true)}> 
+                  <span class="material-symbols-outlined">logout</span>              
+                </button>
+              </OverlayTrigger>
+
+              <OverlayTrigger
+                placement='top'
+                overlay={<Tooltip> AI Assistant </Tooltip>}
+              >
+                <button className='ai-button' onClick={handleSidebarToggle}>
+                  <img src={aiAssistantLogo} alt="Customer Service" className='ai-image'/>
+                </button>
+              </OverlayTrigger>
+            </div>
+            {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
           </div>
+          }
+
 
           {
             alert &&
@@ -197,28 +208,6 @@ const CodingPage = () => {
               <Alert variant='info'> { alert } </Alert>
             </div>
           }
-          
-          {/* side bar buttons */}
-          <div className='floating-btns d-flex justify-content-center'>
-            <OverlayTrigger 
-              placement='top' 
-              overlay={<Tooltip> Leave Session </Tooltip>}
-            >
-              <button className='leave-session-btn' onClick={() => setLeaveSessionPopup(true)}> 
-                <span class="material-symbols-outlined">logout</span>              
-              </button>
-            </OverlayTrigger>
-
-            <OverlayTrigger
-              placement='top'
-              overlay={<Tooltip> AI Assistant </Tooltip>}
-            >
-              <button className='ai-button' onClick={handleSidebarToggle}>
-                <img src={aiAssistantLogo} alt="Customer Service" className='ai-image'/>
-              </button>
-            </OverlayTrigger>
-          </div>
-          {sidebarOpen && <AiAssistantSideBar onClose={handleSidebarToggle} />}
 
           {
             leaveSessionPopup &&
@@ -228,6 +217,13 @@ const CodingPage = () => {
               handleClose={() => setLeaveSessionPopup(false)}
               handleSubmit={handleLeaveSession}
             />
+          }
+
+          {
+            !isActive &&
+            <div className='d-flex justify-content-center'>
+              <Alert variant='warning' dismissible> You no longer have edit access to this page. </Alert>
+            </div>
           }
         </div>
       }

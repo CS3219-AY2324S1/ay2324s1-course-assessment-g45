@@ -30,23 +30,7 @@ function WaitingBanner() {
   const handleCancel = async () => {
     if (!user) return; // user should always be logged in
 
-    var complexity;
-    switch (bannerState.showBanner) {
-      case 'WAITING_EASY_MATCH':
-        complexity = 'Easy';
-        break;
-      case 'WAITING_MEDIUM_MATCH':
-        complexity = 'Medium';
-        break;
-      case 'WAITING_HARD_MATCH':
-        complexity = 'Hard';
-        break;
-      default:
-        return;
-    }
-
     const response = await cancel({
-      complexity,
       uid: user.id,
       username: user.username,
     });

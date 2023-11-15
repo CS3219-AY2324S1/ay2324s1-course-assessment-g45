@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
     socket.on('leave-session', async (data) => {
       console.log('user leave')
       console.log(data)
-      const updatedSession = await Session.findByIdAndUpdate(sessionId, { data }, { new : true})
+      const updatedSession = await Session.findByIdAndUpdate(sessionId, { ...data }, { new : true})
       console.log(updatedSession)
       socket.broadcast.to(sessionId).emit('notify', `${data.username} just left the session!`)
     })
@@ -79,17 +79,27 @@ io.on("connection", (socket) => {
   socket.on("get-session", async sessionId => {
     const session = await findSession(sessionId)
     socket.join(sessionId)
-    socket.emit("load-session", session.data)
+    const sessionData = {
+      data : session.data,
+      language : session.language
+    }
+    socket.emit("load-session", sessionData)
     
     console.log("socket join")
+
+    // langauge change
+    socket.on("send_language", delta => {
+      console.log("send_language received")
+      socket.broadcast.to(sessionId).emit("received_language", delta)
+    })
 
     // code changes
     socket.on("send_changes", delta => {
       socket.broadcast.to(sessionId).emit("received_changes", delta) //broadcast.to(sessionId)
     })
-    socket.on("save-document", async data => {
-      // console.log('saving document', data)
-      await Session.findByIdAndUpdate(sessionId, { data })
+
+    socket.on("save-document", async saveData => {
+      await Session.findByIdAndUpdate(sessionId, saveData)
     })
 
     socket.on("disconnect", () => {

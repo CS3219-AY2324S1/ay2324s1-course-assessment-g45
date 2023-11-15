@@ -9,7 +9,7 @@ services:
       - rabbitmq-network
     healthcheck:
         test: rabbitmq-diagnostics -q ping
-        interval: 30s
+        interval: 60s
         timeout: 10s
         retries: 5
   user:
@@ -68,6 +68,8 @@ services:
         condition: service_healthy
   frontend:
     build: ./frontend-react
+    env_file:
+      - ./frontend-react/.env
     environment:
       - WATCHPACK_POLLING=true
     volumes:

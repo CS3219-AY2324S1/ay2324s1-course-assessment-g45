@@ -17,10 +17,45 @@ const userSchema = new Schema({
   }
 })
 
+const defaultLanguage = {
+  id: 63,
+  name: "JavaScript (Node.js 12.14.0)",
+  label: "JavaScript (Node.js 12.14.0)",
+  value: "javascript",
+  template: "console.log(\"Hello World!\");"
+}
+
+const languageSchema = new Schema({
+  id: {
+    type: Number,
+    defaultValue: 63,
+  },
+  name: {
+    type: String,
+    defaultValue: 'JavaScript (Node.js 12.14.0)',
+  },
+  label: {
+    type: String,
+    defaultValue: 'JavaScript (Node.js 12.14.0)',
+  },
+  value: {
+    type: String,
+    defaultValue: 'javaScript',
+  },
+  template: {
+    type: String,
+    defaultValue: 'class Main {\npublic static void main(String[] args) {\n\n}\n}'
+  }
+})
+
 const sessionSchema = new Schema({
   data: {
     type: String,
-    defaultValue: '',
+    default: '',
+  },
+  language: {
+    type: languageSchema,
+    default: defaultLanguage
   },
   questionId: {
     type: String,
@@ -36,7 +71,7 @@ const sessionSchema = new Schema({
   },
   chat : {
     type : Array,
-    defaultValue: [],
+    default: [],
   }
 }, {timestamps: true})
 

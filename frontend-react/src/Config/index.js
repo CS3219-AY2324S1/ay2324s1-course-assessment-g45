@@ -25,6 +25,11 @@ const Config = {
       environment === Environment.production
         ? process.env.AI_SERVICE_URL
         : 'http://localhost:3006',
+    CodeExecApiBaseUrl:
+      environment === Environment.production
+        ? 'judge0-ce.p.rapidapi.com'
+        : 'judge0-ce.p.rapidapi.com'
+
   },
 };
 

@@ -1,11 +1,12 @@
 require('dotenv').config();
-const uuid = require('uuid')
+const uuid = require('uuid');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const rabbitMQHandler = require('./connection');
 const matchingRoutes = require('./routes/matching');
+const { log } = require('console');
 
 const PORT = process.env.PORT || 3004;
 
@@ -78,12 +79,12 @@ rabbitMQHandler((connection) => {
         console.log(' [x] Received %s from frontend', msg.content.toString());
         const request = JSON.parse(msg.content.toString());
         const uid = request.uid;
-        const complexity = request.complexity;
 
         const newBuffer = requestBuffer.filter((request) => {
-          return request.complexity != complexity || request.uid != uid;
+          return request.uid != uid;
         });
         requestBuffer = newBuffer;
+        console.log(newBuffer);
       },
       { noAck: true }
     );
@@ -121,50 +122,58 @@ rabbitMQHandler((connection) => {
                   throw err;
                 }
 
-              // send to request for question
-              channel.sendToQueue(
-                'question',
-                Buffer.from(JSON.stringify({ complexity: complexity })),
-                {
-                  correlationId: 'matching_service',
-                  replyTo: queue.queue,
-                }
-              );
-              console.log('sent question request to queue!');                
-
-              // read from queue to get the requested question
-              channel.consume(queue.queue, (msg) => {
-                if (msg.properties.correlationId == 'matching_service') {
-                  console.log(`Received question: ${msg.content.toString()} from question queue`)
-                  const questionId = msg.content.toString()
-                  // create a session id
-                  const sessionId = new mongoose.Types.ObjectId();
-                  const sessionInfo = {
-                    _id: sessionId,
-                    questionId: questionId,
-                    user1: {
-                      uid: request.uid,
-                      username: request.username,
-                    },
-                    user2: {
-                      uid: bufferedRequest.uid,
-                      username: bufferedRequest.username,
-                    },
-                    data: '',
-                    chat: new Array(),
+                // send to request for question
+                channel.sendToQueue(
+                  'question',
+                  Buffer.from(JSON.stringify({ complexity: complexity })),
+                  {
+                    correlationId: 'matching_service',
+                    replyTo: queue.queue,
                   }
-                  console.log(sessionInfo)
-                  console.log("Socket id for u1: " + socketId)
-                  console.log("Socket id for u2: " + bufferedRequest.socketId)
-                  channel.ack(msg) // accept message
+                );
+                console.log('sent question request to queue!');
 
-                  // send session Info to frontend
-                  io.to(socketId).emit('matching', sessionInfo);
-                  io.to(bufferedRequest.socketId).emit('matching', sessionInfo);
-                  requestBuffer.splice(i, 1); // Remove matched request from buffer
-                }
-              })
-            })
+                // read from queue to get the requested question
+                channel.consume(queue.queue, (msg) => {
+                  if (msg.properties.correlationId == 'matching_service') {
+                    console.log(
+                      `Received question: ${msg.content.toString()} from question queue`
+                    );
+                    const questionId = msg.content.toString();
+                    // create a session id
+                    const sessionId = new mongoose.Types.ObjectId();
+                    const sessionInfo = {
+                      _id: sessionId,
+                      questionId: questionId,
+                      user1: {
+                        uid: request.uid,
+                        username: request.username,
+                      },
+                      user2: {
+                        uid: bufferedRequest.uid,
+                        username: bufferedRequest.username,
+                      },
+                      data: '',
+                      chat: new Array(),
+                    };
+                    console.log(sessionInfo);
+                    console.log('Socket id for u1: ' + socketId);
+                    console.log(
+                      'Socket id for u2: ' + bufferedRequest.socketId
+                    );
+                    channel.ack(msg); // accept message
+
+                    // send session Info to frontend
+                    io.to(socketId).emit('matching', sessionInfo);
+                    io.to(bufferedRequest.socketId).emit(
+                      'matching',
+                      sessionInfo
+                    );
+                    requestBuffer.splice(i, 1); // Remove matched request from buffer
+                  }
+                });
+              }
+            );
             return;
           }
         }
