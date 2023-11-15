@@ -57,3 +57,24 @@
 5. Run the command `docker login` in the terminal
 6. Run the command `docker compose up --build` in the terminal
 7. The app is now running locally at http://localhost:3000/
+
+## Final Submission
+### Google Cloud Platform
+Our main application can be accessed via the following link: https://frontend-g5qibfavfa-uc.a.run.app
+
+### Local Deployment
+1. Follow **Assignment 5**, **Quick Start** step 1. Additionally, make sure to include the `.env` file for final submission in the following folders: root folder, `frontend-react`
+2. Install Docker Desktop if you haven't
+3. Login to Docker
+4. Start Docker Desktop
+5. In your terminal, go to the root project folder
+6. (Optional) Log into docker using the command `docker login` in the terminal
+7. Type `docker compose up –-build` and run the command
+8. After all the containers have started, visit http://localhost:3000/ to access our application
+
+### Unit Testing
+1. Follow step 1 in **Local Deployment**
+2. In the terminal, run the command `npm install` in both the root folder and the `backend/question-service` folder
+3. Navigate to the root folder, and run the command `npm run test`
+
+Testing is automatically done when pushing to the repo or merging a Pull Request.
