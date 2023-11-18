@@ -1,0 +1,27 @@
+{
+  "name": "ay2324s1-course-assessment-g45",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test jest --testTimeout=30000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g45.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g45/issues"
+  },
+  "homepage": "https://github.com/CS3219-AY2324S1/ay2324s1-course-assessment-g45#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "supertest": "^6.3.3"
+  }
+}
